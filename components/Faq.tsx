@@ -3,7 +3,7 @@ import AccordionProvider from '@/context/AccordionProvider';
 import AccordionItem from '@/components/AccordionItem'
 import AccordionPanel from '@/components/AccordionPanel'
 
-const Faq = () => {
+const Faq: React.FC = () => {
   return (
     <AccordionProvider>
       <AccordionItem toggle="panel-1">

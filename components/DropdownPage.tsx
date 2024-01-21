@@ -3,11 +3,11 @@ import DropdownItem from './DropdownItem'
 import Tooltip from './tooltip'
 import DownArrow from './DownArrow';
 
-export default function DropdownPage() {
+const DropdownPage: React.FC = () => {
   function useToggle() {
 
     const [show, setShow] = useState(false);
-    const ref = useRef()
+    const toggleRef = useRef()
 
     const toggle = useCallback(() => {
       setShow((prevState) => !prevState);
@@ -15,7 +15,7 @@ export default function DropdownPage() {
 
     useEffect(() => {
       const handleOutsideClick = (e) => {
-        if (show && !ref.current?.contains(e.target)) {
+        if (show && !toggleRef.current?.contains(e.target)) {
           if (!show) return;
           setShow(false);
         }
@@ -52,7 +52,7 @@ export default function DropdownPage() {
         onClick={toggle}
         type='button'
         id='options-menu'
-        ref={ref}
+        ref={toggleRef}
       >
 
         <span className='flex bg-indigo-900 text-white rounded px-6 py-2 font-medium'>
@@ -80,3 +80,5 @@ export default function DropdownPage() {
     </div>
   )
 }
+
+export default DropdownPage;

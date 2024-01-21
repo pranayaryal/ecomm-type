@@ -1,18 +1,33 @@
 import { useEffect, useState, createContext } from "react";
-import { CartContext } from "./CartContext";
+import React from "react";
 
 type Props = {
   children: JSX.Element
 }
 
-type CartItem = {
-  quantity: number;
+export interface CartProduct {
   id: number;
   price: number;
+  image: string;
+  category: string;
+  title: string;
+}
+export interface CartItem extends CartProduct {
+  quantity: number;
 
 }
 
-export const CartProvider = ({ children } : Props) => {
+export type CartContextType = {
+  cartItems: CartItem [];
+  addToCart: (item: CartItem) => void;
+  removeFromCart: (item: CartItem) => void;
+  clearCart: () => void;
+  getCartTotal: () => number;
+}
+
+export const CartContext = createContext<CartContextType | null>(null)
+
+const CartProvider = ({ children } : Props) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
 
   const addToCart = (item: CartItem) => {
@@ -36,16 +51,16 @@ export const CartProvider = ({ children } : Props) => {
     setCartItems([])
   }
 
-  const removeFromCart = (item: CartItem) => {
-    const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id)
+  const removeFromCart = (product: CartProduct) => {
+    const isItemInCart = cartItems.find((cartItem) => cartItem.id === product.id)
     
     if (isItemInCart?.quantity == 1) {
         // Remove the item, keep the rest
-        setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id))
+        setCartItems(cartItems.filter((cartItem) => cartItem.id !== product.id))
     } else {
         setCartItems(
             cartItems.map((cartItem) => 
-             cartItem.id === item.id
+             cartItem.id === product.id
              ? { ...cartItem, quantity: cartItem.quantity -1}
              : cartItem
             )
@@ -85,3 +100,5 @@ export const CartProvider = ({ children } : Props) => {
 
   )
 };
+
+export default CartProvider;

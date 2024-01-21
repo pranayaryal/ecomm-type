@@ -2,12 +2,13 @@ import { useState, useContext } from 'react'
 import Logo from './logo';
 import DropdownPage from './DropdownPage';
 import { DropdownAll } from './DropdownAll';
-import { CartContext } from '@/context/CartContext';
+import { CartContext, CartContextType } from '@/context/CartProvider';
 
 import React from 'react'
 
-export default function Navbar() {
-    const { cartItems } = useContext(CartContext)
+const Navbar= () =>  {
+    let cartContextValues: CartContextType | null;
+    cartContextValues = useContext(CartContext)
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const handleMouseEnter = () => {
         setDropdownVisible(true);
@@ -16,6 +17,7 @@ export default function Navbar() {
     const handleMouseLeave = () => {
         setDropdownVisible(false);
     };
+
     return (
       <>
         <div className='hidden md:block mt-8 w-[100%] max-w-[1500px] pr-0 ml-auto mr-auto pl-[50px] text-dark-slate-grey'>
@@ -34,7 +36,9 @@ export default function Navbar() {
                     <input type="text" className='px-4 py-2 bg-pink-50 outline-none rounded-full' placeholder='Search' />
                     <div className='relative'>
                         <p className='uppercase text-xs'>Cart</p>
-                        <button className='absolute top-0 left-0 text-xs-0 p-[2px] w-full rounded-full bg-pink-200 text-black text-xs flex items-center justify-center'>{cartItems.length}</button>
+                        <button className='absolute top-0 left-0 text-xs-0 p-[2px] w-full rounded-full bg-pink-200 text-black text-xs flex items-center justify-center'>
+                          {cartContextValues?.cartItems.length}
+                        </button>
 
                     </div>
 
@@ -51,3 +55,5 @@ export default function Navbar() {
       </>
     )
 }
+
+export default Navbar;

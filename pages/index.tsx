@@ -5,7 +5,6 @@ import Faq from '@/components/Faq'
 import ImageZoom from '@/components/ImageZoom'
 import ImageMagnifier from '@/components/ImageMagnifier'
 import { CardPage } from '@/components/CardPage'
-import { CartProvider } from '@/context/CartProvider'
 
 export default function Home() {
   

@@ -69,15 +69,10 @@ const getUser = async () => {
 
 const appRouter = router({
     greeting: publicProcedure
-
-        .input(
-            z.object({
-                name: z.string().nullish()
-            })
-        )
+        .input( z.string().nullish())
         .query(({ input }) => {
             return {
-                text: `hello ${input?.name ?? 'world'}`
+                text: `hello ${input ?? 'world'}`
             }
         }),
 
@@ -90,11 +85,11 @@ const appRouter = router({
             // const resp = await axios.get("/api/user")
             const email = input.email;
             const password = input.password
-            // const resp = await loginForTrpc({
-            //     email,
-            //     password,
-            // })
-            const resp = await getUser()
+            const resp = await loginForTrpc({
+                email,
+                password,
+            })
+            // const resp = await getUser()
 
             console.log(resp)
 

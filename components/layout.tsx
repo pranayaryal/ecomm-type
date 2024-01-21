@@ -1,8 +1,9 @@
 import Navbar from './Navbar'
 import Footer from './Footer'
-import { CartProvider } from '@/context/CartProvider'
+import React from 'react'
+import CartProvider from '@/context/CartProvider'
 
-export default function Layout({ children }) {
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <CartProvider>
       <div className='bg-white-smoke flex flex-col'>
@@ -14,3 +15,5 @@ export default function Layout({ children }) {
     </CartProvider>
   )
 }
+
+export default Layout;
