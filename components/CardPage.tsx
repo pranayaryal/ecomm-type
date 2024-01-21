@@ -1,6 +1,5 @@
 import { CartContext, CartContextType, CartProduct, CartItem } from "../context/CartProvider";
-import { useContext, useEffect, useState } from "react";
-import CartProvider from "@/context/CartProvider";
+import { useContext } from "react";
 
 
 export const CardPage: React.FC<{ product: CartItem }> = ({ product }) => {
@@ -18,7 +17,7 @@ export const CardPage: React.FC<{ product: CartItem }> = ({ product }) => {
           <CardTitle className="text-lg">{product.title}</CardTitle>
           <CardText>
             {product.category}
-            {`Price: ${product.price}`}
+            {`Price: ${product.price}, Quantity: ${product.quantity}`}
 
           </CardText>
           <button

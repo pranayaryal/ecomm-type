@@ -5,23 +5,23 @@ import Faq from '@/components/Faq'
 import ImageZoom from '@/components/ImageZoom'
 import ImageMagnifier from '@/components/ImageMagnifier'
 import { CardPage } from '@/components/CardPage'
+import { CartItem } from '@/context/CartProvider'
 
 export default function Home() {
-  
-  type Product = {
-    id: number;
-    price: number;
-  }
+
 
   const [selected, setSelected] = useState(0)
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<CartItem[]>([])
 
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
-      .then(res => res.json())
-      .then(json => setProducts(json))
-
+    const callProductApi = () => {
+      fetch('https://fakestoreapi.com/products')
+        .then(res => res.json())
+        .then(json => setProducts(json.map((prod: CartItem) => ({...prod, quantity: 1}))))
+    }
+    callProductApi()
   }, [])
+
 
   return (
     <main

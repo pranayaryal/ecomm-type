@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Logo({ width, height}) {
+const Logo: React.FC<{ width: string, height: string}> = ({ width, height}) => {
     return (
 
         <svg width={width} height={height} viewBox="0 0 255 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -27,3 +27,5 @@ export default function Logo({ width, height}) {
 
     )
 }
+
+export default Logo

@@ -1,7 +1,6 @@
 import { useState, useContext } from 'react'
 import Logo from './logo';
 import DropdownPage from './DropdownPage';
-import { DropdownAll } from './DropdownAll';
 import { CartContext, CartContextType } from '@/context/CartProvider';
 
 import React from 'react'

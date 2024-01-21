@@ -7,45 +7,45 @@ const DropdownPage: React.FC = () => {
   function useToggle() {
 
     const [show, setShow] = useState(false);
-    const toggleRef = useRef()
+    const toggleRef = useRef<HTMLButtonElement>(null)
 
     const toggle = useCallback(() => {
       setShow((prevState) => !prevState);
     }, []);
 
     useEffect(() => {
-      const handleOutsideClick = (e) => {
-        if (show && !toggleRef.current?.contains(e.target)) {
+      const handleOutsideClick = (event: Event) => {
+        if (show && !toggleRef.current?.contains(event.target as Node)) {
           if (!show) return;
           setShow(false);
         }
       };
-      document.addEventListener('click', handleOutsideClick)
-      return () => document.removeEventListener('click', handleOutsideClick)
-    }, [show, ref])
+      document.addEventListener('click', ((event: Event) => handleOutsideClick))
+      return () => document.removeEventListener('click', ((event: Event) => handleOutsideClick))
+    }, [show, toggleRef])
 
     useEffect(() => {
-      const handleEscape = (event) => {
+      const handleEscape = (event: React.KeyboardEvent) => {
         if (!show) return;
 
         if (event.key === 'Escape') {
           setShow(false)
         }
       };
-      document.addEventListener('keyup', handleEscape)
-      return () => document.removeEventListener('keyup', handleEscape)
+      document.addEventListener('keyup', ((event: KeyboardEvent) => handleEscape))
+      return () => document.removeEventListener('keyup', ((event: KeyboardEvent) => handleEscape))
     }, [show])
 
     return {
       show,
       toggle,
-      ref
+      toggleRef
     };
 
 
   }
 
-  const { show, toggle, ref } = useToggle()
+  const { show, toggle, toggleRef } = useToggle()
   return (
     <div>
       <button className='focus:outline-none'
