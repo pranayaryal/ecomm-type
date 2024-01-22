@@ -20,20 +20,20 @@ const DropdownPage: React.FC = () => {
           setShow(false);
         }
       };
-      document.addEventListener('click', ((event: Event) => handleOutsideClick))
-      return () => document.removeEventListener('click', ((event: Event) => handleOutsideClick))
+      document.addEventListener('click', ((event: Event) => handleOutsideClick(event)))
+      return () => document.removeEventListener('click', ((event: Event) => handleOutsideClick(event)))
     }, [show, toggleRef])
 
     useEffect(() => {
-      const handleEscape = (event: React.KeyboardEvent) => {
+      const handleEscape = (event: KeyboardEvent) => {
         if (!show) return;
 
         if (event.key === 'Escape') {
           setShow(false)
         }
       };
-      document.addEventListener('keyup', ((event: KeyboardEvent) => handleEscape))
-      return () => document.removeEventListener('keyup', ((event: KeyboardEvent) => handleEscape))
+      document.addEventListener('keyup', ((event: KeyboardEvent) => handleEscape(event)))
+      return () => document.removeEventListener('keyup', ((event: KeyboardEvent) => handleEscape(event)))
     }, [show])
 
     return {

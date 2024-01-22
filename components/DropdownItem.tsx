@@ -2,7 +2,7 @@ import React from 'react'
 import Arrow from './Arrow'
 import { useState } from 'react'
 
-export default function DropdownItem({ children }) {
+const DropdownItem:React.FC<{children: React.ReactNode}> = ({ children }) =>  {
   const [ hovered, setHovered ] = useState(false);
   return (
     <a href="#"
@@ -14,3 +14,5 @@ export default function DropdownItem({ children }) {
     </a>
   )
 }
+
+export default DropdownItem;

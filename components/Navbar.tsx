@@ -2,6 +2,7 @@ import { useState, useContext } from 'react'
 import Logo from './logo';
 import DropdownPage from './DropdownPage';
 import { CartContext, CartContextType } from '@/context/CartProvider';
+import { SideNav } from './CartSlider2';
 
 import React from 'react'
 
@@ -9,6 +10,10 @@ const Navbar= () =>  {
     let cartContextValues: CartContextType | null;
     cartContextValues = useContext(CartContext)
     const [isDropdownVisible, setDropdownVisible] = useState(false);
+    const [ openCartSlider, setOpenCartSlider ] = useState(false) 
+     const toggleCartSlider = () => {
+        setOpenCartSlider((prevState) => !prevState)
+    }
     const handleMouseEnter = () => {
         setDropdownVisible(true);
     };
@@ -35,9 +40,16 @@ const Navbar= () =>  {
                     <input type="text" className='px-4 py-2 bg-pink-50 outline-none rounded-full' placeholder='Search' />
                     <div className='relative'>
                         <p className='uppercase text-xs'>Cart</p>
-                        <button className='absolute top-0 left-0 text-xs-0 p-[2px] w-full rounded-full bg-pink-200 text-black text-xs flex items-center justify-center'>
+                        <button 
+                            disabled={openCartSlider}
+                            aria-disabled={openCartSlider}
+                            onClick={toggleCartSlider}
+                            className='absolute top-0 left-0 text-xs-0 p-[2px] w-full rounded-full bg-pink-200 text-black text-xs flex items-center justify-center cursor-pointer'>
                           {cartContextValues?.cartItems.length}
                         </button>
+                        <SideNav open={openCartSlider} setOpen={setOpenCartSlider}>
+                            <p>See here</p>
+                        </SideNav>
 
                     </div>
 
