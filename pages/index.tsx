@@ -14,21 +14,16 @@ import { useShoppingCart } from '@/context/ShoppingCartProvider'
 export default function Home() {
 
   const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
+  const { products, getProducts } = useShoppingCart()
 
-  const [products, setProducts] = useState([])
+  //const [products, setProducts] = useState([])
   const [selected, setSelected] = useState(0)
   const [errors, setErrors] = useState([])
   const [status, setStatus] = useState(null)
 
 
   useEffect(() => {
-    const callProductApi = async () => {
-      // const csrf = () => axios.get('/sanctum/csrf-cookie')
-      
-      const prdts = await getAllProducts()
-      setProducts(prdts)
-    }
-    callProductApi()
+    getProducts()
     console.log('prdts', products)
   }, [])
 

@@ -8,7 +8,17 @@ import React from 'react'
 
 const Navbar = () => {
     const { cartItems, getAllCartItems, forgetCart } = useShoppingCart()
-    console.log('froNavbar', cartItems)
+    // const total = Object.values(cartItems).reduce(
+    //   (accumulator, currentValue) => accumulator + currentValue,
+    //   0,
+    // );
+    const total = Object.values(cartItems).map(val => val.quantity).reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0,
+    )
+
+    console.log('total', total)
+  
     // const [cartFromContext, setCartFromContext] = useState(cartItems)
     const [errors, setErrors] = useState<string[]>([])
 
@@ -71,6 +81,12 @@ const Navbar = () => {
                             <div
                                 className='absolute bottom-0 right-0 text-xs-0 p-[2px] w-[1rem] h-[1rem] rounded-full bg-pink-100 text-black text-xs flex items-center justify-center cursor-pointer'>
                             </div>
+                              <div>
+
+                              </div>
+                             
+                              { total === 0 ? <span>{''}</span>: 
+                              <span className='text-xs'>{total}</span> }
 
                         </button>
 

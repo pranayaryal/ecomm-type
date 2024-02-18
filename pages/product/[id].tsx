@@ -11,7 +11,16 @@ import axios from '@/lib/axios'
 //const products = await getAllProducts();
 
 export async function getStaticPaths() {
-    const products = await getAllProducts();
+    const response = await fetch('http://localhost:3000/api/products', {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+      }
+
+    })
+    let products = await response.json();
+    products = products.products
+    // const products = await getAllProducts();
     const pths = products.map(product => {
         return { params: { id: product.id.toString() } }
     })

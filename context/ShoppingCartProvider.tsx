@@ -9,6 +9,7 @@ type ShoppingCardProviderProps = {
 }
 
 type ShoppingCartContext = {
+  products: []
   getItemQuantity: (id: number) => number
   increaseCartQuantity: (id: number) => void
   decreaseCartQuantity: (id: number) => void
@@ -18,6 +19,7 @@ type ShoppingCartContext = {
   getAllCartItems: () => Promise<void>
   setCartItems: React.Dispatch<React.SetStateAction<{}>>
   forgetCart: () => Promise<void>;
+  getProducts: () => Promise<void>;
 
 }
 
@@ -35,21 +37,15 @@ export function useShoppingCart() {
 
 export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const [cartItems, setCartItems] = useState({})
+  const [ products, setProducts ] = useState([])
 
   // const getItemQuantity = (id: number) => {
   //   return cartItems.find(item => item.id === id)?.quantity || 0
   // }
-  // useEffect(() => {
-  //   const getCart = async () => {
-  //     const res = await getAllCartItems()
-  //     console.log('set it from useEffect')
-  //     setCartItems(res.products)
+  useEffect(() => {
+    getAllCartItems()
 
-
-  //   }
-  //   getCart()
-
-  // }, [])
+  }, [])
 
 
   const increaseCartQuantity = async (id: number) => {
@@ -62,7 +58,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
       body: JSON.stringify(data),
     });
     const resJson = await response.json()
-    setCartItems(resJson);
+    setCartItems(resJson.products);
 
   }
 
@@ -90,6 +86,21 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
     })
     const resJson = await response.json()
     setCartItems({});
+
+  }
+
+  const getProducts = async () => {
+    const response = await fetch('/api/products', {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+      }
+
+    })
+
+    const resJson = await response.json();
+
+    setProducts(resJson.products)
 
   }
 
@@ -125,6 +136,8 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
     <ShoppingCartContext.Provider
       value={{
         // getItemQuantity,
+        products,
+        getProducts,
         setCartItems,
         increaseCartQuantity,
         getAllCartItems,

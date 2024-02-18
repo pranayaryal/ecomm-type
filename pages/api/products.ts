@@ -8,19 +8,18 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/increase-cart`;
-    await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products`;
     const headers = {
       'origin': 'localhost',
       cookie: req.headers.cookie
     }
-
+    await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
     const respWithAxios = await axios
-      .post(url, req.body, {
+      .get(url, {
         headers
       })
       .then(res => res.data)
-
+    
     res.status(200).json(respWithAxios);
 
   }
