@@ -1,92 +1,128 @@
+'use client'
+
+import Button from '@/components/Button'
+import Input from '@/components/Input'
+import InputError from '@/components/InputError'
+import Label from '@/components/Label'
+import Link from 'next/link'
 import { useAuth } from '@/hooks/auth'
-import { useState } from 'react';
-import { trpc } from '@/utils/trpc'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import AuthSessionStatus from '@/components/AuthSessionStatus'
 
 const Login = () => {
+    const router = useRouter()
 
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [errors, setErrors] = useState<string[]>([])
-
-  // const myRes = trpc.login.useQuery({
-  //   email: 'drpranayaryal@gmail.com',
-  //   password: '12345'
-  // })
-
-  // console.log(myRes.data)
-
-  const [formState, setFormState] = useState({
-    email: {
-      value: "",
-      error: ""
-    },
-    password: {
-      value: "",
-      error: ""
-    }
-  })
-
-  const myRes = trpc.login.useQuery({
-    email: formState.email.value,
-    password: formState.password.value})
-  
-  console.log(myRes.data)
-
-  const onChangeHandler = (field: string, value: string) => {
-    let state = {
-      [field]: {
-        value,
-        error: null
-      }
-    }
-
-    setFormState({ ...formState, ...state })
-
-  }
-
-
-  const { login, isLoading, user } = useAuth({ 'middleware': 'guest' })
-
-  const handleSubmit = () => {
-    // login({
-    //   setErrors,
-    //   email: formState.email.value,
-    //   password: formState.password.value,
-    // })
-    // const myRes = trpc.login.query({
-    //   email: formState.email.value,
-    //   password: formState.password.value
-    // })
-
-    // const myRes = trpc.login.useQuery({
-    //   email: 'hello',
-    //   password: 'strong'})
-    // console.log(myRes.data)
-    const res = myRes.query({
-      email: formState.email.value,
-      password: formState.password.value
+    const { login } = useAuth({
+        middleware: 'guest',
+        redirectIfAuthenticated: '/dashboard',
     })
-    console.log(res.data)
-  }
 
-  return (
-    <main
-      className='h-[383px] w-[80%] ml-auto mr-auto md:w-[100%] md:mt-16 max-w-[1500px] pr-0 md:pl-[50px] text-dark-slate-grey'
-    >
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [shouldRemember, setShouldRemember] = useState(false)
+    const [errors, setErrors] = useState([])
+    const [status, setStatus] = useState(null)
 
-      {errors?.length && errors.map((err, ix) => <p key={ix}>{err}</p>)}
-      <div className='flex flex-col justify-start w-1/5'>
-        <input
-          autoFocus={true}
-          value={formState.email.value}
-          onChange={(e) => onChangeHandler("email", e.target.value)} type="text" placeholder="Email" className="mt-4 px-3 py-2 border border-gray-500 rounded-md" />
-        <input value={formState.password.value}
-          onChange={(e) => onChangeHandler("password", e.target.value)} type="password" placeholder="Password" className="mt-3 px-3 py-2 border border-gray-500 rounded-md" />
-        <button onClick={handleSubmit} className='p-2 bg-medium-sea-green mt-4 rounded-md w-1/3'>Submit</button>
-      </div>
+    useEffect(() => {
+        if (router.reset?.length > 0 && errors.length === 0) {
+            setStatus(atob(router.reset))
+        } else {
+            setStatus(null)
+        }
+    })
 
-    </main>
-  )
-};
+    const submitForm = async event => {
+        event.preventDefault()
 
-export default Login;
+        login({
+            email,
+            password,
+            remember: shouldRemember,
+            setErrors,
+            setStatus,
+        })
+    }
+
+    return (
+
+        <main
+            className='h-[383px] w-[80%] ml-auto mr-auto md:w-[100%] md:mt-16 max-w-[1500px] pr-0 md:pl-[50px] text-dark-slate-grey'
+        >
+            <div className='w-1/3'>
+                <AuthSessionStatus className="mb-4" status={status} />
+                <form onSubmit={submitForm}>
+                    {/* Email Address */}
+                    <div>
+                        <Label htmlFor="email">Email</Label>
+
+                        <Input
+                            id="email"
+                            type="email"
+                            value={email}
+                            className="outline-none block mt-1 w-full px-3 py-2"
+                            onChange={event => setEmail(event.target.value)}
+                            required
+                            autoFocus
+                        />
+
+                        <InputError messages={errors.email} className="mt-2" />
+                    </div>
+
+                    {/* Password */}
+                    <div className="mt-4">
+                        <Label htmlFor="password">Password</Label>
+
+                        <Input
+                            id="password"
+                            type="password"
+                            value={password}
+                            className="outline-none block mt-1 w-full px-3 py-2"
+                            onChange={event => setPassword(event.target.value)}
+                            required
+                            autoComplete="current-password"
+                        />
+
+                        <InputError
+                            messages={errors.password}
+                            className="mt-2"
+                        />
+                    </div>
+
+                    {/* Remember Me */}
+                    <div className="block mt-4">
+                        <label
+                            htmlFor="remember_me"
+                            className="inline-flex items-center">
+                            <input
+                                id="remember_me"
+                                type="checkbox"
+                                name="remember"
+                                className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                onChange={event =>
+                                    setShouldRemember(event.target.checked)
+                                }
+                            />
+
+                            <span className="ml-2 text-sm text-gray-600">
+                                Remember me
+                            </span>
+                        </label>
+                    </div>
+
+                    <div className="flex items-center justify-end mt-4">
+                        <Link
+                            href="/forgot-password"
+                            className="underline text-sm text-gray-600 hover:text-gray-900">
+                            Forgot your password?
+                        </Link>
+
+                        <Button className="ml-3">Login</Button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    )
+}
+
+export default Login

@@ -5,7 +5,6 @@ import { z } from 'zod'
 import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { TRPCError } from '@trpc/server'
-import { useAuth } from '@/hooks/auth'
 
 export const authorizedProcedure = publicProcedure
     .input(z.object({ name: z.string(), email: z.string(), password_confirmation: z.string() }))

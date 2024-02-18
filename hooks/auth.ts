@@ -1,111 +1,199 @@
-import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
 import useSWR from 'swr'
-import React from 'react'
 import axios from '@/lib/axios'
-import { z } from 'zod'
+import { Dispatch, SetStateAction, useEffect } from 'react'
+import { useParams, useRouter } from 'next/navigation'
 
-
-interface BaseProps {
-  setErrors: React.Dispatch<React.SetStateAction<string[]>>,
-  email: string,
-  password: string,
-}
-
-interface RegisterProps extends BaseProps {
-  name: string,
-  password_confirmation: string
+type UseAuthProps = {
+    middleware: string | '';
+    redirectIfAuthenticated: string | '';
 }
 
 
-export const useAuth = ({ middleware }: { middleware: string}) => {
-  const router = useRouter()
+type LoginParams = {
+    setErrors: Dispatch<SetStateAction<string[]>>;
+    setStatus: Dispatch<SetStateAction<null>>;
+    props: { email: string, password: string }
+}
 
-  const [isLoading, setIsLoading] = useState(true)
+type CreateParams = {
+    setErrors: Dispatch<SetStateAction<string[]>>;
+}
 
-  const csrf = async () => axios.get("/sanctum/csrf-cookie")
+type RegisterParams = {
+    setErrors: Dispatch<SetStateAction<string[]>>;
+}
 
-  const { data: user, error, mutate } = useSWR("/api/user",
-    async () => await axios.get("/api/user")
-      .then(response => response.data)
-      .catch(error => {
-        if (error.response.status !== 409) {
-          throw error;
-        }
-      })
-  )
+type ForgotPasswordParams = {
+    setErrors: Dispatch<SetStateAction<string[]>>;
+    setStatus: Dispatch<SetStateAction<null>>;
+    email: string;
+}
 
-  const login = async ({ setErrors, ...props}: BaseProps) => {
-    setErrors([])
+type ResendEmailVerificationParams = {
+    setStatus: Dispatch<SetStateAction<null>>;
+}
 
-    await csrf()
 
-    axios.post('/login', props)
-    .then(() => router.push('/'))
-    .catch(error => {
-      console.log(error)
-      if (error.response.status !== 422) throw error;
-      setErrors(Object.values(error.response.data.errors))
-    })
-  }
+export const useAuth = ({ middleware, redirectIfAuthenticated }: UseAuthProps) => {
+    const router = useRouter()
+    const params = useParams()
 
-  const loginForTrpc = async ({ setErrors, ...props}: BaseProps) => {
-    setErrors([])
+    const { data: user, error, mutate } = useSWR('/api/user', () =>
+        axios
+            .get('/api/user')
+            .then(res => res.data)
+            .catch(error => {
+                if (error.response.status !== 409) throw error
 
-    await csrf()
+                router.push('/verify-email')
+            }),
+    )
 
-    axios.post('/login', props)
-    .then(() => router.push('/'))
-    .catch(error => {
-      console.log(error)
-      if (error.response.status !== 422) throw error;
-      setErrors(Object.values(error.response.data.errors))
-    })
-  }
+    const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-  const register = async ({ setErrors, ...props}: RegisterProps) => {
-    setErrors([])
+    const register = async ({ setErrors, ...props }: RegisterParams) => {
+        await csrf()
 
-    // await csrf()
+        setErrors([])
 
-    axios.post('/register', props)
-    .then(() => router.push('/dashboard'))
-    .catch(error => {
-      console.log(error)
-      if (error.response.status !== 422) throw error;
-      setErrors(Object.values(error.response.data.errors))
-    })
-  }
+        axios
+            .post('/register', props)
+            .then(() => mutate())
+            .catch(error => {
+                if (error.response.status !== 422) throw error
 
-  const logout = async ({ setErrors}: { setErrors: React.Dispatch<React.SetStateAction<string[]>>}) => {
-    await csrf()
-    await axios.post("/logout")
-    .then(() => router.push("/login"))
-    .catch(error => {
-      console.log(error)
-      if (error.response.status !== 422) throw console.log('Hey');
-      setErrors(Object.values(error.response.data.errors))
-    })
-  }
-
-  useEffect(() => {
-    if (user || error) {
-      setIsLoading(false)
-
-      if (middleware === "guest" && user) {
-        console.log(user)
-        router.push("/")
-      }
-      if (middleware === "auth" && error) router.push("/login") 
+                setErrors(error.response.data.errors)
+            })
     }
-  })
 
-  return {
-    user,
-    csrf,
-    isLoading,
-    login,
-    logout,
-    register
-  }
+    const login = async ({ setErrors, setStatus, ...props }: LoginParams) => {
+        await csrf()
+
+        setErrors([])
+        setStatus(null)
+
+        axios
+            .post('/login', props)
+            .then(() => mutate())
+            .catch(error => {
+                console.log('errLogin', error)
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const forgotPassword = async ({ setErrors, setStatus, email }: ForgotPasswordParams) => {
+        await csrf()
+
+        setErrors([])
+        setStatus(null)
+
+        axios
+            .post('/forgot-password', { email })
+            .then(response => setStatus(response.data.status))
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const resetPassword = async ({ setErrors, setStatus, ...props }: LoginParams) => {
+        await csrf()
+
+        setErrors([])
+        setStatus(null)
+
+        axios
+            .post('/reset-password', { token: params.token, ...props })
+            .then(response =>
+                router.push('/login?reset=' + btoa(response.data.status)),
+            )
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    // Moving these api routes here to use csrf()
+    const createCartItem = async ({ setErrors, ...props }: CreateParams) => {
+        await csrf()
+
+        setErrors([])
+
+        axios
+            .post('/api/increase-cart', { token: params.token, ...props })
+            .then(response => console.log('it was success'))
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const getCartItems = async ({ setErrors}: CreateParams) => {
+        await csrf()
+        setErrors([])
+        axios
+            .get('/api/cart')
+            .then(response => console.log(response))
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const getProducts = async ({ setErrors }: CreateParams) => {
+        await csrf()
+        setErrors([])
+        axios
+            .get('/api/products')
+            .then(response => console.log(response))
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const resendEmailVerification = ({ setStatus }: ResendEmailVerificationParams) => {
+        axios
+            .post('/email/verification-notification')
+            .then(response => setStatus(response.data.status))
+    }
+
+    const logout = async () => {
+        if (!error) {
+            await axios.post('/logout').then(() => mutate())
+        }
+
+        window.location.pathname = '/login'
+    }
+
+    // useEffect(() => {
+    //     if (middleware === 'guest' && redirectIfAuthenticated && user)
+    //         router.push(redirectIfAuthenticated)
+    //     if (
+    //         window.location.pathname === '/verify-email' &&
+    //         user?.email_verified_at
+    //     )
+    //         router.push(redirectIfAuthenticated)
+    //     if (middleware === 'auth' && error) logout()
+    // }, [user, error])
+
+    return {
+        user,
+        register,
+        login,
+        forgotPassword,
+        resetPassword,
+        resendEmailVerification,
+        logout,
+        createCartItem,
+        getCartItems,
+        getProducts
+    }
 }

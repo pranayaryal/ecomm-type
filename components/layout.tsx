@@ -1,20 +1,19 @@
 import Navbar from './Navbar'
 import Footer from './Footer'
 import React from 'react'
-import CartProvider from '@/context/CartProvider'
-import { CartSlider } from '@/components/CartSlider2'
+import { ShoppingCartProvider } from '@/context/ShoppingCartProvider'
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <CartProvider>
-      <div className='bg-white-smoke flex flex-col'>
-        <Navbar />
-        <main>{children}</main>
-        <CartSlider />
-        <Footer />
-      </div>
+    <div className='bg-white-smoke flex flex-col font-sans'>
+      <Navbar />
+      <main
+        className='w-[80%] ml-auto mr-auto md:w-[100%] md:mt-16 max-w-[1500px] pr-0 md:pl-[50px] text-dark-slate-grey'>
+        {children}
+      </main>
+      <Footer />
+    </div>
 
-    </CartProvider>
   )
 }
 

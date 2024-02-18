@@ -22,6 +22,7 @@ const config: Config = {
         'yellow-custom': '#e6ff4c',
         'grey': '#81857f',
         'green': '#faf8f7',
+        'vivid-purple': '#9b51e0'
       }
     },
   },

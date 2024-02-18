@@ -6,27 +6,35 @@ import ImageZoom from '@/components/ImageZoom'
 import ImageMagnifier from '@/components/ImageMagnifier'
 import { CardPage } from '@/components/CardPage'
 import { CartItem } from '@/context/CartProvider'
+import { useAuth } from '@/hooks/auth'
+import axios from '@/lib/axios'
+import { getAllProducts } from '@/lib/backend'
+import { useShoppingCart } from '@/context/ShoppingCartProvider'
 
 export default function Home() {
 
+  const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
 
+  const [products, setProducts] = useState([])
   const [selected, setSelected] = useState(0)
-  const [products, setProducts] = useState<CartItem[]>([])
+  const [errors, setErrors] = useState([])
+  const [status, setStatus] = useState(null)
+
 
   useEffect(() => {
-    const callProductApi = () => {
-      fetch('https://fakestoreapi.com/products')
-        .then(res => res.json())
-        .then(json => setProducts(json.map((prod: CartItem) => ({...prod, quantity: 1}))))
+    const callProductApi = async () => {
+      // const csrf = () => axios.get('/sanctum/csrf-cookie')
+      
+      const prdts = await getAllProducts()
+      setProducts(prdts)
     }
     callProductApi()
+    console.log('prdts', products)
   }, [])
 
 
   return (
-    <main
-      className='w-[80%] ml-auto mr-auto md:w-[100%] md:mt-16 max-w-[1500px] pr-0 md:pl-[50px] text-dark-slate-grey'
-    >
+    <>
       <div className='grid grid-cols-1 gap-y-4 md:gap-y-0 md:grid-cols-2 px-0 md:gap-x-8 md:auto-cols-fr py-[20px] justify-center'>
         <div className='flex items-start flex-col justify-center'>
           <h1 className='text-4xl mb-4'>Stop wasting time on security questionnaires</h1>
@@ -65,6 +73,6 @@ export default function Home() {
       </div>
 
 
-    </main>
+    </>
   )
 }
