@@ -38,6 +38,7 @@ export function useShoppingCart() {
 export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const [cartItems, setCartItems] = useState({})
   const [ products, setProducts ] = useState([])
+  const [ openSide, setOpenSide ] = useState(false)
 
   // const getItemQuantity = (id: number) => {
   //   return cartItems.find(item => item.id === id)?.quantity || 0
