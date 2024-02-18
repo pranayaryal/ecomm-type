@@ -7,16 +7,24 @@ import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import React from 'react'
 
 const Navbar = () => {
-    const { cartItems, getAllCartItems } = useShoppingCart()
+    const { cartItems, getAllCartItems, forgetCart } = useShoppingCart()
+    console.log('froNavbar', cartItems)
     // const [cartFromContext, setCartFromContext] = useState(cartItems)
     const [errors, setErrors] = useState<string[]>([])
 
 
-    useEffect(() => {
-        getAllCartItems()
-        console.log('cartItemsFromNavbar', cartItems)
+    // useEffect(() => {
+    //     getAllCartItems()
+    //     console.log('cartItemsFromNavbar', cartItems)
 
-    }, [])
+    // }, [])
+
+    const calcTotal = () => {
+        const vals = Object.values(cartItems).reduce((a, b) => a + b, 0);
+
+
+
+    }
 
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [openCartSlider, setOpenCartSlider] = useState(false)
@@ -44,6 +52,8 @@ const Navbar = () => {
                         <div className='p-[0.2px] border-b-1 border-transparent hover:border-b hover:border-dark-slate-grey'>Pricing</div>
                         <div className='p-[0.2px] border-b-1 border-transparent hover:border-b hover:border-dark-slate-grey'>Company</div>
                         <div className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>Learn more</div>
+                        <button onClick={forgetCart}
+                            className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>Forget cart</button>
                     </div>
                     {/* Right */}
                     <div className='flex space-x-2 items-center'>
@@ -59,11 +69,7 @@ const Navbar = () => {
                             </svg>
 
                             <div
-                                className='absolute bottom-0 right-0 text-xs-0 p-[2px] w-[2rem] h-[2rem] rounded-full bg-white text-black text-xs flex items-center justify-center cursor-pointer'>
-                                    {/* {
-                                        cartItems &&
-                                        <p className='text-black'>{Object.values(cartItems?.products).reduce((a, b) => a + b, 0)}</p>
-                                    } */}
+                                className='absolute bottom-0 right-0 text-xs-0 p-[2px] w-[1rem] h-[1rem] rounded-full bg-pink-100 text-black text-xs flex items-center justify-center cursor-pointer'>
                             </div>
 
                         </button>

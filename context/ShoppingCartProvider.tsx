@@ -9,16 +9,15 @@ type ShoppingCardProviderProps = {
 }
 
 type ShoppingCartContext = {
-  openCart: () => void
-  closeCart: () => void
   getItemQuantity: (id: number) => number
   increaseCartQuantity: (id: number) => void
   decreaseCartQuantity: (id: number) => void
   removeFromCart: (id: number) => void
   cartQuantity: number
   cartItems: {},
-  getAllCartItems: void
+  getAllCartItems: () => Promise<void>
   setCartItems: React.Dispatch<React.SetStateAction<{}>>
+  forgetCart: () => Promise<void>;
 
 }
 
@@ -40,17 +39,17 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   // const getItemQuantity = (id: number) => {
   //   return cartItems.find(item => item.id === id)?.quantity || 0
   // }
-  useEffect(() => {
-    const getCart = () => {
-      const res = getAllCartItems()
-      console.log('set it from useEffect')
-      setCartItems(res.data)
+  // useEffect(() => {
+  //   const getCart = async () => {
+  //     const res = await getAllCartItems()
+  //     console.log('set it from useEffect')
+  //     setCartItems(res.products)
 
 
-    }
-    getCart()
+  //   }
+  //   getCart()
 
-  }, [])
+  // }, [])
 
 
   const increaseCartQuantity = async (id: number) => {
@@ -76,9 +75,22 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
 
     })
     const resJson = await response.json()
-    console.log('summing', Object.values(resJson.data.products).reduce((a, b) => a + b, 0))
+    // console.log('summing', Object.values(resJson.data.products).reduce((a, b) => a + b, 0))
     // console.log('typeof', resJson.data.products)
-    setCartItems(resJson.data);
+    setCartItems(resJson.products);
+  }
+
+  const forgetCart = async () => {
+    const response = await fetch('/api/forget-cart', {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+    })
+    const resJson = await response.json()
+    setCartItems({});
+
   }
 
 
@@ -116,6 +128,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         setCartItems,
         increaseCartQuantity,
         getAllCartItems,
+        forgetCart,
         // decreaseCartQuantity,
         // removeFromCart,
         // openCart,

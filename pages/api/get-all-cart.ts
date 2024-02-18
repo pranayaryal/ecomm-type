@@ -23,7 +23,7 @@ export default async function handler(
       })
       .then(res => res.data)
     
-    res.status(200).json({ data: respWithAxios });
+    res.status(200).json(respWithAxios);
 
   }
   catch (error) {

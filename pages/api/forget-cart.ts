@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/increase-cart`;
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/forget-cart`;
     const headers = {
       'origin': 'localhost',
       cookie: req.headers.cookie
@@ -18,11 +18,11 @@ export default async function handler(
     // .catch(err => console.log('sncterr', err))
 
     const respWithAxios = await axios
-      .post(url, req.body, {
+      .get(url, {
         headers
       })
       .then(res => res.data)
-
+    
     res.status(200).json(respWithAxios);
 
   }
