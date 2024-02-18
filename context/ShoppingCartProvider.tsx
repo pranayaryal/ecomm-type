@@ -18,8 +18,9 @@ type ShoppingCartContext = {
   cartItems: {},
   getAllCartItems: () => Promise<void>
   setCartItems: React.Dispatch<React.SetStateAction<{}>>
-  forgetCart: () => Promise<void>;
-  getProducts: () => Promise<void>;
+  forgetCart: () => Promise<void>
+  getProducts: () => Promise<void>
+  setOpenSide: React.Dispatch<React.SetStateAction<boolean>>
 
 }
 
@@ -137,6 +138,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
     <ShoppingCartContext.Provider
       value={{
         // getItemQuantity,
+        setOpenSide,
         products,
         getProducts,
         setCartItems,
@@ -150,6 +152,10 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         // cartQuantity,
         cartItems
       }}>
+      { openSide &&
+      <div className='absolute'>
+      </div>
+      }
       {children}
     </ShoppingCartContext.Provider>
   )
