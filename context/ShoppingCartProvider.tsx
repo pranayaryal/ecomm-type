@@ -3,6 +3,7 @@ import React from "react";
 import ShoppingCart from "@/components/ShoppingCart";
 import axios from '@/lib/axios'
 import { getAllProducts } from "@/lib/backend";
+import { SideSlider } from '@/components/SideSlider'
 
 type ShoppingCardProviderProps = {
   children: ReactNode
@@ -20,7 +21,10 @@ type ShoppingCartContext = {
   setCartItems: React.Dispatch<React.SetStateAction<{}>>
   forgetCart: () => Promise<void>
   getProducts: () => Promise<void>
-  setOpenSide: React.Dispatch<React.SetStateAction<boolean>>
+  openCart: () => void
+  closeCart: () => void
+  // setOpenSide: React.Dispatch<React.SetStateAction<boolean>>
+  toggle: React.Dispatch<React.SetStateAction<boolean>>
 
 }
 
@@ -37,9 +41,13 @@ export function useShoppingCart() {
 }
 
 export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
-  const [cartItems, setCartItems] = useState({})
+  const [cartItems, setCartItems] = useState([])
   const [ products, setProducts ] = useState([])
-  const [ openSide, setOpenSide ] = useState(false)
+  const [ isOpen, setIsOpen ] = useState(false)
+
+
+  const openCart = () => setIsOpen(true) 
+  const closeCart = () => setIsOpen(false) 
 
   // const getItemQuantity = (id: number) => {
   //   return cartItems.find(item => item.id === id)?.quantity || 0
@@ -60,7 +68,13 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
       body: JSON.stringify(data),
     });
     const resJson = await response.json()
-    setCartItems(resJson.products);
+    let cartAsArray = []
+    if (resJson.products) {
+      Object.values(resJson.products).map(s => {
+        cartAsArray.push(s)
+      })
+    }
+    setCartItems(cartAsArray);
 
   }
 
@@ -72,10 +86,18 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
       },
 
     })
+
     const resJson = await response.json()
     // console.log('summing', Object.values(resJson.data.products).reduce((a, b) => a + b, 0))
     // console.log('typeof', resJson.data.products)
-    setCartItems(resJson.products);
+    // Having to set as array
+    let cartAsArray = []
+    if (resJson.products) {
+      Object.values(resJson.products).map(s => {
+        cartAsArray.push(s)
+      })
+    }
+    setCartItems(cartAsArray);
   }
 
   const forgetCart = async () => {
@@ -87,7 +109,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
 
     })
     const resJson = await response.json()
-    setCartItems({});
+    setCartItems([]);
 
   }
 
@@ -138,7 +160,8 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
     <ShoppingCartContext.Provider
       value={{
         // getItemQuantity,
-        setOpenSide,
+        openCart,
+        closeCart,
         products,
         getProducts,
         setCartItems,
@@ -152,10 +175,8 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         // cartQuantity,
         cartItems
       }}>
-      { openSide &&
-      <div className='absolute'>
-      </div>
-      }
+      <ShoppingCart isOpen={isOpen} />
+      {/* <SideSlider openSide={isOpen}/> */}
       {children}
     </ShoppingCartContext.Provider>
   )

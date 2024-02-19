@@ -17,17 +17,6 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
     } = useShoppingCart()
     console.log('cartItems', cartItems)
     
-
-    useEffect(() => {
-        const getProducts = async () => {
-            console.log('loading prodts')
-            const prdts = await getAllProducts()
-            setProducts(prdts)
-        }
-        getProducts()
-        console.log('prdtsShopping', products)
-    }, [open])
-
     useEffect(() => {
         const handleOutsideClick = (event: Event) => {
             if (!asideRef.current?.contains(event.target as Node)) {
@@ -63,15 +52,16 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
                 >
                     <p>Shopping cart</p>
                     <div className='flex flex-col'>
-                        {cartItems.map(item => {
-                            return (
-                                <div>
-                                    <p>{item.id}</p>
-                                    <p>{item.quantity}</p>
-                                </div>
-                            )
-                        })}
 
+                      {(cartItems === undefined || cartItems.length === 0) ?
+                      <p className='mt-4'>No items in cart</p> :
+                        cartItems.map(item => (
+                        <>
+                        <p>Item Id: {item.id}</p>
+                        <p>Item Quantity: {item.quantity}</p>
+                        </>
+                      ))
+                    }
                     </div>
 
                     <button aria-label='Close'

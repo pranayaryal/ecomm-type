@@ -3,11 +3,19 @@ import Logo from './logo';
 import DropdownPage from './DropdownPage';
 import { useAuth } from '@/hooks/auth';
 import { useShoppingCart } from '@/context/ShoppingCartProvider' 
+import { SideSlider } from './SideSlider';
 
 import React from 'react'
 
 const Navbar = () => {
-    const { cartItems, getAllCartItems, forgetCart } = useShoppingCart()
+   const [ isOpen, setIsOpen ] = useState(false);
+    const { cartItems,
+        getAllCartItems,
+        openCart,
+        closeCart,
+        forgetCart,
+      } = useShoppingCart()
+    
     // const total = Object.values(cartItems).reduce(
     //   (accumulator, currentValue) => accumulator + currentValue,
     //   0,
@@ -17,6 +25,7 @@ const Navbar = () => {
       0,
     ) : 
     0;
+
 
     console.log('total', total)
   
@@ -50,6 +59,7 @@ const Navbar = () => {
         setDropdownVisible(false);
     };
 
+
     return (
         <>
             <div className='hidden md:block mt-8 w-[100%] max-w-[1500px] pr-0 ml-auto mr-auto pl-[50px] text-dark-slate-grey'>
@@ -70,6 +80,7 @@ const Navbar = () => {
                     <div className='flex space-x-2 items-center'>
                         <input type="text" className='px-4 py-2 bg-pink-50 outline-none rounded-full' placeholder='Search' />
                         <button
+                            onClick={openCart}
                             className='relative outline-none'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24"
