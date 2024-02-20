@@ -14,7 +14,7 @@ export const getAllProducts = async () => {
 export const getProduct = async (id: number) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product/${id}`);
     const product = await response.json()
-    return product;
+    return product.product;
 }
 
 export const getCartItems = async () => {

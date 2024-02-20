@@ -128,6 +128,21 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
 
   }
 
+  const getProduct = async (id) => {
+    const response = await fetch(`/api/product/${id}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+      }
+
+    })
+
+    const resJson = await response.json();
+
+    setProducts(resJson.products)
+
+  }
+
 
   // const decreaseCartQuantity = (id: number) => {
   //   setCartItems(currItems => {
