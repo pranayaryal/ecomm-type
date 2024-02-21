@@ -21,6 +21,7 @@ type ShoppingCartContext = {
   setCartItems: React.Dispatch<React.SetStateAction<{}>>
   forgetCart: () => Promise<void>
   getProducts: () => Promise<void>
+  setProduct: React.Dispatch<React.SetStateAction<[]>>
   openCart: () => void
   closeCart: () => void
   // setOpenSide: React.Dispatch<React.SetStateAction<boolean>>
@@ -44,6 +45,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const [cartItems, setCartItems] = useState([])
   const [ products, setProducts ] = useState([])
   const [ isOpen, setIsOpen ] = useState(false)
+  const [ product, setProduct ] = useState({})
 
 
   const openCart = () => setIsOpen(true) 
@@ -148,7 +150,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
 
   }
 
-  const getProduct = async (id) => {
+  const getProduct = async (id: number) => {
     const response = await fetch(`/api/product/${id}`, {
       method: 'GET',
       headers: {
@@ -201,6 +203,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         closeCart,
         products,
         getProducts,
+        getProduct,
         setCartItems,
         increaseCartQuantity,
         decreaseCartQuantity,
