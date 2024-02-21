@@ -6,7 +6,7 @@ import { getAllProducts } from '@/lib/backend'
 const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
     // console.log('shopping cart data', data)
     const [open, setOpen] = useState(false)
-    const [ products, setProducts ] = useState([])
+    const [products, setProducts] = useState([])
     const asideRef = useRef<HTMLElement>(null)
     const { cartQuantity,
         cartItems,
@@ -16,7 +16,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
         getItemQuantity
     } = useShoppingCart()
     console.log('cartItems', cartItems)
-    
+
     useEffect(() => {
         const handleOutsideClick = (event: Event) => {
             if (!asideRef.current?.contains(event.target as Node)) {
@@ -53,15 +53,23 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
                     <p>Shopping cart</p>
                     <div className='flex flex-col'>
 
-                      {(cartItems === undefined || cartItems.length === 0) ?
-                      <p className='mt-4'>No items in cart</p> :
-                        cartItems.map(item => (
-                        <>
-                        <p>Item Id: {item.id}</p>
-                        <p>Item Quantity: {item.quantity}</p>
-                        </>
-                      ))
-                    }
+                        {(cartItems === undefined || cartItems.length === 0) ?
+                            <p className='mt-4'>No items in cart</p> :
+                            cartItems.map(item => (
+                                <>
+                                    <p>Item Id: {item.id}</p>
+                                    <p>Item Quantity: {item.quantity}</p>
+                                    <div className='text-lg mt-4 px-8 flex justify-between'>
+                                        <button 
+                                            onClick={() =>increaseCartQuantity(item.id)}
+                                            className='flex justify-center h-12 w-12 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
+                                        <button
+                                            onClick={() => decreaseCartQuantity(item.id)}
+                                            className='flex justify-center h-12 w-12 bg-pink-100 rounded-full px-2 py-2 items-center'>-</button>
+                                    </div>
+                                </>
+                            ))
+                        }
                     </div>
 
                     <button aria-label='Close'

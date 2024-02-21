@@ -78,6 +78,26 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
 
   }
 
+  const decreaseCartQuantity = async (id: number) => {
+    const data = { id, quantity: 1 }
+    const response = await fetch('/api/remove-cart-item', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const resJson = await response.json()
+    let cartAsArray = []
+    if (resJson.products) {
+      Object.values(resJson.products).map(s => {
+        cartAsArray.push(s)
+      })
+    }
+    setCartItems(cartAsArray);
+
+  }
+
   const getAllCartItems = async () => {
     const response = await fetch('/api/get-all-cart', {
       method: 'GET',
@@ -144,6 +164,8 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   }
 
 
+
+
   // const decreaseCartQuantity = (id: number) => {
   //   setCartItems(currItems => {
   //     // If you don't find add it
@@ -181,6 +203,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         getProducts,
         setCartItems,
         increaseCartQuantity,
+        decreaseCartQuantity,
         getAllCartItems,
         forgetCart,
         // decreaseCartQuantity,
