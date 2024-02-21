@@ -134,7 +134,7 @@ export default function Page({ product }) {
                 </div>
                 <button
                     type="button"
-                    onClick={() => addToCartApi(product.id)}
+                    onClick={() => increaseCartQuantity(product.id)}
                     className='text-white mt-12 cursor-pointer focus:outline-none m-1.5 py-4 font-bold bg-vivid-purple w-full rounded-full'
                 >
                     Add To Cart
