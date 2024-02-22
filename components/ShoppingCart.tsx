@@ -12,6 +12,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
         cartItems,
         decreaseCartQuantity,
         increaseCartQuantity,
+        getProduct,
         closeCart,
         getItemQuantity
     } = useShoppingCart()

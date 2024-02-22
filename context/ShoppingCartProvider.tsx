@@ -22,6 +22,7 @@ type ShoppingCartContext = {
   forgetCart: () => Promise<void>
   getProducts: () => Promise<void>
   setProduct: React.Dispatch<React.SetStateAction<[]>>
+  getProduct: React.Dispatch<React.SetStateAction<[]>>
   openCart: () => void
   closeCart: () => void
   // setOpenSide: React.Dispatch<React.SetStateAction<boolean>>
@@ -151,7 +152,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   }
 
   const getProduct = async (id: number) => {
-    const response = await fetch(`/api/product/${id}`, {
+    const response = await fetch(`/api/product?id=${id}`, {
       method: 'GET',
       headers: {
         "Content-Type": "application/json",
@@ -160,8 +161,9 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
     })
 
     const resJson = await response.json();
+    return resJson.products
 
-    setProducts(resJson.products)
+    // setProducts(resJson.products)
 
   }
 

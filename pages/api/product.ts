@@ -8,10 +8,9 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const { query: { name, keyword }, method, } = req;
-    console.log('name', name)
-    console.log('keyword', keyword)
-    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product/3`;
+    //const { query: { name, keyword }, method, } = req;
+    const { query: { id} } = req;
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product/${id}`;
     const headers = {
       'origin': 'localhost',
       cookie: req.headers.cookie

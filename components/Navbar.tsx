@@ -13,6 +13,7 @@ const Navbar = () => {
         getAllCartItems,
         openCart,
         closeCart,
+        getProduct,
         forgetCart,
       } = useShoppingCart()
     
@@ -75,6 +76,8 @@ const Navbar = () => {
                         <div className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>Learn more</div>
                         <button onClick={forgetCart}
                             className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>Forget cart</button>
+                        <button onClick={() => getProduct(3)}
+                            className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>Get Product</button>
                     </div>
                     {/* Right */}
                     <div className='flex space-x-2 items-center'>
