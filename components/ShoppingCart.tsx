@@ -6,17 +6,30 @@ import { getAllProducts } from '@/lib/backend'
 const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
     // console.log('shopping cart data', data)
     const [open, setOpen] = useState(false)
-    const [products, setProducts] = useState([])
     const asideRef = useRef<HTMLElement>(null)
     const { cartQuantity,
         cartItems,
         decreaseCartQuantity,
         increaseCartQuantity,
-        getProduct,
+        products,
         closeCart,
         getItemQuantity
     } = useShoppingCart()
     console.log('cartItems', cartItems)
+
+    // useEffect(() => {
+    //     const awaitProducts = async() => {
+    //     //  const res = await getProducts() 
+    //     //  const prods = await res.json()
+    //     //  setProducts(prods)
+    //     }
+    //     awaitProducts()
+    //     console.log('prodsfromshoppingcart', products)
+
+    // })
+    const filterProducts = (id: number) => {
+        return 
+    }
 
     useEffect(() => {
         const handleOutsideClick = (event: Event) => {
