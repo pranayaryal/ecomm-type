@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import Logo from './logo';
 import DropdownPage from './DropdownPage';
-import { useAuth } from '@/hooks/auth';
 import { useShoppingCart } from '@/context/ShoppingCartProvider' 
 import { SideSlider } from './SideSlider';
 

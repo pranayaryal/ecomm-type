@@ -15,7 +15,7 @@ export default async function handler(
       'origin': 'localhost',
       cookie: req.headers.cookie
     }
-    await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
+    //await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
     const respWithAxios = await axios
       .get(url, {
         headers
