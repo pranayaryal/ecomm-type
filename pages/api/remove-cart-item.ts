@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/decrease-cart`;
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/remove-item`;
     await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
     const headers = {
       'origin': 'localhost',

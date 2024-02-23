@@ -59,20 +59,22 @@ export default function Page({ product }) {
     //     rating_count: [3]
 
     // }
-    const { increaseCartQuantity, getAllCartItems, cartItems } = useShoppingCart()
+    const { increaseCartQuantity, getAllCartItems, cartItems, openCart } = useShoppingCart()
     
     const [errors, setErrors] = useState<string[]>([])
     const [cart, setCart] = useState([])
     const router = useRouter();
 
     const addToCart = async (id: number) => {
-        increaseCart({ id, quantity: 1, setErrors })
+        increaseCartQuantity(id)
+        openCart()
     }
 
     const addToCartApi = async (id: number) => {
         increaseCartQuantity(id)
         //getAllCartItems()
     }
+
 
     const forgetCart = async () => {
 
@@ -134,7 +136,7 @@ export default function Page({ product }) {
                 </div>
                 <button
                     type="button"
-                    onClick={() => increaseCartQuantity(product.id)}
+                    onClick={() => addToCart(product.id)}
                     className='text-white mt-12 cursor-pointer focus:outline-none m-1.5 py-4 font-bold bg-vivid-purple w-full rounded-full'
                 >
                     Add To Cart

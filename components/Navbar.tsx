@@ -21,12 +21,13 @@ const Navbar = () => {
     //   (accumulator, currentValue) => accumulator + currentValue,
     //   0,
     // );
-    const total = cartItems ? Object.values(cartItems).map(val => val.quantity).reduce(
-      (accumulator, currentValue) => accumulator + currentValue,
-      0,
-    ) : 
-    0;
+    // const total = cartItems ? Object.values(cartItems).map(val => val.quantity).reduce(
+    //   (accumulator, currentValue) => accumulator + currentValue,
+    //   0,
+    // ) : 
+    // 0;
 
+    const total = cartItems ? cartItems.length : 0;
 
     console.log('total', total)
   

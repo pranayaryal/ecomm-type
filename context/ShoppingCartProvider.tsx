@@ -13,6 +13,7 @@ type ShoppingCartContext = {
   products: []
   getItemQuantity: (id: number) => number
   increaseCartQuantity: (id: number) => void
+  removeCartItem: (id: number) => void
   decreaseCartQuantity: (id: number) => void
   removeFromCart: (id: number) => void
   cartQuantity: number
@@ -82,6 +83,26 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   }
 
   const decreaseCartQuantity = async (id: number) => {
+    const data = { id, quantity: 1 }
+    const response = await fetch('/api/decrease-cart-item', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const resJson = await response.json()
+    let cartAsArray = []
+    if (resJson.products) {
+      Object.values(resJson.products).map(s => {
+        cartAsArray.push(s)
+      })
+    }
+    setCartItems(cartAsArray);
+
+  }
+
+  const removeCartItem = async (id: number) => {
     const data = { id, quantity: 1 }
     const response = await fetch('/api/remove-cart-item', {
       method: "POST",
@@ -170,6 +191,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
 
 
 
+
   // const decreaseCartQuantity = (id: number) => {
   //   setCartItems(currItems => {
   //     // If you don't find add it
@@ -211,6 +233,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         decreaseCartQuantity,
         getAllCartItems,
         forgetCart,
+        removeCartItem,
         // decreaseCartQuantity,
         // removeFromCart,
         // openCart,

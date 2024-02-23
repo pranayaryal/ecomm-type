@@ -2,9 +2,11 @@ import React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import { getAllProducts } from '@/lib/backend'
+import { useRouter } from 'next/router'
 
 const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
     // console.log('shopping cart data', data)
+    const router = useRouter()
     const [open, setOpen] = useState(false)
     const asideRef = useRef<HTMLElement>(null)
     const { cartQuantity,
@@ -14,6 +16,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
         products,
         getProducts,
         closeCart,
+        removeCartItem,
         getItemQuantity
     } = useShoppingCart()
     console.log('cartItems', cartItems)
@@ -59,7 +62,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
             {isOpen &&
                 <aside
                     ref={asideRef}
-                    className='h-screen overflow-auto bg-white fixed px-16 py-24 z-20 top-0 right-0 transition-all ease duration-300 w-3/12'
+                    className='h-screen overflow-auto bg-white fixed px-16 py-16 z-20 top-0 right-0 transition-all ease duration-300 w-3/12'
                 >
                     <div className='flex flex-col'>
 
@@ -74,7 +77,8 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
                                         <p className='text-sm'>{products.filter(p => p.id === item.id)[0].title}</p>
 
                                     </div>
-                                    <div className='mb-4 px-8 flex justify-end items-center'>
+                                    <div className='mt-4 flex justify-between items-center'>
+                                      <div className='flex justify-center space-x-2'>
                                         <button
                                             onClick={() => increaseCartQuantity(item.id)}
                                             className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
@@ -82,12 +86,21 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
                                         <button
                                             onClick={() => decreaseCartQuantity(item.id)}
                                             className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>-</button>
+                                      </div>
+                                      <button
+                                        onClick={() => removeCartItem(item.id)}
+                                        className='ml-2 text-sm'>Remove</button>
                                     </div>
                                     <hr className='mt-4'/>
                                 </>
                             ))
                         }
-                        {cartItems.length > 0 ? <button className='mt-16 py-3 w-full bg-slate-300 rounded-full'>Proceed to checkout</button> : <p></p>}
+                        {cartItems.length > 0 ? 
+                          <a href='/edit-cart'>
+                          <button
+                          className='mt-16 py-3 w-full bg-slate-300 rounded-full'>Proceed to checkout</button>
+                          </a>
+                           : <p></p>}
                     </div>
 
                     <button aria-label='Close'
