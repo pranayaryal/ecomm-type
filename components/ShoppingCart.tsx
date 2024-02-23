@@ -12,23 +12,19 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
         decreaseCartQuantity,
         increaseCartQuantity,
         products,
+        getProducts,
         closeCart,
         getItemQuantity
     } = useShoppingCart()
     console.log('cartItems', cartItems)
 
-    // useEffect(() => {
-    //     const awaitProducts = async() => {
-    //     //  const res = await getProducts() 
-    //     //  const prods = await res.json()
-    //     //  setProducts(prods)
-    //     }
-    //     awaitProducts()
-    //     console.log('prodsfromshoppingcart', products)
+    useEffect(() => {
+        getProducts()
 
-    // })
+    }, [])
+
     const filterProducts = (id: number) => {
-        return 
+        return
     }
 
     useEffect(() => {
@@ -62,33 +58,41 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
         <>
             {isOpen &&
                 <aside
-                    ref={asideRef} className='h-screen bg-gray-100 fixed px-8 py-12 z-20 top-0 right-0 transition-all ease duration-300 w-3/12'
+                    ref={asideRef}
+                    className='h-screen overflow-auto bg-white fixed px-16 py-24 z-20 top-0 right-0 transition-all ease duration-300 w-3/12'
                 >
-                    <p>Shopping cart</p>
                     <div className='flex flex-col'>
 
                         {(cartItems === undefined || cartItems.length === 0) ?
                             <p className='mt-4'>No items in cart</p> :
                             cartItems.map(item => (
                                 <>
-                                    <p>Item Id: {item.id}</p>
-                                    <p>Item Quantity: {item.quantity}</p>
-                                    <div className='text-lg mt-4 px-8 flex justify-between'>
-                                        <button 
-                                            onClick={() =>increaseCartQuantity(item.id)}
-                                            className='flex justify-center h-12 w-12 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
+                                    <div className='mt-4 flex items-center space-x-4'>
+                                        <img
+                                            className='w-16 h-16'
+                                            src={products.filter(p => p.id === item.id)[0].image} />
+                                        <p className='text-sm'>{products.filter(p => p.id === item.id)[0].title}</p>
+
+                                    </div>
+                                    <div className='mb-4 px-8 flex justify-end items-center'>
+                                        <button
+                                            onClick={() => increaseCartQuantity(item.id)}
+                                            className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
+                                        <p className='text-sm'>{item.quantity}</p>
                                         <button
                                             onClick={() => decreaseCartQuantity(item.id)}
-                                            className='flex justify-center h-12 w-12 bg-pink-100 rounded-full px-2 py-2 items-center'>-</button>
+                                            className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>-</button>
                                     </div>
+                                    <hr className='mt-4'/>
                                 </>
                             ))
                         }
+                        {cartItems.length > 0 ? <button className='mt-16 py-3 w-full bg-slate-300 rounded-full'>Proceed to checkout</button> : <p></p>}
                     </div>
 
                     <button aria-label='Close'
                         onClick={closeCart}
-                        className='absolute top-1 focus:outline-none right-3 text-3xl text-black cursor-pointer'>
+                        className='absolute top-8 focus:outline-none right-8 text-3xl text-black cursor-pointer'>
                         &times;
                     </button>
 
