@@ -11,27 +11,63 @@ import axios from '@/lib/axios'
 import { getAllProducts } from '@/lib/backend'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 
+
 export default function Home() {
 
   const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
-  const {  } = useShoppingCart()
+  const { cartQuantity,
+        cartItems,
+        decreaseCartQuantity,
+        increaseCartQuantity,
+        products,
+        getProducts,
+        closeCart,
+        removeCartItem,
+        getItemQuantity
+    } = useShoppingCart()
+
+  
+    useEffect(() => {
+      getProducts()
+      
+    }, [])
+
+  
+  
 
 
 
   return (
     <>
-      <div className='grid grid-cols-1 gap-y-4 md:gap-y-0 md:grid-cols-2 px-0 md:gap-x-8 md:auto-cols-fr py-[20px] justify-center'>
-        <div className='flex items-start flex-col justify-center'>
-          <h1 className='text-4xl mb-4'>Stop wasting time on security questionnaires</h1>
-          <p>HyperComply is the easiest way for InfoSec and Sales leaders to share compliance information, automate security questionnaires, and accelerate sales.</p>
-          <button className='hidden md:block mt-4 rounded-md border-2 border-[#273720] px-3 py-3 bg-yellow-custom text-sm'>Request a demo</button>
-
+      <div className='flex py-[20px] justify-center'>
+        <div className='flex flex-col gap-y-4 w-3/5'>
+          <div className='flex justify-center space-x-8'>
+            <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='First Name'/>
+            <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='Last Name'/>
+          </div>
+          <div className='flex justify-center space-x-8'>
+            <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='phone'/>
+            <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='email'/>
+          </div>
+          <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='address'/>
+          <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='Postal Code'/>
+          <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='City'/>
+          <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='State'/>
 
         </div>
-        <div className='flex items-end flex-col justify-center'>
-          <img src='https://assets-global.website-files.com/630955d355f57f38b7c3b1f5/656672e22bde4288b4d6e502_homepage-screenshot-xsm.webp' />
+        {(cartItems === undefined || cartItems.length === 0) ?
+        <p></p> :
+        <div className='flex justify-top flex-col gap-y-8 w-1/5 border border-gray-300 p-4'>
+          <p>Total</p>
+          <p className='text-sm'>Shipping</p>
+          <a href='/edit-cart'>
+          <button className='px-3 py-2 bg-purple-100 w-full rounded-full'>Edit Cart</button>
+          </a>
 
         </div>
+
+        }
+        
 
       </div>
 
