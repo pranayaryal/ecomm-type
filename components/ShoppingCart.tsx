@@ -98,7 +98,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
                         {cartItems.length > 0 ? 
                           <a href='/edit-cart'>
                           <button
-                          className='mt-16 py-3 w-full bg-slate-300 rounded-full'>Proceed to checkout</button>
+                          className='mt-16 py-3 w-full bg-slate-300 rounded-full'>Edit Cart</button>
                           </a>
                            : <p></p>}
                     </div>
