@@ -58,16 +58,18 @@ export default function Home() {
 
                                     </div>
                                     <div className='flex flex-col items-start'>
-                                      <p className='text-md'>{product.title}</p>
+                                      <a href={`/product/${product.id}`}>
+                                        <p className='text-md'>{product.title}</p>
+                                      </a>
                                       <p className='text-sm'>Category: {product.category}</p>
                                       <div className='mt-8 flex justify-center'>
                                         <button
-                                            onClick={() => increaseCartQuantity(item.id)}
-                                            className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
-                                        <p className='text-sm'>{item.quantity}</p>
-                                        <button
                                             onClick={() => decreaseCartQuantity(item.id)}
                                             className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>-</button>
+                                        <p className='text-sm'>{item.quantity}</p>
+                                        <button
+                                            onClick={() => increaseCartQuantity(item.id)}
+                                            className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
                                       </div>
                                     </div>
                                     <div>

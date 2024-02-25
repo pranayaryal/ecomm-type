@@ -68,24 +68,27 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
 
                         {(cartItems === undefined || cartItems.length === 0) ?
                             <p className='mt-4'>No items in cart</p> :
-                            cartItems.map(item => (
-                                <>
+                          cartItems.map(item => {
+                                const product = products.filter(p => p.id === item.id)[0];
+                                 return <>
                                     <div className='mt-4 flex items-center space-x-4'>
                                         <img
                                             className='w-16 h-16'
-                                            src={products.filter(p => p.id === item.id)[0].image} />
-                                        <p className='text-sm'>{products.filter(p => p.id === item.id)[0].title}</p>
+                                            src={product.image} />
+                                        <a className='hover:underline' href={`/product/${product.id}`}>
+                                          <p className='text-sm'>{product.title}</p>
+                                        </a>
 
                                     </div>
                                     <div className='mt-4 flex justify-between items-center'>
                                       <div className='flex justify-center space-x-2'>
                                         <button
-                                            onClick={() => increaseCartQuantity(item.id)}
-                                            className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
-                                        <p className='text-sm'>{item.quantity}</p>
-                                        <button
                                             onClick={() => decreaseCartQuantity(item.id)}
                                             className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>-</button>
+                                        <p className='text-sm'>{item.quantity}</p>
+                                        <button
+                                            onClick={() => increaseCartQuantity(item.id)}
+                                            className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
                                       </div>
                                       <button
                                         onClick={() => removeCartItem(item.id)}
@@ -93,7 +96,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
                                     </div>
                                     <hr className='mt-4'/>
                                 </>
-                            ))
+                        })
                         }
                         {cartItems.length > 0 ? 
                           <a href='/edit-cart'>

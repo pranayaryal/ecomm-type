@@ -1,14 +1,21 @@
 import { CartContext, CartContextType, CartProduct, CartItem } from "../context/CartProvider";
 import { useContext } from "react";
-
+import { useShoppingCart } from '@/context/ShoppingCartProvider'
 
 export const CardPage: React.FC<{ product: CartItem }> = ({ product }) => {
+  const { products, getProducts, increaseCartQuantity, openCart } = useShoppingCart()
+
+  const addToCartAndOpenSide = (id: number) => {
+    increaseCartQuantity(id)
+    openCart()
+
+  }
   let cartContextVals: CartContextType | null;
   cartContextVals = useContext(CartContext);
   return (
     <div className="w-full md:w-1/6 mb-6 md:mb-0 md:p-3">
-      <a href={`/product/${product.id}`}>
         <Card>
+          <a href={`/product/${product.id}`}>
           <img
             className="max-w-full h-auto md:h-48"
             src={product.image}
@@ -21,14 +28,14 @@ export const CardPage: React.FC<{ product: CartItem }> = ({ product }) => {
               {`Price: ${product.price}, Quantity: ${product.quantity}`}
 
             </CardText>
-            <button
-              onClick={() => cartContextVals?.addToCart(product)}
-              className="text-dark-slate-grey flex py-3 rounded-md w-full bg-yellow-custom justify-center items-center mt-4 cursor-pointer">
-              Add To Carts
-            </button>
           </CardBody>
-        </Card>
       </a>
+            <button
+              onClick={() => addToCartAndOpenSide(product.id)}
+              className="text-dark-slate-grey flex py-3 rounded-md w-full bg-yellow-custom justify-center items-center mt-4 cursor-pointer">
+              Add To Cart
+            </button>
+        </Card>
 
     </div>
 
