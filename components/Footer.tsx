@@ -3,25 +3,6 @@ import { useEffect, useState } from 'react'
 import FooterLogo from './FooterLogo'
 
 export default function Footer() {
-  const [ product, setProduct ] = useState([])
-  useEffect(() => {
-    const getProduct = async () => {
-      const response = await fetch(`/api/product/`, {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json",
-        }
-
-      })
-      const resp = await response.json()
-      
-      setProduct(response)
-      console.log('respFooter', product)
-
-    }
-    getProduct();
-
-  }, [])
 
   return (
     <>
