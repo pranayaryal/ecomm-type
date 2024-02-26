@@ -38,26 +38,64 @@ export default function Home() {
 
 
   return (
-    <>
-      <div className='flex py-[20px] justify-center'>
-        <div className='flex flex-col gap-y-4 w-3/5'>
-          <div className='flex justify-center space-x-8'>
-            <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='First Name'/>
-            <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='Last Name'/>
+    <div className='max-w-[1064px] ml-auto mr-auto'>
+      <div className='flex justify-center space-x-8'>
+        <div className='flex flex-col gap-y-4 w-2/3 py-6 px-5'>
+        <div className='bg-white py-6 px-5 w-full'>
+          <p className='text-sm font-bold'>My Information</p>
+          <div className='w-1/2 flex flex-col'>
+            <label className='text-xs'>Email</label>
+            <input className='text-xs mt-1 px-4 py-2 border border-gray-200 outline-none'/>
           </div>
-          <div className='flex justify-center space-x-8'>
-            <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='phone'/>
-            <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='email'/>
+          <div className='flex space-x-4 w-full mt-4'>
+            <div className='flex flex-col w-1/2'>
+              <label className='text-xs'>First name</label>
+              <input className='text-xs mt-1 px-4 py-2 border border-gray-200 outline-none'/>
+            </div>
+            <div className='flex flex-col w-1/2'>
+              <label className='text-xs'>Last Name</label>
+              <input className='text-xs mt-1 px-4 py-2 border border-gray-200 outline-none'/>
+            </div>
           </div>
-          <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='address'/>
-          <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='Postal Code'/>
-          <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='City'/>
-          <input className='px-4 py-2 border border-gray-200 rounded-md outline-none' placeholder='State'/>
+          <button className='bg-black text-white w-1/3 text-sm py-3 px-3 ml-auto mr-auto mt-4'>Save</button>
+        </div>
+        <div className='bg-white py-6 px-5 w-full'>
+          <p className='text-sm font-bold'>Billing address</p>
+          <p className='text-xs mt-2'>Enter your billing address</p>
+          <div className='flex flex-col mt-4'>
+            <label className='text-xs'>Address</label>
+            <input className='px-4 py-2 border border-gray-200 outline-none'/>
+            <span className='text-xs text-gray-500'>Street address, P.0 box or military address</span>
+          </div>
+          <div className='flex space-x-4 w-full mt-4'>
+            <div className='flex flex-col w-1/2'>
+              <label className='text-xs'>Town/City</label>
+              <input className='text-xs mt-1 px-4 py-2 border border-gray-200 outline-none'/>
+            </div>
+            <div className='flex flex-col w-1/2'>
+              <label className='text-xs'>Postal code</label>
+              <input className='text-xs mt-1 px-4 py-2 border border-gray-200 outline-none'/>
+            </div>
+          </div>
+          <div className='flex flex-col mt-4'>
+            <label className='text-xs'>State</label>
+            <input className='px-4 py-2 border border-gray-200 outline-none'/>
+          </div>
 
+        </div>
+        <div className='bg-white py-6 px-5 w-full'>
+          <p className='text-sm font-bold'>Shipping</p>
+          <div className='flex mt-8 items-center space-x-2'>
+            <input type='checkbox' className='w-3 h-3'/>
+            <p className='text-xs'>Same as my billing address</p>
+
+          </div>
+        </div>
+        <button className='bg-black text-white py-3 w-1/3 mr-auto mx-auto'>Select</button>
         </div>
         {(cartItems === undefined || cartItems.length === 0) ?
         <p></p> :
-        <div className='flex justify-top flex-col gap-y-8 w-1/5 border border-gray-300 p-4'>
+        <div className='flex justify-top flex-col gap-y-8 bg-white w-1/3 p-4'>
           <p>Total</p>
           <p className='text-sm'>Shipping</p>
           <a href='/edit-cart'>
@@ -67,12 +105,9 @@ export default function Home() {
         </div>
 
         }
-        
 
       </div>
 
-
-
-    </>
+    </div>
   )
 }
