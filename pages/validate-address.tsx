@@ -39,7 +39,7 @@ const ValidateAddress = () => {
       var street = xStreet.childNodes[0];
       setAddress({city, state, zip, street})
     }
-    callUsPs()
+    // callUsPs()
 
   }, [])
 
@@ -48,8 +48,14 @@ const ValidateAddress = () => {
 
   return (
     <div>
-      <p></p>
-      <input />
+      <div className='flex flex-col w-2/5'>
+        <input type='text' placeholder='Street' className='text-sm border border-gray-500 outline-none px-3 py-2'/>
+        <input type='text' placeholder='City' className='text-sm border border-gray-500 outline-none px-3 py-2'/>
+        <input type='text' placeholder='State' className='text-sm border border-gray-500 outline-none px-3 py-2'/>
+        <input type='text' placeholder='Zip' className='text-sm border border-gray-500 outline-none px-3 py-2'/>
+        <button className='bg-black text-white w-1/2 py-3'>Validate</button>
+
+      </div>
 
     </div>
   )
