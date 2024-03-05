@@ -32,9 +32,28 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
     "shopping-cart",
     []
   )
+
   const [ isOpen, setIsOpen ] = useState(false)
   const [ product, setProduct ] = useState({})
 
+  const cartQuantity = cartItems.reduce(
+    (quantity, item) => item.quantity + quantity,
+    0
+  )
+
+  function getItemQuantity(id: number) {
+    return cartItems.find(item => item.id === id)?.quantity || 0
+  }
+
+  function increaseCartQuantity(id: number) {
+    setCartItems(currItems => {
+      if (currItems.find(item => item.id == id) == null){
+        return [...currItems, {id, quantity: 1}]
+      } else {
+        return
+      }
+    })
+  }
 
   const openCart = () => setIsOpen(true) 
   const closeCart = () => setIsOpen(false) 
