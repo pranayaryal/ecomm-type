@@ -49,74 +49,42 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
     setCartItems(currItems => {
       if (currItems.find(item => item.id == id) == null){
         return [...currItems, {id, quantity: 1}]
-      } else {
-        return
       }
-    })
+      return currItems.map(item => {
+          if (item.id === id) {
+            return { ...item, quantity: item.quantity + 1}
+          }
+          return item;
+        })
+      }
+    )
   }
+
+  function decreaseCartQuantity(id: number) {
+    setCartItems(currItems => {
+      if (currItems.find(item => item.id === id)?.quantity === 1){
+        return currItems.filter(item => item.id !== id)
+      }
+      return currItems.map(item => {
+        if (item.id == id){
+          return { item, quantity: item.quantity - 1}
+        }
+        return item;
+      })
+
+    })
+
+  }
+
 
   const openCart = () => setIsOpen(true) 
   const closeCart = () => setIsOpen(false) 
 
 
-  const increaseCartQuantity = async (id: number) => {
-    const data = { id, quantity: 1 }
-    const response = await fetch('/api/add-cart-item', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const resJson = await response.json()
-    let cartAsArray = []
-    if (resJson.products) {
-      Object.values(resJson.products).map(s => {
-        cartAsArray.push(s)
-      })
-    }
-    setCartItems(cartAsArray);
-
-  }
-
-  const decreaseCartQuantity = async (id: number) => {
-    const data = { id, quantity: 1 }
-    const response = await fetch('/api/decrease-cart-item', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const resJson = await response.json()
-    let cartAsArray = []
-    if (resJson.products) {
-      Object.values(resJson.products).map(s => {
-        cartAsArray.push(s)
-      })
-    }
-    setCartItems(cartAsArray);
-
-  }
-
-  const removeCartItem = async (id: number) => {
-    const data = { id, quantity: 1 }
-    const response = await fetch('/api/remove-cart-item', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const resJson = await response.json()
-    let cartAsArray = []
-    if (resJson.products) {
-      Object.values(resJson.products).map(s => {
-        cartAsArray.push(s)
-      })
-    }
-    setCartItems(cartAsArray);
-
+  function removeFromCart(id: number){
+    setCartItems(currItems => {
+      return currItems.filter(item => item.id !== id)
+    })
   }
 
   const getAllCartItems = async () => {
