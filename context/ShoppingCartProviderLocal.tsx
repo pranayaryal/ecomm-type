@@ -9,9 +9,10 @@ type ShoppingCartContextLocal = {
   getItemQuantity: (id: number) => number
   increaseCartQuantity: (id: number) => void
   decreaseCartQuantity: (id: number) => void
-  removeCart: (id: number) => void
+  removeFromCart: (id: number) => void
   cartQuantity: number
   cartItems: CartItem[]
+  getProduct: (id: number) => any
 
 }
 
@@ -40,6 +41,7 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
     (quantity, item) => item.quantity + quantity,
     0
   )
+
 
   function getItemQuantity(id: number) {
     return cartItems.find(item => item.id === id)?.quantity || 0
@@ -87,55 +89,8 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
     })
   }
 
-  const getAllCartItems = async () => {
-    const response = await fetch('/api/get-all-cart', {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-      },
 
-    })
 
-    const resJson = await response.json()
-    // console.log('summing', Object.values(resJson.data.products).reduce((a, b) => a + b, 0))
-    // console.log('typeof', resJson.data.products)
-    // Having to set as array
-    let cartAsArray = []
-    if (resJson.products) {
-      Object.values(resJson.products).map(s => {
-        cartAsArray.push(s)
-      })
-    }
-    setCartItems(cartAsArray);
-  }
-
-  const forgetCart = async () => {
-    const response = await fetch('/api/forget-cart', {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-    })
-    const resJson = await response.json()
-    setCartItems([]);
-
-  }
-
-  const getProducts = async () => {
-    const response = await fetch('/api/products', {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-      }
-
-    })
-
-    const resJson = await response.json();
-
-    setProducts(resJson.products)
-
-  }
 
   const getProduct = async (id: number) => {
     const response = await fetch(`/api/product?id=${id}`, {
@@ -154,56 +109,17 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
   }
 
 
-
-
-
-  // const decreaseCartQuantity = (id: number) => {
-  //   setCartItems(currItems => {
-  //     // If you don't find add it
-  //     if (currItems.find(item => item.id === id)?.quantity == 1) {
-  //       return currItems.filter(item => item.id !== id)
-  //     }
-
-  //     // If you find it increment by one
-  //     return currItems.map(item => {
-  //       if (item.id == id) {
-  //         return { ...item, quantity: item.quantity - 1 }
-
-  //       }
-  //       return item;
-  //     })
-
-  //   })
-  // }
-
-  // const removeFromCart = (id: number) => {
-  //   setCartItems(currItems => {
-  //     return currItems.filter(item => item.id !== id)
-  //   })
-  // }
-
-  //const cartQuantity = cartItems.reduce((quantity, item) => item.quantity + quantity, 0)
-
   return (
     <ShoppingCartContext.Provider
       value={{
-        // getItemQuantity,
+        getItemQuantity,
         openCart,
         closeCart,
-        products,
-        getProducts,
         getProduct,
-        setCartItems,
         increaseCartQuantity,
         decreaseCartQuantity,
-        getAllCartItems,
-        forgetCart,
-        removeCartItem,
-        // decreaseCartQuantity,
-        // removeFromCart,
-        // openCart,
-        // closeCart,
-        // cartQuantity,
+        removeFromCart,
+        cartQuantity,
         cartItems
       }}>
       <ShoppingCart isOpen={isOpen} />
