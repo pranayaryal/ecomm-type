@@ -33,10 +33,7 @@ export function useShoppingCartLocal() {
 
 export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) {
   // const [cartItems, setCartItems] = useState<CartItem[]>([])
-  const [cartItems, setCartItems] = useLocalStorage<CartItem[]>(
-    "shopping-cart",
-    []
-  )
+  const [cartItems, setCartItems] = useLocalStorage<CartItem[]>("shopping-cart", [])
 
   // useEffect(() => {
   //   const storedCartItems = getFromLocalStorage([])
