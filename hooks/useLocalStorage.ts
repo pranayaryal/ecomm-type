@@ -8,7 +8,7 @@ export function useLocalStorage<T>(key: string, initialValue: T | (() => T)) {
     const [ value, setValue] = useState<T>(() => {
         if (typeof window !== 'undefined') {
             const jsonValue = window.localStorage.getItem(key)
-            if (jsonValue !== '') {
+            if (jsonValue) {
                 return JSON.parse(jsonValue)
             }
 
@@ -18,7 +18,7 @@ export function useLocalStorage<T>(key: string, initialValue: T | (() => T)) {
             return initialValue;
 
         }
-        return []
+        return initialValue
 
     })
     useEffect(() => {
