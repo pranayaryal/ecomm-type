@@ -1,7 +1,8 @@
 import React from 'react'
 import { useEffect, useRef, useState } from 'react'
-import { useShoppingCart } from '@/context/ShoppingCartProvider'
-import { getAllProducts } from '@/lib/backend'
+// import { useShoppingCart } from '@/context/ShoppingCartProvider'
+import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
+import { getAllProducts, removeFromCart } from '@/lib/backend'
 import { useRouter } from 'next/router'
 
 const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
@@ -15,10 +16,10 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
         increaseCartQuantity,
         products,
         getProducts,
+        removeFromCart,
         closeCart,
-        removeCartItem,
         getItemQuantity
-    } = useShoppingCart()
+    } = useShoppingCartLocal()
     console.log('cartItems', cartItems)
 
     useEffect(() => {
@@ -91,7 +92,7 @@ const ShoppingCart = ({ isOpen }: { isOpen: boolean }) => {
                                             className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
                                       </div>
                                       <button
-                                        onClick={() => removeCartItem(item.id)}
+                                        onClick={() => removeFromCart(item.id)}
                                         className='ml-2 text-sm'>Remove</button>
                                     </div>
                                     <hr className='mt-4'/>

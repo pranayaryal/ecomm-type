@@ -5,27 +5,27 @@ import { useEffect, useState } from 'react'
 export function useLocalStorage<T>(key: string, initialValue: T | (() => T)) {
 
 
-    const [ valOnEffect, setValOnEffect ] = useState([])
-    // useEffect(() => {
-    //   const val = localStorage.getItem(key)
-    //   setValOnEffect(val)
-    // }, [])
-
-    console.log(valOnEffect)
+    console.log('here you hare')
     const [ value, setValue] = useState<T>(() => {
-        const jsonValue = localStorage.getItem(key)
-        if (jsonValue != null) return JSON.parse(jsonValue)
+        if (typeof window !== 'undefined') {
+            const jsonValue = window.localStorage.getItem(key)
+            if (jsonValue != null || jsonValue !== '') return JSON.parse(jsonValue)
 
-        if (typeof initialValue === "function") {
-            return (initialValue as () => T)()
+            if (typeof initialValue === "function") {
+                return (initialValue as () => T)()
+            }
+            return initialValue;
+
         }
-        return initialValue;
+        return []
 
     })
-
     useEffect(() => {
         localStorage.setItem(key, JSON.stringify(value))
     }, [key, value])
 
     return [value, setValue] as [typeof value, typeof setValue]
+
+
+
 }

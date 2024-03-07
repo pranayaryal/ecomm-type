@@ -5,7 +5,8 @@ import Star from '@/components/Star'
 import { Dispatch, SetStateAction } from 'react'
 import { useState } from "react";
 import { getAllProducts, getProduct, increaseCart, getToken } from "@/lib/backend";
-import { useShoppingCart } from '@/context/ShoppingCartProvider' 
+// import { useShoppingCart } from '@/context/ShoppingCartProvider' 
+import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal' 
 import axios from '@/lib/axios'
 
 //const products = await getAllProducts();
@@ -59,7 +60,7 @@ export default function Page({ product }) {
     //     rating_count: [3]
 
     // }
-    const { increaseCartQuantity, getAllCartItems, cartItems, openCart } = useShoppingCart()
+    const { increaseCartQuantity, openCart } = useShoppingCartLocal()
     
     const [errors, setErrors] = useState<string[]>([])
     const [cart, setCart] = useState([])

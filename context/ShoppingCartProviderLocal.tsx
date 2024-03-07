@@ -1,6 +1,7 @@
-import { useState, ReactNode, createContext, useContext } from "react";
+import { useState, ReactNode, createContext, useContext, useEffect } from "react";
 import ShoppingCart from "@/components/ShoppingCart";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+// import { getFromLocalStorage, setToLocalStorage } from "@/hooks/useLocalStorageNew";
 
 
 type ShoppingCartContextLocal = {
@@ -13,6 +14,8 @@ type ShoppingCartContextLocal = {
   cartQuantity: number
   cartItems: CartItem[]
   getProduct: (id: number) => any
+  products: []
+  getProducts: () => Promise<void>
 
 }
 
@@ -22,61 +25,117 @@ type CartItem = {
 
 }
 
-const ShoppingCartContext = createContext({} as ShoppingCartContextLocal)
+const ShoppingCartContextLocal = createContext({} as ShoppingCartContextLocal)
 
-export function useShoppingCart() {
-  return useContext(ShoppingCartContext)
+export function useShoppingCartLocal() {
+  return useContext(ShoppingCartContextLocal)
 }
 
 export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) {
+  // const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [cartItems, setCartItems] = useLocalStorage<CartItem[]>(
     "shopping-cart",
     []
   )
 
+  // useEffect(() => {
+  //   const storedCartItems = getFromLocalStorage([])
+  //   console.log('storedCartItems', storedCartItems)
+  //   setCartItems(storedCartItems)
+
+  // }, [])
+
+  // useEffect(() => {
+  //   setToLocalStorage(cartItems)
+
+  // }, [cartItems])
+
   const [ isOpen, setIsOpen ] = useState(false)
+  const [ products, setProducts ] = useState([])
   const [ product, setProduct ] = useState({})
 
-  const cartQuantity = cartItems.reduce(
+  let cartQuantity;
+  if (cartItems.length === 0) {
+    cartQuantity = 0
+  }
+  else {
+    cartQuantity = cartItems?.reduce(
     (quantity, item) => item.quantity + quantity,
     0
   )
+
+  }
 
 
   function getItemQuantity(id: number) {
     return cartItems.find(item => item.id === id)?.quantity || 0
   }
 
-  function increaseCartQuantity(id: number) {
-    setCartItems(currItems => {
-      if (currItems.find(item => item.id == id) == null){
-        return [...currItems, {id, quantity: 1}]
-      }
-      return currItems.map(item => {
-          if (item.id === id) {
-            return { ...item, quantity: item.quantity + 1}
-          }
-          return item;
-        })
-      }
-    )
-  }
-
-  function decreaseCartQuantity(id: number) {
-    setCartItems(currItems => {
-      if (currItems.find(item => item.id === id)?.quantity === 1){
-        return currItems.filter(item => item.id !== id)
-      }
-      return currItems.map(item => {
-        if (item.id == id){
-          return { item, quantity: item.quantity - 1}
+  function increaseCartQuantityNew(id: number) {
+    const currItems = cartItems
+    // If the item is not found
+    if (currItems.length !== 0 && currItems.find(item => item.id == id) == null){
+      setCartItems([...currItems, {id, quantity: 1}])
+      return
+    }
+    // If the item is found
+    const updatedCurrItems = currItems.map(item => {
+        if (item.id === id) {
+          return { ...item, quantity: item.quantity + 1}
         }
         return item;
       })
+    setCartItems(updatedCurrItems)
+  }
+
+
+   function increaseCartQuantity(id: number) {
+    setCartItems(currItems => {
+      if (currItems.find(item => item.id === id) == null) {
+        return [...currItems, { id, quantity: 1 }]
+      } else {
+        return currItems.map(item => {
+          if (item.id === id) {
+            return { ...item, quantity: item.quantity + 1 }
+          } else {
+            return item
+          }
+        })
+      }
+    })
+  }
+
+  function decreaseCartQuantity(id: number) {
+    const currItems = cartItems
+    if (currItems.find(item => item.id === id)?.quantity === 1){
+      setCartItems(currItems.filter(item => item.id !== id))
+      return
+    }
+    const updatedCurrItems = currItems.map(item => {
+        if (item.id === id) {
+          return { ...item, quantity: item.quantity - 1}
+        }
+        return item;
+      })
+    setCartItems(updatedCurrItems)
+
+  }
+
+  const getProducts = async () => {
+    const response = await fetch('/api/products', {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+      }
 
     })
 
+    const resJson = await response.json();
+
+    setProducts(resJson.products)
+
   }
+
 
 
   const openCart = () => setIsOpen(true) 
@@ -84,9 +143,8 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
 
 
   function removeFromCart(id: number){
-    setCartItems(currItems => {
-      return currItems.filter(item => item.id !== id)
-    })
+    const currItems = cartItems
+    setCartItems(currItems.filter(item => item.id !== id))
   }
 
 
@@ -110,21 +168,23 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
 
 
   return (
-    <ShoppingCartContext.Provider
+    <ShoppingCartContextLocal.Provider
       value={{
         getItemQuantity,
         openCart,
         closeCart,
         getProduct,
+        getProducts,
         increaseCartQuantity,
         decreaseCartQuantity,
         removeFromCart,
         cartQuantity,
-        cartItems
+        cartItems,
+        products
       }}>
       <ShoppingCart isOpen={isOpen} />
       {/* <SideSlider openSide={isOpen}/> */}
       {children}
-    </ShoppingCartContext.Provider>
+    </ShoppingCartContextLocal.Provider>
   )
 }

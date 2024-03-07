@@ -1,9 +1,10 @@
 import { CartContext, CartContextType, CartProduct, CartItem } from "../context/CartProvider";
 import { useContext } from "react";
-import { useShoppingCart } from '@/context/ShoppingCartProvider'
+// import { useShoppingCart } from '@/context/ShoppingCartProvider'
+import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
 
 export const CardPage: React.FC<{ product: CartItem }> = ({ product }) => {
-  const { products, getProducts, increaseCartQuantity, openCart } = useShoppingCart()
+  const { products, getProducts, increaseCartQuantity, openCart } = useShoppingCartLocal()
 
   const addToCartAndOpenSide = (id: number) => {
     increaseCartQuantity(id)
