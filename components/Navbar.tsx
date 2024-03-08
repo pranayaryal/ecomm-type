@@ -1,44 +1,35 @@
 import { useState, useContext, useEffect } from 'react'
 import Logo from './logo';
 import DropdownPage from './DropdownPage';
-import { useShoppingCart } from '@/context/ShoppingCartProvider' 
+import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
+import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import { SideSlider } from './SideSlider';
 
 import React from 'react'
 
 const Navbar = () => {
-   const [ isOpen, setIsOpen ] = useState(false);
-    const { cartItems,
-        getAllCartItems,
+    const [isOpen, setIsOpen] = useState(false);
+    const [ cartItems, setCartItems ] = useState([])
+    const [ total, setTotal ] = useState(0)
+    const { 
         openCart,
-        closeCart,
-        getProduct,
-        forgetCart,
-      } = useShoppingCart()
-    
-    // const total = Object.values(cartItems).reduce(
-    //   (accumulator, currentValue) => accumulator + currentValue,
-    //   0,
-    // );
-    // const total = cartItems ? Object.values(cartItems).map(val => val.quantity).reduce(
-    //   (accumulator, currentValue) => accumulator + currentValue,
-    //   0,
-    // ) : 
-    // 0;
+        getProduct
+    } = useShoppingCartLocal()
 
-    const total = cartItems ? cartItems.length : 0;
 
-    console.log('total', total)
-  
     // const [cartFromContext, setCartFromContext] = useState(cartItems)
     const [errors, setErrors] = useState<string[]>([])
 
 
-    // useEffect(() => {
-    //     getAllCartItems()
-    //     console.log('cartItemsFromNavbar', cartItems)
+    useEffect(() => {
+        const jsonValue = window.localStorage.getItem('shopping-cart')
+        setCartItems(jsonValue ? JSON.parse(jsonValue) : [])
 
-    // }, [])
+    }, [])
+
+    useEffect(() => {
+        setTotal(cartItems ? cartItems.length: 0)
+    }, [cartItems])
 
     const calcTotal = () => {
         const vals = Object.values(cartItems).reduce((a, b) => a + b, 0);
@@ -74,15 +65,15 @@ const Navbar = () => {
                         <div className='p-[0.2px] border-b-1 border-transparent hover:border-b hover:border-dark-slate-grey'>Pricing</div>
                         <div className='p-[0.2px] border-b-1 border-transparent hover:border-b hover:border-dark-slate-grey'>Company</div>
                         <div className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>Learn more</div>
-                        <button onClick={forgetCart}
-                            className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>Forget cart</button>
                         <button onClick={() => getProduct(3)}
-                            className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>Get Product</button>
+                            className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>
+                                Get Product
+                        </button>
                     </div>
                     {/* Right */}
                     <div className='flex space-x-2 items-center'>
                         <input type="text" className='px-4 py-2 bg-pink-50 outline-none rounded-full' placeholder='Search' />
-                        <button
+                        <div
                             onClick={openCart}
                             className='relative outline-none'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -96,15 +87,15 @@ const Navbar = () => {
                             {total > 0 &&
                                 <div
                                     className='absolute bottom-0 right-0 text-xs-0 p-[2px] w-[1rem] h-[1rem] rounded-full bg-pink-100 text-black text-xs flex items-center justify-center cursor-pointer'>
-                                { total === 0 ? <span>{''}</span>: 
-                                <span className='text-xs'>{total}</span> }
+                                    {total === 0 ? <span>{''}</span> :
+                                        <span className='text-xs'>{total}</span>}
                                 </div>
-                            
+
                             }
 
-                             
 
-                        </button>
+
+                        </div>
 
                     </div>
                 </div>

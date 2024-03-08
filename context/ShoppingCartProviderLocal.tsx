@@ -22,7 +22,6 @@ type ShoppingCartContextLocal = {
 type CartItem = {
   id: number
   quantity: number
-
 }
 
 const ShoppingCartContextLocal = createContext({} as ShoppingCartContextLocal)
@@ -35,33 +34,26 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
   // const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [cartItems, setCartItems] = useLocalStorage<CartItem[]>("shopping-cart", [])
 
-  // useEffect(() => {
-  //   const storedCartItems = getFromLocalStorage([])
-  //   console.log('storedCartItems', storedCartItems)
-  //   setCartItems(storedCartItems)
-
-  // }, [])
-
-  // useEffect(() => {
-  //   setToLocalStorage(cartItems)
-
-  // }, [cartItems])
-
   const [ isOpen, setIsOpen ] = useState(false)
   const [ products, setProducts ] = useState([])
   const [ product, setProduct ] = useState({})
 
-  let cartQuantity;
-  if (cartItems.length === 0) {
-    cartQuantity = 0
-  }
-  else {
-    cartQuantity = cartItems?.reduce(
+  const cartQuantity =  cartItems?.reduce(
     (quantity, item) => item.quantity + quantity,
     0
   )
 
-  }
+  // let cartQuantity;
+  // if (cartItems.length === 0) {
+  //   cartQuantity = 0
+  // }
+  // else {
+  //   cartQuantity = cartItems?.reduce(
+  //   (quantity, item) => item.quantity + quantity,
+  //   0
+  // )
+
+  // }
 
 
   function getItemQuantity(id: number) {
@@ -180,7 +172,6 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
         products
       }}>
       <ShoppingCart isOpen={isOpen} />
-      {/* <SideSlider openSide={isOpen}/> */}
       {children}
     </ShoppingCartContextLocal.Provider>
   )

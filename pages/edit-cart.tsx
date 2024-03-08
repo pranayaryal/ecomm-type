@@ -9,22 +9,22 @@ import { CartItem } from '@/context/CartProvider'
 import { useAuth } from '@/hooks/auth'
 import axios from '@/lib/axios'
 import { getAllProducts } from '@/lib/backend'
-import { useShoppingCart } from '@/context/ShoppingCartProvider'
+import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
 
 
 export default function Home() {
+  const [ cartItems, setCartItems ] = useState([])
 
   const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
   const { cartQuantity,
-        cartItems,
         decreaseCartQuantity,
         increaseCartQuantity,
         products,
         getProducts,
         closeCart,
-        removeCartItem,
+        removeFromCart,
         getItemQuantity
-    } = useShoppingCart()
+    } = useShoppingCartLocal()
 
   
     useEffect(() => {
@@ -32,6 +32,13 @@ export default function Home() {
       
     }, [])
 
+
+    useEffect(() => {
+        const jsonValue = window.localStorage.getItem('shopping-cart')
+        console.log('cartItemsFromNavbar', cartItems)
+        setCartItems(jsonValue ? JSON.parse(jsonValue) : [])
+
+    }, [])
   
   
 
@@ -41,7 +48,7 @@ export default function Home() {
     <>
       <div className='flex py-[20px] justify-center'>
         <div className='flex flex-col w-3/5'>
-                                  {(cartItems === undefined || cartItems.length === 0) ?
+            {(!cartItems) ?
                             <p className='mt-4'>No items in cart</p> :
                             cartItems.map(item => {
 
@@ -77,7 +84,7 @@ export default function Home() {
                                       <p className='mr-0'>${product.price}</p>
                                     </div>
                                     <div className='cursor-pointer'
-                                      onClick={() => removeCartItem(item.id)}>
+                                      onClick={() => removeFromCart(item.id)}>
                                       <svg viewBox="0 0 16 16"
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="16"
@@ -93,7 +100,7 @@ export default function Home() {
                         }
 
         </div>
-        {(cartItems === undefined || cartItems.length === 0) ?
+        {(!cartItems) ?
         <p></p> :
         <div className='flex justify-top flex-col gap-y-8 w-1/5 border border-gray-300 p-4'>
           <p>Total</p>
