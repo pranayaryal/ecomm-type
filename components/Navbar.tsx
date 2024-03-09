@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react'
 import Logo from './logo';
 import DropdownPage from './DropdownPage';
-import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
+// import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import { SideSlider } from './SideSlider';
 
@@ -9,27 +9,34 @@ import React from 'react'
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [ cartItems, setCartItems ] = useState([])
-    const [ total, setTotal ] = useState(0)
+    // const [ total, setTotal ] = useState(0)
     const { 
         openCart,
-        getProduct
-    } = useShoppingCartLocal()
+        getProduct,
+        cartItems
+    } = useShoppingCart()
+
+
+    const total = cartItems ? cartItems.length : 0
 
 
     // const [cartFromContext, setCartFromContext] = useState(cartItems)
     const [errors, setErrors] = useState<string[]>([])
 
 
-    useEffect(() => {
-        const jsonValue = window.localStorage.getItem('shopping-cart')
-        setCartItems(jsonValue ? JSON.parse(jsonValue) : [])
+    // useEffect(() => {
+    //     const jsonValue = window.localStorage.getItem('shopping-cart') || []
+    //     setCartItems(jsonValue ? JSON.parse(jsonValue) : [])
 
-    }, [])
+    // }, [])
 
-    useEffect(() => {
-        setTotal(cartItems ? cartItems.length: 0)
-    }, [cartItems])
+    // useEffect(() => {
+    //     localStorage.setItem('shopping-cart', JSON.stringify(cartItems));
+    // }, [cartItems])
+
+    // useEffect(() => {
+    //     setTotal(cartItems ? cartItems.length: 0)
+    // }, [cartItems])
 
     const calcTotal = () => {
         const vals = Object.values(cartItems).reduce((a, b) => a + b, 0);

@@ -9,38 +9,28 @@ import { CartItem } from '@/context/CartProvider'
 import { useAuth } from '@/hooks/auth'
 import axios from '@/lib/axios'
 import { getAllProducts } from '@/lib/backend'
-import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
+import { useShoppingCart } from '@/context/ShoppingCartProvider'
 
 
 export default function Home() {
-  const [ cartItems, setCartItems ] = useState([])
 
   const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
   const { cartQuantity,
         decreaseCartQuantity,
+        cartItems,
         increaseCartQuantity,
         products,
         getProducts,
         closeCart,
-        removeFromCart,
+        removeCartItem,
         getItemQuantity
-    } = useShoppingCartLocal()
+    } = useShoppingCart()
 
   
     useEffect(() => {
       getProducts()
       
     }, [])
-
-
-    useEffect(() => {
-        const jsonValue = window.localStorage.getItem('shopping-cart')
-        console.log('cartItemsFromNavbar', cartItems)
-        setCartItems(jsonValue ? JSON.parse(jsonValue) : [])
-
-    }, [])
-  
-  
 
 
 
@@ -84,7 +74,7 @@ export default function Home() {
                                       <p className='mr-0'>${product.price}</p>
                                     </div>
                                     <div className='cursor-pointer'
-                                      onClick={() => removeFromCart(item.id)}>
+                                      onClick={() => removeCartItem(item.id)}>
                                       <svg viewBox="0 0 16 16"
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="16"

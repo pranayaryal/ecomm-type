@@ -1,19 +1,12 @@
 import { useState, ReactNode, createContext, useContext, useEffect } from "react";
 import ShoppingCart from "@/components/ShoppingCart";
-import dynamic from 'next/dynamic'
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-// import { getFromLocalStorage, setToLocalStorage } from "@/hooks/useLocalStorageNew";
 
 
-type ShoppingCartContextLocal = {
+type ShoppingCartContextNew = {
   openCart: () => void
   closeCart: () => void
   getItemQuantity: (id: number) => number
-  increaseCartQuantity: (id: number) => void
-  decreaseCartQuantity: (id: number) => void
   removeFromCart: (id: number) => void
-  cartQuantity: number
-  cartItems: CartItem[]
   getProduct: (id: number) => any
   products: []
   getProducts: () => Promise<void>
@@ -25,33 +18,17 @@ type CartItem = {
   quantity: number
 }
 
-const ShoppingCartContextLocal = createContext({} as ShoppingCartContextLocal)
+const ShoppingCartContextNew = createContext({} as ShoppingCartContextNew)
 
-export function useShoppingCartLocal() {
-  return useContext(ShoppingCartContextLocal)
+export function useShoppingCartNew() {
+  return useContext(ShoppingCartContextNew)
 }
 
-export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) {
-  // const [cartItems, setCartItems] = useLocalStorage<CartItem[]>("shopping-cart", [])
-
-  // const getInitialState = () => {
-  //   if (typeof window !== 'undefined') {
-  //     const storedCart = window.localStorage.getItem('shopping-cart')
-  //     return storedCart ? JSON.parse(storedCart) : []
-  //   }
-  //   return []
-  // }
-
+export function ShoppingCartProviderNew({ children }: { children: ReactNode}) {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
 
   const [ isOpen, setIsOpen ] = useState(false)
   const [ products, setProducts ] = useState([])
-  const [ product, setProduct ] = useState({})
-
-  // const cartQuantity =  cartItems?.reduce(
-  //   (quantity, item) => item.quantity + quantity,
-  //   0
-  // )
 
   // let cartQuantity;
   // if (cartItems.length === 0) {
@@ -65,30 +42,15 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
 
   // }
 
-  useEffect(() => {
-    const cart = window.localStorage.getItem('shopping-cart');
-    console.log('cart', cart)
-    setCartItems(cart ? JSON.parse(cart) : []);
-  }, [])
-
-  useEffect(() => {
-    if (cartItems) {
-      window.localStorage.setItem('shopping-cart', JSON.stringify(cartItems))
-      return 
-    }
-    window.localStorage.setItem('shopping-cart', JSON.stringify([]))
-
-  }, [cartItems])
-
 
   function getItemQuantity(id: number) {
     return cartItems.find(item => item.id === id)?.quantity || 0
   }
 
-  function increaseCartQuantity(id: number) {
+  function increaseCartQuantityNew(id: number) {
     const currItems = cartItems
     // If the item is not found
-    if (currItems.find(item => item.id == id) == null){
+    if (currItems.length !== 0 && currItems.find(item => item.id == id) == null){
       setCartItems([...currItems, {id, quantity: 1}])
       return
     }
@@ -103,7 +65,7 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
   }
 
 
-   function increaseCartQuantityOld(id: number) {
+   function increaseCartQuantity(id: number) {
     setCartItems(currItems => {
       if (currItems.find(item => item.id === id) == null) {
         return [...currItems, { id, quantity: 1 }]
@@ -182,22 +144,18 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
 
 
   return (
-    <ShoppingCartContextLocal.Provider
+    <ShoppingCartContextNew.Provider
       value={{
         getItemQuantity,
         openCart,
         closeCart,
         getProduct,
         getProducts,
-        increaseCartQuantity,
-        decreaseCartQuantity,
         removeFromCart,
-        // cartQuantity,
-        cartItems,
         products
       }}>
       <ShoppingCart isOpen={isOpen} />
       {children}
-    </ShoppingCartContextLocal.Provider>
+    </ShoppingCartContextNew.Provider>
   )
 }

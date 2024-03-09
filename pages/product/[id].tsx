@@ -5,8 +5,9 @@ import Star from '@/components/Star'
 import { Dispatch, SetStateAction } from 'react'
 import { useState } from "react";
 import { getAllProducts, getProduct, increaseCart, getToken } from "@/lib/backend";
-// import { useShoppingCart } from '@/context/ShoppingCartProvider' 
-import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal' 
+import { useShoppingCart } from '@/context/ShoppingCartProvider' 
+// import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal' 
+// import { useShoppingCartNew } from '@/context/ShoppingCartProviderNew' 
 import axios from '@/lib/axios'
 
 //const products = await getAllProducts();
@@ -60,11 +61,33 @@ export default function Page({ product }) {
     //     rating_count: [3]
 
     // }
-    const { increaseCartQuantity, openCart } = useShoppingCartLocal()
+    const { openCart, increaseCartQuantity } = useShoppingCart()
+    // const [ cartItems, setCartItems ] = useState([])
+
+    // useEffect(() => {
+    //     const jsonValue = window.localStorage.getItem('shopping-cart') || []
+    //     setCartItems(jsonValue ? JSON.parse(jsonValue) : [])
+
+    // }, [])
+
+    // useEffect(() => {
+    //     localStorage.setItem('shopping-cart', JSON.stringify(cartItems));
+    // }, [cartItems])
+
+    // const increaseCartQuantity = (id: number) => {
+    //   const currCart = cartItems
+    //   if (currCart.find(item => item.id === id) == null) {
+    //     setCartItems([...currCart, {id, quantity: 1}])
+    //     return
+    //   }
+    //   const updatedCart = currCart.map(item => {
+    //     return (item.id === id) ? {...item, quantity: item.quantity + 1} : item
+    //   })
+    //   setCartItems(updatedCart)
+    // }
+
     
     const [errors, setErrors] = useState<string[]>([])
-    const [cart, setCart] = useState([])
-    const router = useRouter();
 
     const addToCart = async (id: number) => {
         increaseCartQuantity(id)

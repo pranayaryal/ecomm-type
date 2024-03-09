@@ -59,9 +59,6 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const openCart = () => setIsOpen(true) 
   const closeCart = () => setIsOpen(false) 
 
-  // const getItemQuantity = (id: number) => {
-  //   return cartItems.find(item => item.id === id)?.quantity || 0
-  // }
   useEffect(() => {
     getAllCartItems()
 
@@ -78,13 +75,9 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
       body: JSON.stringify(data),
     });
     const resJson = await response.json()
-    let cartAsArray = []
     if (resJson.products) {
-      Object.values(resJson.products).map(s => {
-        cartAsArray.push(s)
-      })
+      setCartItems(Object.values(resJson.products));
     }
-    setCartItems(cartAsArray);
 
   }
 
@@ -98,13 +91,9 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
       body: JSON.stringify(data),
     });
     const resJson = await response.json()
-    let cartAsArray = []
     if (resJson.products) {
-      Object.values(resJson.products).map(s => {
-        cartAsArray.push(s)
-      })
+      setCartItems(Object.values(resJson.products));
     }
-    setCartItems(cartAsArray);
 
   }
 
@@ -118,13 +107,9 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
       body: JSON.stringify(data),
     });
     const resJson = await response.json()
-    let cartAsArray = []
     if (resJson.products) {
-      Object.values(resJson.products).map(s => {
-        cartAsArray.push(s)
-      })
+      setCartItems(Object.values(resJson.products));
     }
-    setCartItems(cartAsArray);
 
   }
 
@@ -138,16 +123,9 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
     })
 
     const resJson = await response.json()
-    // console.log('summing', Object.values(resJson.data.products).reduce((a, b) => a + b, 0))
-    // console.log('typeof', resJson.data.products)
-    // Having to set as array
-    let cartAsArray = []
     if (resJson.products) {
-      Object.values(resJson.products).map(s => {
-        cartAsArray.push(s)
-      })
+      setCartItems(Object.values(resJson.products));
     }
-    setCartItems(cartAsArray);
   }
 
   const forgetCart = async () => {
@@ -189,8 +167,6 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
 
     const resJson = await response.json();
     return resJson.products
-
-    // setProducts(resJson.products)
 
   }
 

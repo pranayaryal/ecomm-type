@@ -9,18 +9,13 @@ import { CartItem } from '@/context/CartProvider'
 import { useAuth } from '@/hooks/auth'
 import axios from '@/lib/axios'
 import { getAllProducts } from '@/lib/backend'
-// import { useShoppingCart } from '@/context/ShoppingCartProvider'
-import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
+import { useShoppingCart } from '@/context/ShoppingCartProvider'
+// import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
 
 export default function Home() {
 
   const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
-  const { products, getProducts } = useShoppingCartLocal()
-
-  //const [products, setProducts] = useState([])
-  const [selected, setSelected] = useState(0)
-  const [errors, setErrors] = useState([])
-  const [status, setStatus] = useState(null)
+  const { products, getProducts } = useShoppingCart()
 
 
   useEffect(() => {
