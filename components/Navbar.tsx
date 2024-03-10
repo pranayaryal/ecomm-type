@@ -16,6 +16,34 @@ const Navbar = () => {
         cartItems
     } = useShoppingCart()
 
+    const setCookie = async() => {
+        const resp = await fetch('/api/set-cookie', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                cart: { apple: 1, orange: 3}
+            })
+
+                })
+
+        const resJson = await resp.json()
+        console.log(resJson.cart)
+    }
+
+    const getCookie = async() => {
+        const resp = await fetch('/api/get-cookie', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+                })
+
+        const resJson = await resp.json()
+        console.log(resJson)
+    }
+
 
     const total = cartItems ? cartItems.length : 0
 
@@ -75,6 +103,14 @@ const Navbar = () => {
                         <button onClick={() => getProduct(3)}
                             className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>
                                 Get Product
+                        </button>
+                        <button onClick={setCookie}
+                            className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>
+                                Set Cookie
+                        </button>
+                        <button onClick={getCookie}
+                            className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>
+                                Get Cookie
                         </button>
                     </div>
                     {/* Right */}

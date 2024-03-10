@@ -33,16 +33,21 @@ export function useShoppingCartLocal() {
 
 export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) {
   // const [cartItems, setCartItems] = useLocalStorage<CartItem[]>("shopping-cart", [])
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
 
-  // const getInitialState = () => {
-  //   if (typeof window !== 'undefined') {
-  //     const storedCart = window.localStorage.getItem('shopping-cart')
-  //     return storedCart ? JSON.parse(storedCart) : []
-  //   }
-  //   return []
+  // const getInitialState = async() => {
+  //     const resp = await fetch('/api/get-cookie', {
+  //         method: "GET",
+  //         headers: {
+  //             "Content-Type": "application/json",
+  //         }
+  //             })
+
+  //     const resJson = await resp.json()
+  //     return resJson.cart ? resJson.cart : [];
+
   // }
 
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
 
   const [ isOpen, setIsOpen ] = useState(false)
   const [ products, setProducts ] = useState([])
@@ -66,17 +71,37 @@ export function ShoppingCartProviderLocal({ children }: { children: ReactNode}) 
   // }
 
   useEffect(() => {
-    const cart = window.localStorage.getItem('shopping-cart');
-    console.log('cart', cart)
-    setCartItems(cart ? JSON.parse(cart) : []);
+    const setTheCart = async () => {
+      const resp = await fetch('/api/get-cookie', {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+          }
+              })
+
+      const resJson = await resp.json()
+      setCartItems(resJson.cart ? resJson.cart : []);
+    }
+    setTheCart()
   }, [])
 
   useEffect(() => {
-    if (cartItems) {
-      window.localStorage.setItem('shopping-cart', JSON.stringify(cartItems))
-      return 
+    const setCookieWhenChanged = async() => {
+      if (cartItems && cartItems.length > 0) {
+        const resp = await fetch('/api/set-cookie', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cartItems })
+        })
+
+        const resJson = await resp.json()
+        return 
+      }
+
     }
-    window.localStorage.setItem('shopping-cart', JSON.stringify([]))
+    setCookieWhenChanged()
 
   }, [cartItems])
 
