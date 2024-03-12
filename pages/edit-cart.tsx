@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/auth'
 import axios from '@/lib/axios'
 import { getAllProducts } from '@/lib/backend'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
+import Layout from '@/components/layout'
 
 
 export default function Home() {
@@ -35,7 +36,7 @@ export default function Home() {
 
 
   return (
-    <>
+    <Layout>
       <div className='flex py-[20px] justify-center'>
         <div className='flex flex-col w-3/5'>
             {(!cartItems) ?
@@ -108,6 +109,6 @@ export default function Home() {
 
 
 
-    </>
+    </Layout>
   )
 }

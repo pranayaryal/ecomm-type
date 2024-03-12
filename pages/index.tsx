@@ -10,9 +10,11 @@ import { useAuth } from '@/hooks/auth'
 import axios from '@/lib/axios'
 import { getAllProducts } from '@/lib/backend'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
+import Layout from '@/components/layout'
+
 // import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
 
-export default function Home() {
+export default function Page() {
 
   const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
   const { products, getProducts } = useShoppingCart()
@@ -25,7 +27,7 @@ export default function Home() {
 
 
   return (
-    <>
+    <Layout>
       <div className='grid grid-cols-1 gap-y-4 md:gap-y-0 md:grid-cols-2 px-0 md:gap-x-8 md:auto-cols-fr py-[20px] justify-center'>
         <div className='flex items-start flex-col justify-center'>
           <h1 className='text-4xl mb-4'>Stop wasting time on security questionnaires</h1>
@@ -64,6 +66,7 @@ export default function Home() {
       </div>
 
 
-    </>
+    </Layout>
   )
 }
+
