@@ -1,6 +1,8 @@
 import { error } from "console";
 import { useEffect, useRef, useState } from "react";
 import { json } from "stream/consumers";
+import CheckoutLayout from '@/components/CheckoutLayout'
+import { states } from '@/components/states'
 
 const ValidateAddress = () => {
   const stateAbbr = ["KY", "OH"];
@@ -37,12 +39,6 @@ const ValidateAddress = () => {
   };
 
   const callUsPs = async () => {
-    // if (!address.state ||
-    //     !address.city ||
-    //     !address.street ||
-    //     !address.zip){
-    //   return
-    // }
     const urlStart =
       "https://secure.shippingapis.com/ShippingAPI.dll?API=Verify&XML=";
     const urlSecond = encodeURIComponent(
@@ -119,7 +115,7 @@ const ValidateAddress = () => {
   };
 
   return (
-    <div>
+    <CheckoutLayout>
       <div className="flex flex-col w-2/5">
         <span className="text-red-500 text-xs">{address.street.error}</span>
         <input
@@ -127,7 +123,7 @@ const ValidateAddress = () => {
           placeholder="Street"
           value={address.street.value}
           onChange={(e) => onChangeHandler("street", e.target.value)}
-          className={`text-sm border outline-none px-3 py-2 ${address.street.error?.length === 0 ? 'border-gray-500': 'border-red-500'}`}
+          className={`text-sm border outline-none px-3 py-2 ${address.street.error?.length === 0 ? 'border-gray-500' : 'border-red-500'}`}
         />
         <span className="mt-2 text-red-500 text-xs">{address.city.error}</span>
         <span className="mt-2 text-red-500 text-xs">{address.state.error}</span>
@@ -137,29 +133,28 @@ const ValidateAddress = () => {
             onChange={(e) => onChangeHandler("city", e.target.value)}
             type="text"
             placeholder="City"
-            className={`text-sm border outline-none px-3 py-2 ${address.city.error?.length === 0 ? 'border-gray-500': 'border-red-500'}`}
+            className={`text-sm border outline-none px-3 py-2 ${address.city.error?.length === 0 ? 'border-gray-500' : 'border-red-500'}`}
           />
           <input
             value={address.zip.value}
             onChange={(e) => onChangeHandler("zip", e.target.value)}
             type="text"
             placeholder="Zip"
-            className={`text-sm border outline-none px-3 py-2 ${address.zip.error?.length === 0 ? 'border-gray-500': 'border-red-500'}`}
+            className={`text-sm border outline-none px-3 py-2 ${address.zip.error?.length === 0 ? 'border-gray-500' : 'border-red-500'}`}
           />
           <select
-            value={address.state.value}
-            defaultValue=""
-            className="px-3 py-3 outline-none"
-            onChange={(e) => onChangeHandler("state", e.target.value)}
-          >
-            {stateAbbr.map((s) => {
-              return (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              );
-            })}
+            className={`px-3 py-2 bg-white border font-sans tracking-wide text-md ${address.state.error ? 'border-red-300' : 'border-gray-200'}`}
+            value={address.state.value} onChange={(e) => onChangeHandler("state", e.target.value)}>
+            <option
+            className={`${address.state.error ? 'text-red-400' : 'text-black'}`}
+            value="">Select state</option>
+            {states.map((s) => (
+              <option key={s.abbreviation} value={s.abbreviation}>
+                {s.name}
+              </option>
+            ))}
           </select>
+          {address.state.error && <span className='text-xs text-red-400'>{address.state.error}</span>}
         </div>
         <span className="mt-2 text-red-500 text-xs">{address.zip.error}</span>
         <button
@@ -169,7 +164,7 @@ const ValidateAddress = () => {
           Validate
         </button>
       </div>
-    </div>
+    </CheckoutLayout>
   );
 };
 

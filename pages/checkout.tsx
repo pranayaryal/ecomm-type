@@ -12,6 +12,7 @@ import { getAllProducts } from '@/lib/backend'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import CheckoutLayout from '@/components/CheckoutLayout'
 import { states } from '@/components/states'
+import { callUsPs } from './api/usps'
 
 
 export default function Page() {
@@ -81,7 +82,6 @@ export default function Page() {
 
 
   const onAddressChangeHandler = (field: string, value: string) => {
-    console.log("triggered");
     let state = {
       [field]: {
         value,
@@ -136,7 +136,7 @@ export default function Page() {
     }
 
     var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip.value);
-    if (!isValidZip){
+    if (!isValidZip) {
       updatedState.zip.error = "Please enter a valid postal code (10710)";
       setAddress({ ...updatedState });
       return false
@@ -152,12 +152,35 @@ export default function Page() {
   }
 
 
+
   const handleSubmit = async () => {
     if (!validateAddress()) {
       return
     }
 
+    await callUsPs({address, setAddress})
+
   };
+
+  const saveAddressToSession = async () => {
+
+    const resp = await fetch('/api/adddress', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        zip: address.zip.value,
+        street: address.street.value,
+        city: address.city.value,
+        state: address.state.value
+      })
+    })
+
+    const respJson = await resp.json()
+
+  }
+
 
 
   useEffect(() => {
@@ -302,6 +325,7 @@ export default function Page() {
               <div className='flex flex-col mt-4'>
                 <label className='text-xs'>Address</label>
                 <input
+                  value={address.street.value}
                   onChange={(e) => onAddressChangeHandler("street", e.target.value)}
                   className={`text-xs mt-1 px-4 py-2 border outline-none ${address.street.error ? 'border-red-300' : 'border-gray-200'}`} />
                 {(!address.street.error) && <span className='text-xs text-gray-500'>Street address, P.0 box or military address</span>}
@@ -311,6 +335,7 @@ export default function Page() {
                 <div className='flex flex-col w-1/2'>
                   <label className='text-xs'>Town/City</label>
                   <input
+                    value={address.city.value}
                     onChange={(e) => onAddressChangeHandler("city", e.target.value)}
                     className={`text-xs mt-1 px-4 py-2 border outline-none ${address.city.error ? 'border-red-300' : 'border-gray-200'}`} />
                   {address.city.error && <span className='text-xs text-red-400'>{address.city.error}</span>}
@@ -318,6 +343,7 @@ export default function Page() {
                 <div className='flex flex-col w-1/2'>
                   <label className='text-xs'>Postal code</label>
                   <input
+                    value={address.zip.value}
                     onChange={(e) => onAddressChangeHandler("zip", e.target.value)}
                     className={`text-xs mt-1 px-4 py-2 border outline-none ${address.zip.error ? 'border-red-300' : 'border-gray-200'}`} />
                   {address.zip.error && <span className='text-xs text-red-400'>{address.zip.error}</span>}
@@ -326,11 +352,11 @@ export default function Page() {
               <div className='flex flex-col mt-4'>
                 <label className='text-xs'>State</label>
                 <select
-                className={`px-3 py-2 bg-white border font-sans tracking-wide text-md ${address.state.error ? 'border-red-300' : 'border-gray-200'}`}
+                  className={`px-3 py-2 bg-white border font-sans tracking-wide text-md ${address.state.error ? 'border-red-300' : 'border-gray-200'}`}
                   value={address.state.value} onChange={(e) => onAddressChangeHandler("state", e.target.value)}>
-                    <option
-                      className={`${address.state.error ? 'text-red-400' : 'text-black'}`}
-                      value="">Select state</option>
+                  <option
+                    className={`${address.state.error ? 'text-red-400' : 'text-black'}`}
+                    value="">Select state</option>
                   {states.map((s) => (
                     <option key={s.abbreviation} value={s.abbreviation}>
                       {s.name}
