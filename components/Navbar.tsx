@@ -32,6 +32,18 @@ const Navbar = () => {
         console.log(resJson.cart)
     }
 
+    const callUsps = async() => {
+        const resp = await fetch('/api/usps', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        const respJson = await resp.json()
+
+    }
+
     const getCookie = async() => {
         const resp = await fetch('/api/get-cookie', {
             method: "GET",
@@ -104,13 +116,9 @@ const Navbar = () => {
                             className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>
                                 Get Product
                         </button>
-                        <button onClick={setCookie}
+                        <button onClick={callUsps}
                             className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>
-                                Set Cookie
-                        </button>
-                        <button onClick={getCookie}
-                            className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>
-                                Get Cookie
+                                Call Usps
                         </button>
                     </div>
                     {/* Right */}

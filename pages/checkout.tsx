@@ -12,7 +12,6 @@ import { getAllProducts } from '@/lib/backend'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import CheckoutLayout from '@/components/CheckoutLayout'
 import { states } from '@/components/states'
-import { callUsPs } from './api/usps'
 
 
 export default function Page() {
@@ -158,7 +157,34 @@ export default function Page() {
       return
     }
 
-    await callUsPs({address, setAddress})
+    const data = {
+      streetAddress: address.street.value,
+      city: address.city.value,
+      state: address.state.value,
+      ZIPCode: address.zip.value,
+    }
+
+    const resp = await fetch('/api/usps', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+
+    const respJson = await resp.json()
+    console.log(respJson)
+    const updatedAddress = {...address}
+    updatedAddress.city.value = respJson.city
+    updatedAddress.street.value = respJson.street
+    updatedAddress.state.value = respJson.state
+    updatedAddress.zip.value = respJson.zip
+    setAddress({...updatedAddress})
+
+    // If there is an error from 
+    // if (!address.street.value){
+    //   saveAddressToSession()
+    // }
 
   };
 
