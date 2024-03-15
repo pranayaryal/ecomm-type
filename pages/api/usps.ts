@@ -53,13 +53,13 @@ export default async function handler(
     })
 
     const respUspsAddJson = await respUspsAdd.json()
-    const { address: { streetAddress, city, state, ZIPCode }} = respUspsAddJson
-    res.status(200).json({ street: streetAddress, city, state, zip: ZIPCode});
+    // const { address: { streetAddress, city, state, ZIPCode }} = respUspsAddJson
+    // const { error } = respUspsAddJson
+    res.status(200).json({respUspsAddJson});
 
   }
   catch (error) {
-    console.log(error)
-    res.status(200).json(`There was an error ${error}`)
+    res.status(200).json({error: `There was an error ${error}`})
   }
 
 }

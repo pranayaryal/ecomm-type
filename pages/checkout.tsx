@@ -174,6 +174,13 @@ export default function Page() {
 
     const respJson = await resp.json()
     console.log(respJson)
+    // if (error) {
+    //   const updatedAddress = {...address}
+    //   address.street.error = error
+    //   setAddress({...updatedAddress})
+    //   return
+
+    // }
     const updatedAddress = {...address}
     updatedAddress.city.value = respJson.city
     updatedAddress.street.value = respJson.street
