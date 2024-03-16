@@ -19,7 +19,8 @@ export default function Page() {
   // const [ firstName, setFirstName ] = useState("")
   // const [ lastName, setLastName ] = useState("")
   const [openForm, setOpenForm] = useState(false)
-  const [updatePersonal, setUpdatePersonal] = useState(false)
+  const [ showNameEmailform, setShowNameEmailForm ] = useState(true)
+  const [ showAddressForm, setShowAddressForm ] = useState(true)
   const [personal, setPersonal] = useState({
     email: {
       value: "",
@@ -61,11 +62,12 @@ export default function Page() {
     lastName: ''
   })
 
-  const personalIsSaved = () => {
-    return savedPersonal.email
-      && savedPersonal.firstName
-      && savedPersonal.lastName
-  }
+  const [savedAddress, setSavedAddress] = useState({
+    city: '',
+    state: '',
+    zip: '',
+    street: ''
+  })
 
   const onChangeHandler = (field: string, value: string) => {
     let state = {
@@ -151,7 +153,6 @@ export default function Page() {
   }
 
 
-
   const handleSubmit = async () => {
     if (!validateAddress()) {
       return
@@ -173,7 +174,31 @@ export default function Page() {
     })
 
     const respJson = await resp.json()
-    console.log(respJson)
+    const { respUspsAddJson  } = respJson
+    console.log('error Present', respUspsAddJson.hasOwnProperty('error'))
+
+    // Handle errors
+    if (respUspsAddJson.hasOwnProperty('error')){
+      const { respUspsAddJson : { error: { message}} } = respJson
+      const updatedAddress = {...address}
+      updatedAddress.street.error = message
+      setAddress({...updatedAddress})
+      return
+
+    }
+    const { respUspsAddJson : { address: { streetAddress, city, state, ZIPCode} }} = respJson
+    const updatedAddress = {...address}
+    updatedAddress.city.value = city
+    updatedAddress.state.value = state 
+    updatedAddress.zip.value = ZIPCode 
+    updatedAddress.street.value = streetAddress
+    setAddress({...updatedAddress})
+
+    await saveAddressToSession() 
+    
+    return
+
+    
     // if (error) {
     //   const updatedAddress = {...address}
     //   address.street.error = error
@@ -181,12 +206,12 @@ export default function Page() {
     //   return
 
     // }
-    const updatedAddress = {...address}
-    updatedAddress.city.value = respJson.city
-    updatedAddress.street.value = respJson.street
-    updatedAddress.state.value = respJson.state
-    updatedAddress.zip.value = respJson.zip
-    setAddress({...updatedAddress})
+    // const updatedAddress = {...address}
+    // updatedAddress.city.value = respJson.city
+    // updatedAddress.street.value = respJson.street
+    // updatedAddress.state.value = respJson.state
+    // updatedAddress.zip.value = respJson.zip
+    // setAddress({...updatedAddress})
 
     // If there is an error from 
     // if (!address.street.value){
@@ -197,7 +222,7 @@ export default function Page() {
 
   const saveAddressToSession = async () => {
 
-    const resp = await fetch('/api/adddress', {
+    const resp = await fetch('/api/address', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -211,6 +236,9 @@ export default function Page() {
     })
 
     const respJson = await resp.json()
+    if(respJson.hasOwnProperty("address")){
+
+    }
 
   }
 
@@ -229,13 +257,14 @@ export default function Page() {
         updatedPersonal.lastName.value = lastName
         setPersonal(updatedPersonal)
         if (email) {
-          setUpdatePersonal(false)
+          setShowNameEmailForm(false)
           return
         }
-        setUpdatePersonal(true)
+        setShowNameEmailForm(true)
 
       }
     }
+
 
     getInitialData()
 
@@ -287,7 +316,7 @@ export default function Page() {
       updatedPersonal.lastName.value = lastName
       setPersonal(updatedPersonal)
       setSavedPersonal({ email, firstName, lastName })
-      setUpdatePersonal(false)
+      setShowNameEmailForm(false)
 
     }
 
@@ -312,14 +341,14 @@ export default function Page() {
           <div className='flex flex-col gap-y-4 w-[66.67%] px-5 items-center'>
             <div className='bg-white py-6 px-5 w-full'>
               <p className='text-sm font-bold'>My Information</p>
-              {(!updatePersonal) && <div className='mt-3 text-xs flex justify-between'>
+              {(!showNameEmailform) && <div className='mt-3 text-xs flex justify-between'>
                 <div>
                   <p>Email: {personal.email.value}</p>
                   <p className='mt-2'>{`${personal.firstName.value} ${personal.lastName.value}`}</p>
                 </div>
-                <p onClick={() => setUpdatePersonal(true)} className='text-xs cursor-pointer'>Change</p>
+                <p onClick={() => setShowNameEmailForm(true)} className='text-xs cursor-pointer'>Change</p>
               </div>}
-              {(updatePersonal) && <div className='flex flex-col'>
+              {(showNameEmailform) && <div className='flex flex-col'>
                 <div className='w-1/2 flex flex-col'>
                   <label className={`text-xs ${personal.email.error ? 'text-red-400' : 'text-black'}`}>Email</label>
                   <input
