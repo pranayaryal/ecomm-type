@@ -211,6 +211,7 @@ const AddressForm = () => {
 
   return (
     <div className='bg-white py-6 px-5 w-full flex flex-col'>
+      <p className='text-sm font-bold'>Billing address</p>
       <AnimatePresence initial={false}>
         {showAddressForm && (
           <motion.section
@@ -226,7 +227,6 @@ const AddressForm = () => {
             transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
             <>
-              <p className='text-sm font-bold'>Billing address</p>
               <p className='text-xs mt-2'>Enter your billing address</p>
               <div className='flex flex-col mt-4'>
                 <label className='text-xs'>Address</label>

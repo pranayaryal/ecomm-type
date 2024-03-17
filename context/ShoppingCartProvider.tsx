@@ -1,6 +1,7 @@
 import { useState, ReactNode, createContext, useContext, useEffect } from "react";
 import React from "react";
 import ShoppingCart from "@/components/ShoppingCart";
+import ShoppingCartSlide from "@/components/ShoppingCartSlide";
 import axios from '@/lib/axios'
 import { getAllProducts } from "@/lib/backend";
 import { SideSlider } from '@/components/SideSlider'
@@ -223,7 +224,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         // cartQuantity,
         cartItems
       }}>
-      <ShoppingCart isOpen={isOpen} />
+      <ShoppingCartSlide isOpen={isOpen} />
       {/* <SideSlider openSide={isOpen}/> */}
       {children}
     </ShoppingCartContext.Provider>
