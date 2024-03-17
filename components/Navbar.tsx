@@ -77,18 +77,6 @@ const Navbar = () => {
     // useEffect(() => {
     //     setTotal(cartItems ? cartItems.length: 0)
     // }, [cartItems])
-    const getAddressSession = async() => {
-        const resp = await fetch('/api/get-address', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-
-        const respJson = await resp.json()
-        console.log('addressFromSessioinNavbar', respJson)
-
-    }
 
     const calcTotal = () => {
         const vals = Object.values(cartItems).reduce((a, b) => a + b, 0);
@@ -128,14 +116,9 @@ const Navbar = () => {
                             className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>
                                 Get Product
                         </button>
-                        <button onClick={getAddressSession}
-                            className='p-[0.2px] border-b-1 transition duration-100 ease-in-out border-transparent hover:border-b hover:border-dark-slate-grey'>
-                                Get Address Session
-                        </button>
                     </div>
                     {/* Right */}
                     <div className='flex space-x-2 items-center'>
-                        <input type="text" className='px-4 py-2 bg-pink-50 outline-none rounded-full' placeholder='Search' />
                         <div
                             onClick={openCart}
                             className='relative outline-none'>

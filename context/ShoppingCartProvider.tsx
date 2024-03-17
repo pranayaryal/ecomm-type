@@ -2,6 +2,7 @@ import { useState, ReactNode, createContext, useContext, useEffect } from "react
 import React from "react";
 import ShoppingCart from "@/components/ShoppingCart";
 import ShoppingCartSlide from "@/components/ShoppingCartSlide";
+import ShoppingCartTransient from "@/components/ShoppingCartTransient";
 import axios from '@/lib/axios'
 import { getAllProducts } from "@/lib/backend";
 import { SideSlider } from '@/components/SideSlider'
@@ -52,22 +53,33 @@ export function useShoppingCart() {
 
 export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const [cartItems, setCartItems] = useState([])
-  const [ products, setProducts ] = useState([])
-  const [ isOpen, setIsOpen ] = useState(false)
-  const [ product, setProduct ] = useState({})
+  const [ clickedItem, setClickedItem ] = useState({})
+  const [products, setProducts] = useState([])
+  const [isOpen, setIsOpen] = useState(false)
+  const [product, setProduct] = useState({})
 
 
-  const openCart = () => setIsOpen(true) 
-  const closeCart = () => setIsOpen(false) 
+  const openCart = () => setIsOpen(true)
+  const closeCart = () => setIsOpen(false)
 
   useEffect(() => {
     getAllCartItems()
 
   }, [])
 
+  useEffect(() => {
+    if (isOpen) {
+      const toRef = setTimeout(() => {
+        setIsOpen(false);
+        clearTimeout(toRef);
+      }, 3000);
+    }
+  }, [isOpen]);
+
 
   const increaseCartQuantity = async (id: number) => {
     const data = { id, quantity: 1 }
+    setClickedItem(data)
     const response = await fetch('/api/add-cart-item', {
       method: "POST",
       headers: {
@@ -222,9 +234,10 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         // openCart,
         // closeCart,
         // cartQuantity,
-        cartItems
+        cartItems,
+        clickedItem
       }}>
-      <ShoppingCartSlide isOpen={isOpen} />
+      <ShoppingCartTransient isOpen={isOpen} />
       {/* <SideSlider openSide={isOpen}/> */}
       {children}
     </ShoppingCartContext.Provider>
