@@ -1,12 +1,14 @@
 import React from "react";
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
+import LoadingSpinner from "./LoadingSpinner";
 
 
 // Used during checkout
 const NameEmailForm = () => {
 
   const [showNameEmailform, setShowNameEmailForm] = useState(true)
+  const [useSpinner, setUseSpinner] = useState(false)
 
   const [personal, setPersonal] = useState({
     email: {
@@ -68,6 +70,7 @@ const NameEmailForm = () => {
       setPersonal({ ...updatedState });
       return;
     }
+    setUseSpinner(true)
     const data = {
       email: personal.email.value,
       firstName: personal.firstName.value,
@@ -92,6 +95,8 @@ const NameEmailForm = () => {
       setShowNameEmailForm(false)
 
     }
+    setUseSpinner(false)
+    return
 
   }
 
@@ -164,19 +169,28 @@ const NameEmailForm = () => {
                     className={`text-xs mt-1 px-4 py-2 border outline-none ${personal.lastName.error ? 'border-red-300' : 'border-gray-200'}`} />
                 </div>
               </div>
-              <button
-                onClick={() => savePersonal()}
-                className='bg-black text-white w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-12 hover:bg-gray-800'>
-                Save
-              </button>
-              <button 
+              {useSpinner ? (
+                <button
+                  className='bg-black text-white w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-8 hover:bg-gray-800'>
+                  <LoadingSpinner />
+                </button>
+              ) :
+                (
+                  <button
+                    onClick={() => savePersonal()}
+                    className='bg-black text-white w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-12 hover:bg-gray-800'>
+                    Save
+                  </button>
+
+                )}
+              {savedPersonal.email && <button
                 onClick={() => setShowNameEmailForm(false)}
                 className='text-xs flex w-[50%] ml-auto mr-auto mt-3 space-x-3 items-center justify-center'>
                 <span>
                   <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" height="16" width="16"><path d="M1.854 1.146a.5.5 0 1 0-.708.708L7.293 8l-6.146 6.146a.5.5 0 0 0 .707.708L8 8.707l6.146 6.147a.5.5 0 0 0 .708-.708L8.707 8l6.147-6.146a.5.5 0 1 0-.707-.708L8 7.293 1.854 1.146Z"></path></svg>
                 </span>
                 <p>Cancel</p>
-              </button>
+              </button>}
 
             </div>
 
@@ -190,7 +204,7 @@ const NameEmailForm = () => {
         </div>}
 
       </AnimatePresence>
-    </div>
+    </div >
 
   )
 }

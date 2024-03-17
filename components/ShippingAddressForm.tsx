@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { states } from '@/components/states'
 import LoadingSpinner from "./LoadingSpinner";
 
-const AddressForm = () => {
+const ShippingAddressForm = () => {
 
   const [showAddressForm, setShowAddressForm] = useState(true)
   const [useSpinner, setUseSpinner] = useState(false)
@@ -318,4 +318,4 @@ const AddressForm = () => {
   )
 }
 
-export default AddressForm;
+export default ShippingAddressForm;
