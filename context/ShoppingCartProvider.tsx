@@ -3,7 +3,6 @@ import React from "react";
 import ShoppingCart from "@/components/ShoppingCart";
 import ShoppingCartSlide from "@/components/ShoppingCartSlide";
 import ShoppingCartTransient from "@/components/ShoppingCartTransient";
-import ShoppingCartExperimental from "@/components/ShoppingCartExperimental";
 import axios from '@/lib/axios'
 import { getAllProducts } from "@/lib/backend";
 import { SideSlider } from '@/components/SideSlider'
@@ -245,7 +244,6 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         clickedItem
       }}>
       <ShoppingCartTransient isOpen={isOpen} />
-      <ShoppingCartExperimental isOpen={isOpenWholeCart} />
       {/* <SideSlider openSide={isOpen}/> */}
       {children}
     </ShoppingCartContext.Provider>

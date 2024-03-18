@@ -1,75 +1,76 @@
 import React from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
-// import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
-import { getAllProducts, removeFromCart } from '@/lib/backend'
-import { useRouter } from 'next/router'
+import { AnimatePresence, motion } from 'framer-motion'
 
-const ShoppingCartExperimental = ({ isOpen }: { isOpen: boolean }) => {
+const ShoppingCartExperimental = ({ isOpen, cartItems, products }) => {
     // console.log('shopping cart data', data)
-    const router = useRouter()
-    const [open, setOpen] = useState(false)
-    const asideRef = useRef<HTMLElement>(null)
-    const { cartQuantity,
-        cartItems,
-        decreaseCartQuantity,
-        increaseCartQuantity,
-        products,
-        getProducts,
-        getItemQuantity
-    } = useShoppingCart()
     console.log('cartItems', cartItems)
 
-    useEffect(() => {
-        getProducts()
 
-    }, [])
-
-    const filterProducts = (id: number) => {
-        return
-    }
 
 
     return (
-        <>
+        <AnimatePresence>
             {isOpen &&
-                <aside
-                    className='h-screen overflow-auto bg-white fixed px-16 py-16 z-20 top-5 right-5 transition-all ease duration-300 w-3/12'
+                <motion.aside
+                    initial={{ opacity: 0, y: "-100%" }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                        ease: "linear",
+                        duration: 0.5,
+                        x: { duration: 1 }
+                    }}
+                    exit={{ opacity: 0, y: 0 }}
+                    className='overflow-auto bg-white fixed p-8 z-20 top-15 right-5 transition-all ease duration-300 w-[350px]'
                 >
                     <div className='flex flex-col'>
 
                         {(cartItems === undefined || cartItems.length === 0) ?
-                            <p className='mt-4'>No items in cart</p> :
-                          cartItems.map(item => {
+                            (<p className='mt-4'>No items in cart</p>) :
+                            (cartItems.map(item => {
                                 const product = products.filter(p => p.id === item.id)[0];
-                                 return <>
+                                return (
                                     <div className='mt-4 flex items-center space-x-4'>
                                         <img
-                                            className='w-16 h-16'
+                                            className='w-16 h-20 object-fit'
                                             src={product.image} />
-                                        <a className='hover:underline' href={`/product/${product.id}`}>
-                                          <p className='text-sm'>{product.title}</p>
+                                        <a className='hover:underline text-xs' href={`/product/${product.id}`}>
+                                            <p>{product.title}</p>
+                                            <p className='font-bold'>$45</p>
+                                            <p className='text-[11px]'>Quantity: 1</p>
+                                            <p className='text-[11px]'>Color: white/patterned</p>
                                         </a>
 
                                     </div>
-                                    <hr className='mt-4'/>
-                                </>
-                        })
+                                )
+
+                            })
+
+                            )
+
                         }
-                        {cartItems.length > 0 ? 
-                          <a href='/edit-cart'>
-                          <button
-                          className='mt-16 py-3 w-full bg-slate-300 rounded-full'>Edit Cart</button>
-                          </a>
-                           : <p></p>}
+                        {cartItems.length > 0 ? (
+                            <>
+                                <a href='/checkout'>
+                                    <button
+                                        className='mt-16 py-3 w-full bg-black hover:bg-gray-800 text-white'>Checkout</button>
+                                </a>
+                                <a href='/edit-cart'>
+                                    <button
+                                        className='mt-16 py-3 w-full bg-white border border-black hover:underline'>Shopping bag</button>
+                                </a>
+                            </>
+                        )
+                            : (<p></p>)}
                     </div>
 
 
-                </aside>
+                </motion.aside>
 
             }
 
-        </>
+        </AnimatePresence>
     )
 
 }
