@@ -3,6 +3,7 @@ import React from "react";
 import ShoppingCart from "@/components/ShoppingCart";
 import ShoppingCartSlide from "@/components/ShoppingCartSlide";
 import ShoppingCartTransient from "@/components/ShoppingCartTransient";
+import ShoppingCartExperimental from "@/components/ShoppingCartExperimental";
 import axios from '@/lib/axios'
 import { getAllProducts } from "@/lib/backend";
 import { SideSlider } from '@/components/SideSlider'
@@ -56,11 +57,15 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const [ clickedItem, setClickedItem ] = useState({})
   const [products, setProducts] = useState([])
   const [isOpen, setIsOpen] = useState(false)
+  const [ isOpenWholeCart, setIsOpenWholeCart ] = useState(false)
   const [product, setProduct] = useState({})
 
 
   const openCart = () => setIsOpen(true)
   const closeCart = () => setIsOpen(false)
+
+  const openWholeCart = () => setIsOpenWholeCart(true)
+  const closeWholeCart = () => setIsOpenWholeCart(false)
 
   useEffect(() => {
     getAllCartItems()
@@ -220,6 +225,8 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         // getItemQuantity,
         openCart,
         closeCart,
+        openWholeCart,
+        closeWholeCart,
         products,
         getProducts,
         getProduct,
@@ -238,6 +245,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         clickedItem
       }}>
       <ShoppingCartTransient isOpen={isOpen} />
+      <ShoppingCartExperimental isOpen={isOpenWholeCart} />
       {/* <SideSlider openSide={isOpen}/> */}
       {children}
     </ShoppingCartContext.Provider>
