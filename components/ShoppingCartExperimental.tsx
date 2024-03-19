@@ -58,7 +58,7 @@ const ShoppingCartExperimental = ({ isOpen, cartItems, products }) => {
                                 </a>
                                 <a href='/edit-cart'>
                                     <button
-                                        className='mt-16 py-3 w-full bg-white border border-black hover:underline'>Shopping bag</button>
+                                        className='mt-4 py-3 w-full bg-white border border-black hover:underline'>Shopping bag</button>
                                 </a>
                             </>
                         )

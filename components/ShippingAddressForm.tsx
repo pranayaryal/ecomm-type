@@ -73,7 +73,7 @@ const ShippingAddressForm = () => {
 
   const saveAddressToSession = async () => {
 
-    const resp = await fetch('/api/address', {
+    const resp = await fetch('/api/shipping-address', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -82,7 +82,8 @@ const ShippingAddressForm = () => {
         zip: address.zip.value,
         street: address.street.value,
         city: address.city.value,
-        state: address.state.value
+        state: address.state.value,
+        addressType: 'shipping'
       })
     })
 
@@ -147,18 +148,6 @@ const ShippingAddressForm = () => {
 
 
 
-    // const updatedAddress = {...address}
-    // updatedAddress.city.value = respJson.city
-    // updatedAddress.street.value = respJson.street
-    // updatedAddress.state.value = respJson.state
-    // updatedAddress.zip.value = respJson.zip
-    // setAddress({...updatedAddress})
-
-    // If there is an error from 
-    // if (!address.street.value){
-    //   saveAddressToSession()
-    // }
-
   };
 
   const onAddressChangeHandler = (field: string, value: string) => {
@@ -174,7 +163,7 @@ const ShippingAddressForm = () => {
 
   useEffect(() => {
     const getAddressFromSession = async () => {
-      const resp = await fetch('/api/get-address', {
+      const resp = await fetch('/api/get-address?addressType=shipping', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -226,8 +215,8 @@ const ShippingAddressForm = () => {
             transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
             <>
-              <p className='text-sm font-bold'>Billing address</p>
-              <p className='text-xs mt-2'>Enter your billing address</p>
+              <p className='text-sm font-bold'>Shipping address</p>
+              <p className='text-xs mt-2'>Enter your shipping address</p>
               <div className='flex flex-col mt-4'>
                 <label className='text-xs'>Address</label>
                 <input

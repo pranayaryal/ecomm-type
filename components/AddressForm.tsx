@@ -82,7 +82,8 @@ const AddressForm = () => {
         zip: address.zip.value,
         street: address.street.value,
         city: address.city.value,
-        state: address.state.value
+        state: address.state.value,
+        addressType: 'billing'
       })
     })
 
@@ -174,7 +175,7 @@ const AddressForm = () => {
 
   useEffect(() => {
     const getAddressFromSession = async () => {
-      const resp = await fetch('/api/get-address', {
+      const resp = await fetch('/api/get-address?addressType=billing', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'

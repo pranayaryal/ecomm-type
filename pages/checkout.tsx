@@ -13,10 +13,12 @@ import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import CheckoutLayout from '@/components/CheckoutLayout'
 import NameEmailForm from '@/components/NameEmailForm'
 import AddressForm from '@/components/AddressForm'
+import ShippingAddressForm from '@/components/ShippingAddressForm'
 
 
 export default function Page() {
   const [ showNameEmailform, setShowNameEmailForm ] = useState(true)
+  const [ isShippingSame, setIsShippingSame ] = useState(true)
   const [personal, setPersonal] = useState({
     email: {
       value: "",
@@ -32,6 +34,15 @@ export default function Page() {
     }
 
   })
+
+   const handleCheckboxChange = (event) => {
+    setIsShippingSame(event.target.checked);
+  };
+
+  useEffect(() => {
+    console.log('isShippingSame', isShippingSame)
+
+  }, [isShippingSame])
 
 
   const [savedPersonal, setSavedPersonal] = useState({
@@ -93,10 +104,15 @@ export default function Page() {
             <div className='bg-white py-6 px-5 w-full'>
               <p className='text-sm font-bold'>Shipping</p>
               <div className='flex mt-8 items-center space-x-2'>
-                <input type='checkbox' className='w-3 h-3' />
+                <input
+                  type='checkbox'
+                  checked={isShippingSame}
+                  onChange={handleCheckboxChange}
+                  className='w-3 h-3' />
                 <p className='text-xs'>Same as my billing address</p>
 
               </div>
+              {!isShippingSame && <ShippingAddressForm/>}
             </div>
             <button className='bg-black text-white py-3 w-1/3 mr-auto mx-auto'>Select</button>
           </div>

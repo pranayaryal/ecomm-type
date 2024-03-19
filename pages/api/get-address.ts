@@ -9,6 +9,13 @@ export default async function handler(
 ) {
   try {
     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address`;
+    const params = req.query
+    const queryString = Object.keys(params)
+      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+      .join('&');
+    
+    const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address`;
+    const finalUrl = `${baseUrl}?${queryString}`
     //await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
     const headers = {
       'origin': 'localhost',
@@ -18,7 +25,7 @@ export default async function handler(
 
 
     const respWithAxios = await axios
-      .get(url, {
+      .get(finalUrl, {
         headers
       })
       .then(res => res.data)

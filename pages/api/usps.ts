@@ -34,7 +34,6 @@ export default async function handler(
     const { access_token } = resp
 
     const params = req.body
-    console.log('params', params)
 
     const queryString = Object.keys(params)
       .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
