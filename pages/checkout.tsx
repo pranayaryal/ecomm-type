@@ -1,41 +1,53 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import { useState, useEffect } from 'react'
-import Faq from '@/components/Faq'
-import ImageZoom from '@/components/ImageZoom'
-import ImageMagnifier from '@/components/ImageMagnifier'
-import { CardPage } from '@/components/CardPage'
-import { CartItem } from '@/context/CartProvider'
-import { useAuth } from '@/hooks/auth'
-import axios from '@/lib/axios'
-import { getAllProducts } from '@/lib/backend'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import CheckoutLayout from '@/components/CheckoutLayout'
 import NameEmailForm from '@/components/NameEmailForm'
 import AddressForm from '@/components/AddressForm'
 import ShippingAddressForm from '@/components/ShippingAddressForm'
+import PhoneNumber from '@/components/PhoneNumber'
 
 
 export default function Page() {
-  const [ showNameEmailform, setShowNameEmailForm ] = useState(true)
-  const [ isShippingSame, setIsShippingSame ] = useState(true)
-  const [personal, setPersonal] = useState({
-    email: {
-      value: "",
-      error: ""
-    },
-    firstName: {
-      value: "",
-      error: ""
-    },
-    lastName: {
-      value: "",
-      error: ""
+  const [isShippingSame, setIsShippingSame] = useState(true)
+  const [phone, setPhone] = useState('')
+  const [ phoneError, setPhoneError ] = useState('')
+
+
+  const formatPhoneNumber = (value) => {
+
+    const numericValue = value.replace(/\D/g, '')
+
+    switch (numericValue.length) {
+      case 0:
+        return '';
+      case 1:
+      case 2:
+      case 3:
+        return numericValue;
+      case 4:
+      case 5:
+      case 6:
+        return `(${numericValue.slice(0, 3)}) ${numericValue.slice(3)}`;
+      case 7:
+      case 8:
+      case 9:
+        return `(${numericValue.slice(0, 3)}) ${numericValue.slice(3, 6)}-${numericValue.slice(6)}`;
+      case 10:
+        return `(${numericValue.slice(0, 3)}) ${numericValue.slice(3, 6)}-${numericValue.slice(6, 10)}`;
+      default:
+        return '';
     }
 
-  })
 
-   const handleCheckboxChange = (event) => {
+  }
+
+  const handlePhoneChange = (e) => {
+    const formattedPhone = formatPhoneNumber(e.target.value)
+    setPhone(formattedPhone)
+  }
+
+
+  const handleCheckboxChange = (event) => {
     setIsShippingSame(event.target.checked);
   };
 
@@ -45,28 +57,8 @@ export default function Page() {
   }, [isShippingSame])
 
 
-  const [savedPersonal, setSavedPersonal] = useState({
-    email: '',
-    firstName: '',
-    lastName: ''
-  })
-
-
-  const onChangeHandler = (field: string, value: string) => {
-    let state = {
-      [field]: {
-        value,
-        error: ""
-      }
-    }
-
-    setPersonal({ ...personal, ...state })
-
-  }
-
   const {
     cartItems,
-    products,
     getProducts,
   } = useShoppingCart()
 
@@ -79,10 +71,9 @@ export default function Page() {
 
   }, [])
 
+  const savePhoneToSession = async() => {
 
-
-
-
+  }
 
 
   return (
@@ -112,9 +103,15 @@ export default function Page() {
                 <p className='text-xs'>Same as my billing address</p>
 
               </div>
-              {!isShippingSame && <ShippingAddressForm/>}
+              {!isShippingSame && <ShippingAddressForm />}
+              <PhoneNumber
+                phone={phone}
+                handlePhoneChange={handlePhoneChange}
+                formatPhoneNumber={formatPhoneNumber}
+              />
             </div>
-            <button className='bg-black text-white py-3 w-1/3 mr-auto mx-auto'>Select</button>
+            <button
+              className='bg-black text-white py-3 w-1/3 mr-auto mx-auto'>Select</button>
           </div>
           {(cartItems === undefined || cartItems.length === 0) ?
             <p></p> :

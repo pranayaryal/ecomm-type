@@ -73,7 +73,7 @@ const ShippingAddressForm = () => {
 
   const saveAddressToSession = async () => {
 
-    const resp = await fetch('/api/shipping-address', {
+    const resp = await fetch('/api/address', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
