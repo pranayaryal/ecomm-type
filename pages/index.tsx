@@ -23,7 +23,6 @@ export default function Page() {
 
   useEffect(() => {
     getProducts()
-    console.log('prdts', products)
   }, [])
 
 
@@ -31,7 +30,7 @@ export default function Page() {
     <Layout>
       {/* <HeroSection /> */}
       <div className='flex mt-16 flex-wrap'>
-        {products.map(product => {
+        {products?.map(product => {
           return <CardPage key={product.id} product={product} />
         })}
       </div>

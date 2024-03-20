@@ -127,6 +127,7 @@ const ShippingAddressForm = () => {
       const updatedAddress = { ...address }
       updatedAddress.street.error = message
       setAddress({ ...updatedAddress })
+      setUseSpinner(false)
       return
 
     }
