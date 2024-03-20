@@ -5,7 +5,7 @@ import LoadingSpinner from "./LoadingSpinner";
 
 
 // Used during checkout
-const NameEmailForm = () => {
+const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm}) => {
 
   const [showNameEmailform, setShowNameEmailForm] = useState(true)
   const [useSpinner, setUseSpinner] = useState(false)
@@ -22,6 +22,10 @@ const NameEmailForm = () => {
     lastName: {
       value: "",
       error: ""
+    },
+    phone: {
+      value: "",
+      error: ""
     }
 
   })
@@ -29,7 +33,8 @@ const NameEmailForm = () => {
   const [savedPersonal, setSavedPersonal] = useState({
     email: '',
     firstName: '',
-    lastName: ''
+    lastName: '',
+    phone: ''
   })
 
   const onChangeHandler = (field: string, value: string) => {
@@ -46,7 +51,7 @@ const NameEmailForm = () => {
 
 
   const savePersonal = async () => {
-    let { email, firstName, lastName } = personal;
+    let { email, firstName, lastName, phone } = personal;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let updatedState = { ...personal };
     if (!emailRegex.test(email.value)) {
@@ -70,11 +75,19 @@ const NameEmailForm = () => {
       setPersonal({ ...updatedState });
       return;
     }
+
+    if (!phone.value) {
+      updatedState.phone.error = "Phone is required";
+      setPersonal({ ...updatedState });
+      return;
+
+    }
     setUseSpinner(true)
     const data = {
       email: personal.email.value,
       firstName: personal.firstName.value,
-      lastName: personal.lastName.value
+      lastName: personal.lastName.value,
+      phone: personal.phone.value
     }
     const response = await fetch('/api/personal', {
       method: "POST",
@@ -85,14 +98,16 @@ const NameEmailForm = () => {
     });
     const resJson = await response.json()
     if (resJson.personal_details) {
-      const { email, firstName, lastName } = resJson.personal_details
+      const { email, firstName, lastName, phone } = resJson.personal_details
       const updatedPersonal = { ...personal }
       updatedPersonal.email.value = email
       updatedPersonal.firstName.value = firstName
       updatedPersonal.lastName.value = lastName
+      updatedPersonal.phone.value = phone
       setPersonal(updatedPersonal)
-      setSavedPersonal({ email, firstName, lastName })
+      setSavedPersonal({ email, firstName, lastName, phone })
       setShowNameEmailForm(false)
+      setShowAddressForm(true)
 
     }
     setUseSpinner(false)
@@ -100,22 +115,65 @@ const NameEmailForm = () => {
 
   }
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedPhone = formatPhoneNumber(e.target.value)
+    const updatedPersonal = personal
+    updatedPersonal.phone.value = formattedPhone
+    setPersonal({...updatedPersonal})
+  }
+
+  const formatPhoneNumber = (value: string) => {
+
+    const numericValue = value.replace(/\D/g, '')
+
+    switch (numericValue.length) {
+      case 0:
+        return '';
+      case 1:
+      case 2:
+      case 3:
+        return numericValue;
+      case 4:
+      case 5:
+      case 6:
+        return `(${numericValue.slice(0, 3)}) ${numericValue.slice(3)}`;
+      case 7:
+      case 8:
+      case 9:
+        return `(${numericValue.slice(0, 3)}) ${numericValue.slice(3, 6)}-${numericValue.slice(6)}`;
+      case 10:
+        return `(${numericValue.slice(0, 3)}) ${numericValue.slice(3, 6)}-${numericValue.slice(6, 10)}`;
+      default:
+        return '';
+    }
+
+
+  }
+
+  const updateNameEmailPhone = () => {
+    setShowNameEmailForm(true)
+    setShowAddressForm(false)
+  }
+
   useEffect(() => {
     const getInitialData = async () => {
       const resp = await fetch('/api/get-personal')
       const respJson = await resp.json()
       if (respJson.personal_details) {
-        const { email, firstName, lastName } = respJson.personal_details
+        const { email, firstName, lastName, phone } = respJson.personal_details
         const updatedPersonal = { ...personal }
         updatedPersonal.email.value = email
         updatedPersonal.firstName.value = firstName
         updatedPersonal.lastName.value = lastName
+        updatedPersonal.phone.value = phone
         setPersonal(updatedPersonal)
         if (email) {
           setShowNameEmailForm(false)
+          setShowAddressForm(true)
           return
         }
         setShowNameEmailForm(true)
+        setShowAddressForm(false)
 
       }
     }
@@ -169,6 +227,15 @@ const NameEmailForm = () => {
                     className={`text-xs mt-1 px-4 py-2 border outline-none ${personal.lastName.error ? 'border-red-300' : 'border-gray-200'}`} />
                 </div>
               </div>
+              <div className="flex flex-col mt-2 w-1/2">
+                <label className={`text-xs ${personal.phone.error ? 'text-red-400' : 'text-black'}`}>Phone</label>
+                <input
+                  value={personal.phone.value}
+                  maxLength={14}
+                  onChange={(e) => handlePhoneChange(e)}
+                  className={`text-xs mt-1 px-4 py-2 border outline-none ${personal.phone.error ? 'border-red-300' : 'border-gray-200'}`} />
+
+              </div>
               {useSpinner ? (
                 <button
                   className='bg-black text-white w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-8 hover:bg-gray-800'>
@@ -199,8 +266,9 @@ const NameEmailForm = () => {
           <div>
             <p>Email: {personal.email.value}</p>
             <p className='mt-2'>{`${personal.firstName.value} ${personal.lastName.value}`}</p>
+            <p className='mt-2'>{`${personal.phone.value}`}</p>
           </div>
-          <p onClick={() => setShowNameEmailForm(true)} className='text-xs cursor-pointer'>Change</p>
+          <p onClick={updateNameEmailPhone} className='text-xs cursor-pointer'>Change</p>
         </div>}
 
       </AnimatePresence>
@@ -210,4 +278,4 @@ const NameEmailForm = () => {
 }
 
 
-export default NameEmailForm
+export default NameEmailPhoneForm

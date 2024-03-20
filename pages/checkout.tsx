@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import CheckoutLayout from '@/components/CheckoutLayout'
-import NameEmailForm from '@/components/NameEmailForm'
+import NameEmailForm from '@/components/NameEmailPhoneForm'
 import AddressForm from '@/components/AddressForm'
 import ShippingAddressForm from '@/components/ShippingAddressForm'
 import PhoneNumber from '@/components/PhoneNumber'
+import NameEmailPhoneForm from '@/components/NameEmailPhoneForm'
 
 
 export default function Page() {
+  const [ showAddressForm, setShowAddressForm ] = useState(false)
   const [isShippingSame, setIsShippingSame] = useState(true)
   const [phone, setPhone] = useState('')
   const [ phoneError, setPhoneError ] = useState('')
@@ -88,9 +90,14 @@ export default function Page() {
         <p className='text-2xl font-bold text-center'>Checkout</p>
         <div className='mt-8 flex justify-center space-x-8'>
           <div className='flex flex-col gap-y-4 w-[66.67%] px-5 items-center'>
-            <NameEmailForm />
+            <NameEmailPhoneForm
+              showAddressForm={showAddressForm}
+              setShowAddressForm={setShowAddressForm}
+              />
 
-            <AddressForm />
+            <AddressForm
+              showAddressForm={showAddressForm}
+              setShowAddressForm={setShowAddressForm}/>
 
             <div className='bg-white py-6 px-5 w-full'>
               <p className='text-sm font-bold'>Shipping</p>
@@ -103,12 +110,7 @@ export default function Page() {
                 <p className='text-xs'>Same as my billing address</p>
 
               </div>
-              {!isShippingSame && <ShippingAddressForm />}
-              <PhoneNumber
-                phone={phone}
-                handlePhoneChange={handlePhoneChange}
-                formatPhoneNumber={formatPhoneNumber}
-              />
+              {!isShippingSame && <ShippingAddressForm  isShippingSame={isShippingSame}/>}
             </div>
             <button
               className='bg-black text-white py-3 w-1/3 mr-auto mx-auto'>Select</button>

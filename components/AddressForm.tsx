@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import { states } from '@/components/states'
 import LoadingSpinner from "./LoadingSpinner";
 
-const AddressForm = () => {
+const AddressForm = ( { showAddressForm, setShowAddressForm}) => {
 
-  const [showAddressForm, setShowAddressForm] = useState(true)
   const [useSpinner, setUseSpinner] = useState(false)
   const [addressDisplay, setAddressDisplay] = useState({
     'city': '',
@@ -127,6 +126,7 @@ const AddressForm = () => {
       const updatedAddress = { ...address }
       updatedAddress.street.error = message
       setAddress({ ...updatedAddress })
+      setUseSpinner(false)
       return
 
     }
