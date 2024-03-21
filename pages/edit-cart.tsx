@@ -60,35 +60,57 @@ export default function Home() {
                       src="/shorts.jpeg" />
 
                   </div>
-                  <div className='w-3/4'>
+                  <div className='w-2/4 py-3'>
                     <div className='flex flex-col items-start'>
                       <div>
                         <a href={`/product/${product.id}`}>
-                          <p className='text-md'>{product.title}</p>
+                          <p className='text-md font-sans font-bold'>{product.title}</p>
                         </a>
                         <p className='text-sm'>${product.price}</p>
                       </div>
-                      <div className='mt-8 flex justify-center'>
-                        <button
-                          onClick={() => decreaseCartQuantity(item.id)}
-                          className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>-</button>
-                        <p className='text-sm'>{item.quantity}</p>
-                        <button
-                          onClick={() => increaseCartQuantity(item.id)}
-                          className='flex justify-center h-6 w-6 bg-pink-100 rounded-full px-2 py-2 items-center'>+</button>
+                      <div className='mt-2 grid grid-cols-4 text-xs w-full text-[10px]'>
+                        <p>Art no:</p>
+                        <p>12342343</p>
+                        <p>Size:</p>
+                        <p>3T(2-3Y)</p>
+
+                        <p>Color:</p>
+                        <p>Light denim blue</p>
+                        <p>Size:</p>
+                        <p>3T(2-3Y)</p>
+                      </div>
+                      <div className='mt-4 relative'>
+                        <select value={item.quantity}
+                          aria-required="false"
+                          className='bg-white h-[48px] outline-none border border-gray-300 w-full ps-4 pe-12 appearance-none'>
+                          {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                            <option
+                              key={s} value={s}>
+                              {s}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          className='h-[26px] absolute right-[4px] top-3 z-20'
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                          focusable="false">
+                            <path d="M12 14.9l4.95-4.95.707.707-4.95 4.95-.707.707-5.657-5.657.707-.707L12 14.9z"></path></svg>
+
                       </div>
                     </div>
-                    <div className='cursor-pointer'
-                      onClick={() => removeCartItem(item.id)}>
-                      <svg viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="16"
-                        width="16">
-                        <path d="M6.229 1.229C6.105 1.352 6 1.577 6 2H5c0-.577.145-1.102.521-1.479C5.898.145 6.423 0 7 0h2c.577 0 1.102.145 1.479.521C10.855.898 11 1.423 11 2h-1c0-.423-.105-.648-.229-.771C9.648 1.105 9.423 1 9 1H7c-.423 0-.648.105-.771.229ZM1 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5ZM12 15c.423 0 .648-.105.771-.229.124-.123.229-.348.229-.771V5h1v9c0 .577-.145 1.102-.521 1.479-.377.376-.902.521-1.479.521H4c-.577 0-1.102-.145-1.479-.521C2.145 15.102 2 14.577 2 14V5h1v9c0 .423.105.648.229.771.123.124.348.229.771.229h8ZM14.5 5h-13a.5.5 0 0 1 0-1h13a.5.5 0 0 1 0 1Z M6 11.5v-3a.5.5 0 0 1 1 0v3a.5.5 0 0 1-1 0ZM9 8.5v3a.5.5 0 0 0 1 0v-3a.5.5 0 0 0-1 0Z">
-                        </path>
-                      </svg>
-                    </div>
                   </div>
+                  <div className='w-1/4 cursor-pointer mr-0 ml-auto pl-24'
+                    onClick={() => removeCartItem(item.id)}>
+                    <svg viewBox="0 0 16 16"
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="16"
+                      width="16">
+                      <path d="M6.229 1.229C6.105 1.352 6 1.577 6 2H5c0-.577.145-1.102.521-1.479C5.898.145 6.423 0 7 0h2c.577 0 1.102.145 1.479.521C10.855.898 11 1.423 11 2h-1c0-.423-.105-.648-.229-.771C9.648 1.105 9.423 1 9 1H7c-.423 0-.648.105-.771.229ZM1 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5ZM12 15c.423 0 .648-.105.771-.229.124-.123.229-.348.229-.771V5h1v9c0 .577-.145 1.102-.521 1.479-.377.376-.902.521-1.479.521H4c-.577 0-1.102-.145-1.479-.521C2.145 15.102 2 14.577 2 14V5h1v9c0 .423.105.648.229.771.123.124.348.229.771.229h8ZM14.5 5h-13a.5.5 0 0 1 0-1h13a.5.5 0 0 1 0 1Z M6 11.5v-3a.5.5 0 0 1 1 0v3a.5.5 0 0 1-1 0ZM9 8.5v3a.5.5 0 0 0 1 0v-3a.5.5 0 0 0-1 0Z">
+                      </path>
+                    </svg>
+                  </div>
+
                 </div>
                 <hr />
               </>

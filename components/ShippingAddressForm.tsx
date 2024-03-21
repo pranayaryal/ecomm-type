@@ -245,28 +245,34 @@ const ShippingAddressForm = () => {
                   {address.zip.error && <span className='text-xs text-red-400'>{address.zip.error}</span>}
                 </div>
               </div>
-              <div className='flex flex-col mt-4'>
+              <div className='flex flex-col mt-4 relative'>
                 <label className='text-xs'>State</label>
                 <select
-                  className={`px-3 py-2 bg-white border font-sans tracking-wide text-md ${address.state.error ? 'border-red-300' : 'border-gray-200'}`}
+                  className={`px-3 py-2 bg-white border outline-none font-sans appearance-none tracking-wide text-md ${address.state.error ? 'border-red-300' : 'border-gray-200'}`}
                   value={address.state.value} onChange={(e) => onAddressChangeHandler("state", e.target.value)}>
                   <option
                     className={`${address.state.error ? 'text-red-400' : 'text-black'}`}
                     value="">Select state</option>
                   {states.map((s) => (
-                    <option 
+                    <option
                       key={s.abbreviation} value={s.abbreviation}>
                       {s.name}
                     </option>
                   ))}
                 </select>
+                <svg
+                  className='h-[26px] absolute right-[8px] top-6 z-20'
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  focusable="false">
+                  <path d="M12 14.9l4.95-4.95.707.707-4.95 4.95-.707.707-5.657-5.657.707-.707L12 14.9z"></path></svg>
                 {address.state.error && <span className='text-xs text-red-400'>{address.state.error}</span>}
               </div>
               {useSpinner ? (
-                  <button
-                    className='bg-black text-white w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-8 hover:bg-gray-800'>
-                    <LoadingSpinner />
-                  </button>
+                <button
+                  className='bg-black text-white w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-8 hover:bg-gray-800'>
+                  <LoadingSpinner />
+                </button>
               ) :
                 (
                   <button
