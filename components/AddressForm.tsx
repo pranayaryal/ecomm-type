@@ -290,7 +290,7 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }) => {
                 (
                   <button
                     onClick={handleSubmit}
-                    className='bg-black text-white w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-8 hover:bg-gray-800'>
+                    className='bg-black text-white w-full md:w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-8 hover:bg-gray-800'>
                     Save
                   </button>
 

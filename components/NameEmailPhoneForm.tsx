@@ -208,7 +208,7 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm}) => {
                 <input
                   value={personal.email.value}
                   onChange={(e) => onChangeHandler("email", e.target.value)}
-                  className={`text-xs mt-1 px-4 py-2 border outline-none ${personal.email.error ? 'border-red-300' : 'border-gray-200'}`} />
+                  className={`text-xs mt-1 px-4 py-3 md:py-2 border outline-none ${personal.email.error ? 'border-red-300' : 'border-gray-200'}`} />
 
               </div>
               <div className='flex space-x-4 w-full mt-4'>
@@ -245,7 +245,7 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm}) => {
                 (
                   <button
                     onClick={() => savePersonal()}
-                    className='bg-black text-white w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-12 hover:bg-gray-800'>
+                    className='bg-black text-white w-full md:w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-12 hover:bg-gray-800'>
                     Save
                   </button>
 

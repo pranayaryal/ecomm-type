@@ -80,7 +80,7 @@ export default function Page() {
 
   return (
     <CheckoutLayout>
-      <div className='max-w-[1188px] ml-auto mr-auto'>
+      <div className='md:max-w-[1188px] ml-auto mr-auto'>
         <a
           href="/edit-cart"
           className='cursor-pointer absolute left-10 top-10 flex items-center space-x-2'>
@@ -88,8 +88,8 @@ export default function Page() {
           <p className='text-xs hover:underline leading-6'>Back to shopping bag</p>
         </a>
         <p className='text-2xl font-bold text-center'>Checkout</p>
-        <div className='mt-8 flex justify-center space-x-8'>
-          <div className='flex flex-col gap-y-4 w-[66.67%] px-5 items-center'>
+        <div className='mt-8 flex flex-col md:flex-row justify-center md:space-x-8'>
+          <div className='flex flex-col gap-y-4 w-full md:w-[66.67%] md:px-5 items-center'>
             <NameEmailPhoneForm
               showAddressForm={showAddressForm}
               setShowAddressForm={setShowAddressForm}
@@ -113,11 +113,11 @@ export default function Page() {
               {!isShippingSame && <ShippingAddressForm  isShippingSame={isShippingSame}/>}
             </div>
             <button
-              className='bg-black text-white py-3 w-1/3 mr-auto mx-auto'>Select</button>
+              className='bg-black text-white py-3 w-full md:w-1/3 mr-auto mx-auto'>Select</button>
           </div>
           {(cartItems === undefined || cartItems.length === 0) ?
             <p></p> :
-            <div className='flex justify-top flex-col gap-y-8 bg-white w-1/3 p-4'>
+            <div className='flex justify-top flex-col gap-y-8 bg-white w-full md:w-1/3 p-4'>
               <p>Total</p>
               <p className='text-sm'>Shipping</p>
               <a href='/edit-cart'>
