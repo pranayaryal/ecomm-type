@@ -5,10 +5,10 @@ import React from 'react'
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className='bg-white-smoke flex flex-col font-sans'>
+    <div className='bg-white-smoke font-sans'>
       <Navbar />
       <main
-        className='w-[80%] ml-auto mr-auto md:w-[100%] md:mt-16 max-w-[1500px] pr-0 md:pl-[50px] text-dark-slate-grey'>
+        className='ml-auto mr-auto md:w-[100%] md:mt-16 max-w-[1500px] pr-0 md:pl-[50px] text-dark-slate-grey'>
         {children}
       </main>
       <Footer />

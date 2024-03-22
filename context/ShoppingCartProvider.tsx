@@ -14,7 +14,7 @@ type ShoppingCardProviderProps = {
 type ShoppingCartContext = {
   products: []
   getItemQuantity: (id: number) => number
-  increaseCartQuantity: (id: number) => void
+  setCartQuantity: (id: number, quantity: number) => void
   removeCartItem: (id: number) => void
   decreaseCartQuantity: (id: number) => void
   removeFromCart: (id: number) => void
@@ -81,10 +81,11 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   }, [isOpen]);
 
 
-  const increaseCartQuantity = async (id: number) => {
-    const data = { id, quantity: 1 }
+  const setCartQuantity = async (id: number, quantity: number) => {
+    console.log('yu did reachere')
+    const data = { id, quantity }
     setClickedItem(data)
-    const response = await fetch('/api/add-cart-item', {
+    const response = await fetch('/api/set-cart-quantity', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -230,7 +231,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         getProducts,
         getProduct,
         setCartItems,
-        increaseCartQuantity,
+        setCartQuantity,
         decreaseCartQuantity,
         getAllCartItems,
         forgetCart,

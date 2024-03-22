@@ -5,10 +5,10 @@ import { useShoppingCart } from '@/context/ShoppingCartProvider'
 // import { useShoppingCartNew } from '@/context/ShoppingCartProviderNew'
 
 export const CardPage: React.FC<{ product: CartItem }> = ({ product }) => {
-  const { products, getProducts, increaseCartQuantity, openCart } = useShoppingCart()
+  const { products, getProducts, setCartQuantity, openCart } = useShoppingCart()
 
   const addToCartAndOpenSide = (id: number) => {
-    increaseCartQuantity(id)
+    setCartQuantity(id, 1)
     openCart()
 
   }

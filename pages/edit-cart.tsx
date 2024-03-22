@@ -19,7 +19,7 @@ export default function Home() {
   const { cartQuantity,
     decreaseCartQuantity,
     cartItems,
-    increaseCartQuantity,
+    setCartQuantity,
     products,
     getProducts,
     closeCart,
@@ -40,9 +40,9 @@ export default function Home() {
 
   return (
     <Layout>
-      <p className='text-center text-3xl font-bold'>Shopping bag</p>
-      <div className='flex py-[20px] px-[250px] justify-center mt-4 space-x-8'>
-        <div className='flex flex-col w-4/5'>
+      <p className='text-center text-xl md:text-3xl font-bold'>Shopping bag</p>
+      <div className='flex flex-col md:flex-row py-[20px] w-full md:px-[250px] justify-center mt-4 md:space-x-8'>
+        <div className='flex flex-col w-full md:w-4/5'>
           {(!cartItems || !products) ?
             <p className='mt-4'>No items in cart</p> :
             (cartItems.map(item => {
@@ -52,15 +52,15 @@ export default function Home() {
 
               // return <div className='p-8 flex space-x-8 justify-between'>
               return <>
-                <div className='bg-white p-6 flex'>
-                  <div className='w-1/4'>
+                <div className='bg-white p-6 flex space-x-4 md:space-x-0 relative'>
+                  <div className='w-1/3 md:w-1/5'>
                     <img
-                      className='w-[112px] h-[168px]'
+                      className='w-[95px] h-[112px] md:w-[112px] md:h-[168px]'
                       // src={product.image} />
                       src="/shorts.jpeg" />
 
                   </div>
-                  <div className='w-2/4 py-3'>
+                  <div className='w-2/3 md:w-4/5 py-3'>
                     <div className='flex flex-col items-start'>
                       <div>
                         <a href={`/product/${product.id}`}>
@@ -68,19 +68,29 @@ export default function Home() {
                         </a>
                         <p className='text-sm'>${product.price}</p>
                       </div>
-                      <div className='mt-2 grid grid-cols-4 text-xs w-full text-[10px]'>
-                        <p>Art no:</p>
-                        <p>12342343</p>
-                        <p>Size:</p>
-                        <p>3T(2-3Y)</p>
+                      <ul className='list-none mt-2 block md:flex md:flex-wrap text-xs w-full text-[10px] max-w-[430px]'>
+                        <li className='flex grow shrink basis-1/2'>
+                          <p className='grow shrink basis-0'>Art no:</p>
+                          <p className='grow shrink basis-1/5'>12342343</p>
 
-                        <p>Color:</p>
-                        <p>Light denim blue</p>
-                        <p>Size:</p>
-                        <p>3T(2-3Y)</p>
-                      </div>
+                        </li>
+                        <li className='flex grow shrink basis-1/2'>
+                          <p className='grow shrink basis-0'>Color:</p>
+                          <p className='grow shrink basis-1/5'>Light denim blue</p>
+                        </li>
+                        <li className='flex grow shrink basis-1/2'>
+                          <p className='grow shrink basis-0'>Size:</p>
+                          <p className='grow shrink basis-1/5'>3T (2-3)</p>
+                        </li>
+                        <li className='flex grow shrink basis-1/2'>
+                          <p className='grow shrink basis-0'>Total:</p>
+                          <p className='grow shrink basis-1/5'>$9.99</p>
+                        </li>
+
+                      </ul>
                       <div className='mt-4 relative'>
                         <select value={item.quantity}
+                          onChange={(e) => setCartQuantity(product.id, parseInt(e.target.value))}
                           aria-required="false"
                           className='bg-white h-[48px] outline-none border border-gray-300 w-full ps-4 pe-12 appearance-none'>
                           {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
@@ -95,12 +105,12 @@ export default function Home() {
                           viewBox="0 0 24 24"
                           xmlns="http://www.w3.org/2000/svg"
                           focusable="false">
-                            <path d="M12 14.9l4.95-4.95.707.707-4.95 4.95-.707.707-5.657-5.657.707-.707L12 14.9z"></path></svg>
+                          <path d="M12 14.9l4.95-4.95.707.707-4.95 4.95-.707.707-5.657-5.657.707-.707L12 14.9z"></path></svg>
 
                       </div>
                     </div>
                   </div>
-                  <div className='w-1/4 cursor-pointer mr-0 ml-auto pl-24'
+                  <div className='absolute top-3 right-3 cursor-pointer'
                     onClick={() => removeCartItem(item.id)}>
                     <svg viewBox="0 0 16 16"
                       xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +128,7 @@ export default function Home() {
           }
 
         </div>
-        <div className='flex bg-white justify-top flex-col w-1/5 p-4'>
+        <div className='flex bg-white flex-col w-1/5 p-4'>
           {cartItems.length > 0 ? (<>
             <div className='mt-4 text-[11px] flex justify-between'>
               <p className='text-gray-600'>Order value</p>
