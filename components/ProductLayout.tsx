@@ -1,14 +1,15 @@
 import Navbar from './Navbar'
 import Footer from './Footer'
 import React from 'react'
+import NavbarProduct from './NavbarProduct'
 // import { ShoppingCartProvider } from '@/context/ShoppingCartProvider'
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ProductLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className='bg-white-smoke font-sans-fancy'>
-      <Navbar />
+      <NavbarProduct />
       <main
-        className='ml-auto mr-auto md:w-[100%] md:mt-16 max-w-[1500px] pr-0 md:pl-[50px] text-dark-slate-grey'>
+        className='ml-auto mr-auto md:w-[100%] md:mt-16 pl-8 pr-12 text-dark-slate-grey'>
         {children}
       </main>
       <Footer />
@@ -17,4 +18,4 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   )
 }
 
-export default Layout;
+export default ProductLayout;
