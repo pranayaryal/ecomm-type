@@ -1,29 +1,28 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import { useState, useEffect } from 'react'
 import Faq from '@/components/Faq'
-import ImageZoom from '@/components/ImageZoom'
-import ImageMagnifier from '@/components/ImageMagnifier'
 import { CardPage } from '@/components/CardPage'
-import { CartItem } from '@/context/CartProvider'
-import { useAuth } from '@/hooks/auth'
-import axios from '@/lib/axios'
-import { getAllProducts } from '@/lib/backend'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import Layout from '@/components/layout'
-import HeroSection from '@/components/HeroSection'
 
 // import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
 
 export default function Page() {
 
-  const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
-  const { products, getProducts } = useShoppingCart()
+  // const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
+  const { products } = useShoppingCart()
+
+  // const [products, setProducts] = useState([])
 
 
-  useEffect(() => {
-    getProducts()
-  }, [])
+
+  // useEffect(() => {
+  //   const awaitProds = async () => {
+  //     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products`;
+  //     await axios.get(url)
+  //     .then(res => setProducts(res.data))
+
+  //   }
+  //   awaitProds()
+  // }, [])
 
 
   return (

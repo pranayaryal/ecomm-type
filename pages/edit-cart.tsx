@@ -1,40 +1,30 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import { useState, useEffect } from 'react'
-import Faq from '@/components/Faq'
-import ImageZoom from '@/components/ImageZoom'
-import ImageMagnifier from '@/components/ImageMagnifier'
-import { CardPage } from '@/components/CardPage'
-import { CartItem } from '@/context/CartProvider'
-import { useAuth } from '@/hooks/auth'
-import axios from '@/lib/axios'
-import { getAllProducts } from '@/lib/backend'
+import { useEffect } from 'react'
+// import { useAuth } from '@/hooks/auth'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import Layout from '@/components/layout'
+import axios from '@/lib/axios'
 
 
 export default function Home() {
 
-  const { user } = useAuth({ middleware: '', redirectIfAuthenticated: '' });
-  const { cartQuantity,
-    decreaseCartQuantity,
+  const { 
     cartItems,
     setCartQuantity,
     products,
-    getProducts,
-    closeCart,
     removeCartItem,
-    getItemQuantity
   } = useShoppingCart()
 
+  // const { user } = useAuth({ middleware: '', redirectIfAuthenticated: ''});
 
-  useEffect(() => {
-    const waitForProducts = async () => {
-      await getProducts()
-    }
-    waitForProducts()
 
-  }, [])
+  // useEffect(() => {
+  //   const waitForProducts = async () => {
+  //     await getProducts()
+  //   }
+  //   waitForProducts()
+
+  // }, [])
+
 
 
 

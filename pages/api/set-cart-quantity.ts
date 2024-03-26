@@ -9,7 +9,7 @@ export default async function handler(
 ) {
   try {
     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/set-cart-quantity`;
-    //await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
+    await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
     const headers = {
       'origin': 'localhost',
       cookie: req.headers.cookie

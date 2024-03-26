@@ -9,18 +9,19 @@ export default async function handler(
 ) {
   try {
     //const { query: { name, keyword }, method, } = req;
+    // await axios.get(`/sanctum/csrf-cookie`)
     const { query: { id} } = req;
     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/product/${id}`;
     const headers = {
       'origin': 'localhost',
       cookie: req.headers.cookie
     }
-    //await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
     const respWithAxios = await axios
       .get(url, {
         headers
       })
       .then(res => res.data)
+    
     
     res.status(200).json(respWithAxios);
 

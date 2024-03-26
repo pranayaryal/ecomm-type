@@ -10,19 +10,20 @@ export default async function handler(
   try {
     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cart`;
     const headers = {
-      'origin': 'localhost',
-      cookie: req.headers.cookie
+      // 'origin': 'localhost',
+      // cookie: req.headers.cookie
+      cookie: req.cookies.laravel_session
     }
-    // axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
+    // console.log('request cookies', req.headers.cookie)
     // .then(res => console.log('scn', res))
     // .catch(err => console.log('sncterr', err))
+    console.log(`headersfromallcart ${Date()}`, headers)
 
     const respWithAxios = await axios
       .get(url, {
         headers
       })
       .then(res => res.data)
-    
     res.status(200).json(respWithAxios);
 
   }

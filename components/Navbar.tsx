@@ -16,53 +16,13 @@ const Navbar = () => {
         products,
         getProduct,
         getProducts,
-        cartItems
+        cartItems,
+        getAllCartItems
+        
     } = useShoppingCart()
     
     const openCart = () => setOpenAside(true)
     const closeCart = () => setOpenAside(false)
-
-
-    const setCookie = async () => {
-        const resp = await fetch('/api/set-cookie', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                cart: { apple: 1, orange: 3 }
-            })
-
-        })
-
-        const resJson = await resp.json()
-        console.log(resJson.cart)
-    }
-
-    const callUsps = async () => {
-        const resp = await fetch('/api/usps', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-
-        const respJson = await resp.json()
-
-    }
-
-    const getCookie = async () => {
-        const resp = await fetch('/api/get-cookie', {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-
-        const resJson = await resp.json()
-        console.log(resJson)
-    }
-
 
     const total = cartItems ? cartItems.length : 0
 
@@ -70,27 +30,6 @@ const Navbar = () => {
     // const [cartFromContext, setCartFromContext] = useState(cartItems)
     const [errors, setErrors] = useState<string[]>([])
 
-
-    // useEffect(() => {
-    //     const jsonValue = window.localStorage.getItem('shopping-cart') || []
-    //     setCartItems(jsonValue ? JSON.parse(jsonValue) : [])
-
-    // }, [])
-
-    // useEffect(() => {
-    //     localStorage.setItem('shopping-cart', JSON.stringify(cartItems));
-    // }, [cartItems])
-
-    // useEffect(() => {
-    //     setTotal(cartItems ? cartItems.length: 0)
-    // }, [cartItems])
-
-    const calcTotal = () => {
-        const vals = Object.values(cartItems).reduce((a, b) => a + b, 0);
-
-
-
-    }
 
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [openCartSlider, setOpenCartSlider] = useState(false)
@@ -105,10 +44,6 @@ const Navbar = () => {
         setDropdownVisible(false);
     };
 
-    useEffect(() => {
-        getProducts()
-
-    }, [])
 
 
     return (

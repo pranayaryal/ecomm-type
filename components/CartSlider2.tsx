@@ -13,7 +13,6 @@ const ShoppingCart = ( { isOpen} : { isOpen: boolean}) => {
         closeCart,
         getItemQuantity 
     } = useShoppingCart()
-    console.log(cartItems)
 
     useEffect(() => {
         const handleOutsideClick = (event: Event) => {

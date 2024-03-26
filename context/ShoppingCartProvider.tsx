@@ -4,7 +4,7 @@ import ShoppingCart from "@/components/ShoppingCart";
 import ShoppingCartSlide from "@/components/ShoppingCartSlide";
 import ShoppingCartTransient from "@/components/ShoppingCartTransient";
 import axios from '@/lib/axios'
-import { getAllProducts } from "@/lib/backend";
+import { getAllProducts, getCartItems } from "@/lib/backend";
 import { SideSlider } from '@/components/SideSlider'
 
 type ShoppingCardProviderProps = {
@@ -67,9 +67,18 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const closeWholeCart = () => setIsOpenWholeCart(false)
 
   useEffect(() => {
-    getAllCartItems()
+    const loadCartAndProducts = async() => {
+      await getProducts()
+      await getAllCartItems()
+    }
+    loadCartAndProducts()
 
   }, [])
+
+  useEffect(() => {
+    console.log('cartItemsfromuseeff', cartItems)
+
+  }, [cartItems])
 
   useEffect(() => {
     if (isOpen) {
@@ -81,7 +90,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   }, [isOpen]);
 
 
-  const setCartQuantity = async (id: number, quantity: number) => {
+  const setCartQuantityOld = async (id: number, quantity: number) => {
     console.log('yu did reachere')
     const data = { id, quantity }
     setClickedItem(data)
@@ -98,6 +107,19 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
     }
 
   }
+
+  const setCartQuantity = async (id: number, quantity: number) => {
+    console.log('you reached setCartQuantity')
+    const data = { id, quantity }
+    setClickedItem(data)
+    const resp = await axios
+      .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/set-cart-quantity`, data)
+      .then(dat => dat)
+      .catch(err => console.log(err))
+    setCartItems(Object.values(resp.data.products))
+
+  }
+
 
   const decreaseCartQuantity = async (id: number) => {
     const data = { id, quantity: 1 }
@@ -132,18 +154,32 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   }
 
   const getAllCartItems = async () => {
-    const response = await fetch('/api/get-all-cart', {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-      },
+    // await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
+    const resp = await axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cart`)
+        .then(data => data)
+      
 
-    })
-
-    const resJson = await response.json()
-    if (resJson.products) {
-      setCartItems(Object.values(resJson.products));
+    
+    
+      
+    if (resp?.data.products) {
+      setCartItems(Object.values(resp.data.products));
     }
+
+    console.log('cartItemsFromGetallcartitems', cartItems)
+    // const response = await fetch('/api/get-all-cart', {
+    //   method: 'GET',
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+
+    // })
+
+    // const resJson = await response.json()
+    // if (resJson.products) {
+    //   setCartItems(Object.values(resJson.products));
+    // }
   }
 
   const forgetCart = async () => {
@@ -160,17 +196,21 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   }
 
   const getProducts = async () => {
-    const response = await fetch('/api/products', {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-      }
+    const resp = await axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products`)
+      .then(data => setProducts(data.data.products))
+      .catch(err => console.log(err))
+    // const response = await fetch('/api/products', {
+    //   method: 'GET',
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   }
 
-    })
+    // })
 
-    const resJson = await response.json();
+    // const resJson = await resp.json();
 
-    setProducts(resJson.products)
+    // setProducts(resJson.products)
 
   }
 

@@ -1,35 +1,24 @@
 import React from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef} from 'react'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
-// import { useShoppingCartLocal } from '@/context/ShoppingCartProviderLocal'
-import { getAllProducts, removeFromCart } from '@/lib/backend'
-import { useRouter } from 'next/router'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function ShoppingCartTransient({ isOpen }) {
     // console.log('shopping cart data', data)
 
     const asideRef = useRef<HTMLElement>(null)
-    const { cartQuantity,
+    const {
         cartItems,
-        decreaseCartQuantity,
-        increaseCartQuantity,
         products,
         getProducts,
-        removeCartItem,
-        closeCart,
-        getItemQuantity,
         clickedItem
     } = useShoppingCart()
     console.log('cartItems', cartItems)
 
-    useEffect(() => {
-        getProducts()
+    // useEffect(() => {
+    //     getProducts()
 
-    }, [])
-
-    // const item = cartItems[cartItems.length - 1]
-
+    // }, [])
 
 
     return (

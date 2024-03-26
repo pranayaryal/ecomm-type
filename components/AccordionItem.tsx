@@ -10,7 +10,7 @@ const AccordionItem: React.FC<{children: React.ReactNode,
   return (
     <div
       onClick={ctxtVals?.toggleItem(toggle)}
-      className={'block font-light border-t text-xl md:text-3xl border-t-gray-300 cursor-pointer py-[1.5rem] px-0 ' + className}
+      className={'block border-b-gray-500 hover:text-red-500 cursor-pointer py-2 px-0 ' + className}
     >
       {children}
 

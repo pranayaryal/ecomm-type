@@ -5,7 +5,7 @@ import { useShoppingCart } from '@/context/ShoppingCartProvider'
 // import { useShoppingCartNew } from '@/context/ShoppingCartProviderNew'
 
 export const CardPage: React.FC<{ product: CartItem }> = ({ product }) => {
-  const { products, getProducts, setCartQuantity, openCart } = useShoppingCart()
+  const { setCartQuantity, openCart, cartItems } = useShoppingCart()
 
   const addToCartAndOpenSide = (id: number) => {
     setCartQuantity(id, 1)

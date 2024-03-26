@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getProduct } from "@/lib/backend";
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import ProductLayout from "@/components/ProductLayout";
+import ProductAccordion from '@/components/ProductAccordion';
 
 //const products = await getAllProducts();
 
@@ -61,7 +62,7 @@ export default function Page({ product }) {
             <div className="flex space-x-1">
                 {showFlower ?
                     <>
-                        <div className="w-1/3 mt-12">
+                        <div className="w-1/3 mt-12 grow-0">
                             <img src='/flowershorts.jpeg' className="w-full h-full" /> :
                         </div>
                         <div className="w-1/3">
@@ -111,6 +112,7 @@ export default function Page({ product }) {
                         Add To Cart
                     </button>
                     {<p className='text-red-800 text-sm'>{errors}</p>}
+                    <ProductAccordion />
 
                 </div>
             </div>
