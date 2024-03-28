@@ -59,22 +59,22 @@ export default function Page({ product }) {
 
     return (
         <ProductLayout>
-            <div className="flex space-x-1">
+            <div className="flex flex-col md:flex-row space-x-1">
                 {showFlower ?
                     <>
-                        <div className="w-1/3 mt-12 grow-0">
-                            <img src='/flowershorts.jpeg' className="w-full h-full" /> :
+                        <div className="w-1/3 mt-12">
+                            <img src='/flowershorts.jpeg' /> :
                         </div>
                         <div className="w-1/3">
-                            <img src='/flowershortside.webp' className="w-full h-full" />
+                            <img src='/flowershortside.webp' />
                         </div>
                     </> :
                     <>
                         <div className="w-1/3 mt-12">
-                            <img src='/denim.jpeg' className="w-full h-full" /> :
+                            <img src='/denim.jpeg' /> :
                         </div>
                         <div className="w-1/3">
-                            <img src='/denim-side.webp' className="w-full h-full" />
+                            <img src='/denim-side.webp' />
                         </div>
 
                     </>}

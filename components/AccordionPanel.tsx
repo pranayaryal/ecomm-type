@@ -18,7 +18,7 @@ const AccordionPanel: React.FC<{ children: React.ReactNode, id: string, classNam
     <div
       ref={accordionRef}
       id={id}
-      className="overflow-hidden md:overflow-x-hidden transition-height ease duration-300 text-gray-600"
+      className="px-4 overflow-hidden md:overflow-x-hidden transition-height ease duration-300 text-gray-600"
       style={calculateHeight()}
     >
       {children}
