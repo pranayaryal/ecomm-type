@@ -1,11 +1,13 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import LoadingSpinner from "./LoadingSpinner";
+import axios from '@/lib/axios'
 
 
 // Used during checkout
-const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm}) => {
+const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm} : 
+  { showAddressForm: boolean, setShowAddressForm: Dispatch<SetStateAction<boolean>>}) => {
 
   const [showNameEmailform, setShowNameEmailForm] = useState(true)
   const [useSpinner, setUseSpinner] = useState(false)
@@ -89,14 +91,19 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm}) => {
       lastName: personal.lastName.value,
       phone: personal.phone.value
     }
-    const response = await fetch('/api/personal', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const resJson = await response.json()
+    // const response = await fetch('/api/personal', {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(data),
+    // });
+
+    const resJson = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personal`, data)
+          .then(dat => dat.data)
+          .catch(err => console.log(err))
+
+
     if (resJson.personal_details) {
       const { email, firstName, lastName, phone } = resJson.personal_details
       const updatedPersonal = { ...personal }
@@ -157,8 +164,13 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm}) => {
 
   useEffect(() => {
     const getInitialData = async () => {
-      const resp = await fetch('/api/get-personal')
-      const respJson = await resp.json()
+      // const resp = await fetch('/api/get-personal')
+      const respJson = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personal`)
+              .then(dat => dat.data)
+              .catch(err => console.log(err))
+      
+
+      // const respJson = await resp.json()
       if (respJson.personal_details) {
         const { email, firstName, lastName, phone } = respJson.personal_details
         const updatedPersonal = { ...personal }

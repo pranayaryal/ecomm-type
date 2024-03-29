@@ -1,10 +1,12 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from "react";
 import { states } from '@/components/states'
 import LoadingSpinner from "./LoadingSpinner";
+import axios from '@/lib/axios'
 
-const AddressForm = ({ showAddressForm, setShowAddressForm }) => {
+const AddressForm = ({ showAddressForm, setShowAddressForm }
+    : { showAddressForm: boolean, setShowAddressForm: Dispatch<SetStateAction<boolean>>}) => {
 
   const [useSpinner, setUseSpinner] = useState(false)
   const [addressDisplay, setAddressDisplay] = useState({
@@ -72,21 +74,30 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }) => {
 
   const saveAddressToSession = async () => {
 
-    const resp = await fetch('/api/address', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        zip: address.zip.value,
-        street: address.street.value,
-        city: address.city.value,
-        state: address.state.value,
-        addressType: 'billing'
-      })
+    // const resp = await fetch('/api/address', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     zip: address.zip.value,
+    //     street: address.street.value,
+    //     city: address.city.value,
+    //     state: address.state.value,
+    //     addressType: 'billing'
+    //   })
+    // })
+    const respJson = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address`, {
+      zip: address.zip.value,
+      street: address.street.value,
+      city: address.city.value,
+      state: address.state.value,
+      addressType: 'billing'
     })
+      .then(dat => dat.data)
+      .catch(err => console.log(err))
 
-    const respJson = await resp.json()
+    // const respJson = await resp.json()
     if (respJson.hasOwnProperty("address")) {
       setShowAddressForm(false)
     }
@@ -115,6 +126,7 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }) => {
       },
       body: JSON.stringify(data)
     })
+
 
     const respJson = await resp.json()
     const { respUspsAddJson } = respJson
@@ -175,17 +187,20 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }) => {
 
   useEffect(() => {
     const getAddressFromSession = async () => {
-      const resp = await fetch('/api/get-address?addressType=billing', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      // const resp = await fetch('/api/get-address?addressType=billing', {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      const resp = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address?addressType=billing`)
+        .then(dat => dat.data)
+        .catch(err => console.log(err))
 
-      const respJson = await resp.json()
-      console.log('responseInUseEffect', respJson)
-      if (respJson.address.street) {
-        const { city, state, zip, street } = respJson.address
+      // const respJson = await resp.json()
+      console.log('responseInUseEffect', resp)
+      if (resp.address) {
+        const { city, state, zip, street } = resp.address
         const updatedAddressDisplay = { ...addressDisplay }
         updatedAddressDisplay.street = street
         updatedAddressDisplay.city = city

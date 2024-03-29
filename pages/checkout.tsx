@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, InputHTMLAttributes, ChangeEvent } from 'react'
 import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import CheckoutLayout from '@/components/CheckoutLayout'
 import NameEmailForm from '@/components/NameEmailPhoneForm'
@@ -15,7 +15,7 @@ export default function Page() {
   const [ phoneError, setPhoneError ] = useState('')
 
 
-  const formatPhoneNumber = (value) => {
+  const formatPhoneNumber = (value: string) => {
 
     const numericValue = value.replace(/\D/g, '')
 
@@ -49,7 +49,7 @@ export default function Page() {
   }
 
 
-  const handleCheckboxChange = (event) => {
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     setIsShippingSame(event.target.checked);
   };
 
@@ -73,9 +73,6 @@ export default function Page() {
 
   }, [])
 
-  const savePhoneToSession = async() => {
-
-  }
 
 
   return (
@@ -110,12 +107,12 @@ export default function Page() {
                 <p className='text-xs'>Same as my billing address</p>
 
               </div>
-              {!isShippingSame && <ShippingAddressForm  isShippingSame={isShippingSame}/>}
+              {!isShippingSame && <ShippingAddressForm />}
             </div>
             <button
               className='bg-black text-white py-3 w-full md:w-1/3 mr-auto mx-auto'>Select</button>
           </div>
-          {(cartItems === undefined || cartItems.length === 0) ?
+          {(cartItems === undefined || Object.keys(cartItems).length === 0) ?
             <p></p> :
             <div className='flex justify-top flex-col gap-y-8 bg-white w-full md:w-1/3 p-4'>
               <p>Total</p>
