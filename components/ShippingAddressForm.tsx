@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from "react";
 import { states } from '@/components/states'
 import LoadingSpinner from "./LoadingSpinner";
+import axios from '@/lib/axios'
 
 const ShippingAddressForm = () => {
 
@@ -73,21 +74,32 @@ const ShippingAddressForm = () => {
 
   const saveAddressToSession = async () => {
 
-    const resp = await fetch('/api/address', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+    // const resp = await fetch('/api/address', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     zip: address.zip.value,
+    //     street: address.street.value,
+    //     city: address.city.value,
+    //     state: address.state.value,
+    //     addressType: 'shipping'
+    //   })
+    // })
+
+    const data = {
         zip: address.zip.value,
         street: address.street.value,
         city: address.city.value,
         state: address.state.value,
         addressType: 'shipping'
-      })
-    })
+      }
 
-    const respJson = await resp.json()
+    const respJson = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address`, data)
+                .then(dat => dat.data)
+                .catch(err => console.log(err))
+
     if (respJson.hasOwnProperty("address")) {
       setShowAddressForm(false)
     }
@@ -164,16 +176,21 @@ const ShippingAddressForm = () => {
 
   useEffect(() => {
     const getAddressFromSession = async () => {
-      const resp = await fetch('/api/get-address?addressType=shipping', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      // const resp = await fetch('/api/get-address?addressType=shipping', {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
 
-      const respJson = await resp.json()
+      const respJson = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-address?addressType=shipping`)
+                                  .then(dat => dat.data)
+                                  .catch(err => console.log(err))
+
+
+
       console.log('responseInUseEffect', respJson)
-      if (respJson.address.street) {
+      if (respJson?.address.street) {
         const { city, state, zip, street } = respJson.address
         const updatedAddressDisplay = { ...addressDisplay }
         updatedAddressDisplay.street = street

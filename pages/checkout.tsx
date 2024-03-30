@@ -87,10 +87,10 @@ export default function Page() {
         <p className='text-2xl font-bold text-center'>Checkout</p>
         <div className='mt-8 flex flex-col md:flex-row justify-center md:space-x-8'>
           <div className='flex flex-col gap-y-4 w-full md:w-[66.67%] md:px-5 items-center'>
-            <NameEmailPhoneForm
+            {<NameEmailPhoneForm
               showAddressForm={showAddressForm}
               setShowAddressForm={setShowAddressForm}
-              />
+              />}
 
             <AddressForm
               showAddressForm={showAddressForm}
