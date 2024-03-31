@@ -6,17 +6,25 @@ import LoadingSpinner from "./LoadingSpinner";
 import axios from '@/lib/axios'
 
 
-const AddressForm = ( { showForms, setShowForms} : 
-  { showForms: {
+const AddressForm = ({ showForms, setShowForms }:
+  {
+    showForms: {
       nameEmail: boolean,
       billingAddress: boolean,
-      shippingAddress: boolean
+      shippingAddress: boolean,
+      namePanel: boolean,
+      billingPanel: boolean,
+      shippingPanel: boolean
     }, setShowForms: Dispatch<SetStateAction<{
       nameEmail: boolean,
       billingAddress: boolean,
-      shippingAddress: boolean
+      shippingAddress: boolean,
+      namePanel: boolean,
+      billingPanel: boolean,
+      shippingPanel: boolean
 
-      }>>}) => {
+    }>>
+  }) => {
 
   const [useSpinner, setUseSpinner] = useState(false)
   const [addressDisplay, setAddressDisplay] = useState({
@@ -44,16 +52,16 @@ const AddressForm = ( { showForms, setShowForms} :
       error: "",
     },
   });
-// Create function to validate telephone
+  // Create function to validate telephone
 
- const updateAddressForm = () => {
-    const updatedFormBools = { ...showForms}
+  const updateAddressForm = () => {
+    const updatedFormBools = { ...showForms }
     updatedFormBools.nameEmail = false
     updatedFormBools.billingAddress = true
     updatedFormBools.shippingAddress = false
     setShowForms(updatedFormBools)
 
- }
+  }
 
 
   const validateAddress = () => {
@@ -106,7 +114,7 @@ const AddressForm = ( { showForms, setShowForms} :
 
     // const respJson = await resp.json()
     if (respJson.hasOwnProperty("address")) {
-      const updatedFormBools = { ...showForms}
+      const updatedFormBools = { ...showForms }
       updatedFormBools.nameEmail = false
       updatedFormBools.billingAddress = false
       updatedFormBools.shippingAddress = false
@@ -196,20 +204,16 @@ const AddressForm = ( { showForms, setShowForms} :
     setAddress({ ...address, ...state });
   };
 
+
   useEffect(() => {
     const getAddressFromSession = async () => {
-      // const resp = await fetch('/api/get-address?addressType=billing', {
-      //   method: 'GET',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   }
-      // })
+
       const resp = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address?addressType=billing`)
         .then(dat => dat.data)
         .catch(err => console.log(err))
 
       // const respJson = await resp.json()
-      console.log('responseInUseEffect', resp)
+      console.log('responseInUseEffect', typeof(resp))
       if (resp.address) {
         const { city, state, zip, street } = resp.address
         const updatedAddressDisplay = { ...addressDisplay }
@@ -225,18 +229,20 @@ const AddressForm = ( { showForms, setShowForms} :
         updatedAddress.zip.value = zip
         updatedAddress.state.value = state
         setAddress({ ...updatedAddress })
-        const updatedFormBools = { ...showForms}
+        const updatedFormBools = { ...showForms }
         updatedFormBools.nameEmail = false
         updatedFormBools.billingAddress = false
         updatedFormBools.shippingAddress = false
+        updatedFormBools.billingPanel = true
         setShowForms(updatedFormBools)
         return
       }
-      const updatedFormBools = { ...showForms}
-      updatedFormBools.nameEmail = false
-      updatedFormBools.billingAddress = true
-      updatedFormBools.shippingAddress = false
-      setShowForms(updatedFormBools)
+      // const updatedFormBools = { ...showForms }
+      // updatedFormBools.nameEmail = false
+      // updatedFormBools.billingAddress = true
+      // updatedFormBools.shippingAddress = false
+      // updatedFormBools.billingPanel = false
+      // setShowForms(updatedFormBools)
     }
 
     getAddressFromSession()
@@ -336,7 +342,7 @@ const AddressForm = ( { showForms, setShowForms} :
         )
 
         }
-        {!showForms.billingAddress && (
+        {showForms.billingPanel && (
           <div className='mt-3 text-xs flex justify-between'>
             <div className='text-xs'>
               <p>{addressDisplay.street}</p>

@@ -232,11 +232,11 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
         setShowForms(updatedFormBools)
         return
       }
-      const updatedFormBools = { ...showForms}
-      updatedFormBools.nameEmail = false
-      updatedFormBools.billingAddress = true
-      updatedFormBools.shippingAddress = false
-      setShowForms(updatedFormBools)
+      // const updatedFormBools = { ...showForms}
+      // updatedFormBools.nameEmail = false
+      // updatedFormBools.billingAddress = true
+      // updatedFormBools.shippingAddress = false
+      // setShowForms(updatedFormBools)
     }
 
     getAddressFromSession()

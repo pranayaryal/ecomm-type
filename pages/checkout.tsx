@@ -11,7 +11,15 @@ import NameEmailPhoneForm from '@/components/NameEmailPhoneForm'
 export default function Page() {
   const [ showAddressForm, setShowAddressForm ] = useState(false)
   const [isShippingSame, setIsShippingSame] = useState(true)
-  const [ showForms, setShowForms ] = useState({ nameEmail: true, billingAddress: false, shippingAddress: false })
+  const [ showForms, setShowForms ] = useState(
+    { nameEmail: true,
+      billingAddress: false,
+      shippingAddress: false,
+      namePanel: false,
+      billingPanel: false,
+      shippingPanel: false 
+    }
+      )
   const [phone, setPhone] = useState('')
   const [ phoneError, setPhoneError ] = useState('')
 

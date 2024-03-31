@@ -145,10 +145,20 @@ const NameEmailPhoneForm = ( { showForms, setShowForms} :
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedPhone = formatPhoneNumber(e.target.value)
-    const updatedPersonal = personal
-    updatedPersonal.phone.value = formattedPhone
-    setPersonal({...updatedPersonal})
+    const updatedPersonal = {...personal}
+    updatedPersonal.phone.value = formattedPhone ? formattedPhone : ''
+    setPersonal(updatedPersonal)
   }
+
+  const formatPhoneNumber2 = (phoneNumber: string) => {
+    const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+    }
+    return null;
+  }
+
 
   const formatPhoneNumber = (value: string) => {
 
