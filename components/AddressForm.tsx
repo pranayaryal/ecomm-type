@@ -5,8 +5,18 @@ import { states } from '@/components/states'
 import LoadingSpinner from "./LoadingSpinner";
 import axios from '@/lib/axios'
 
-const AddressForm = ({ showAddressForm, setShowAddressForm }
-    : { showAddressForm: boolean, setShowAddressForm: Dispatch<SetStateAction<boolean>>}) => {
+
+const AddressForm = ( { showForms, setShowForms} : 
+  { showForms: {
+      nameEmail: boolean,
+      billingAddress: boolean,
+      shippingAddress: boolean
+    }, setShowForms: Dispatch<SetStateAction<{
+      nameEmail: boolean,
+      billingAddress: boolean,
+      shippingAddress: boolean
+
+      }>>}) => {
 
   const [useSpinner, setUseSpinner] = useState(false)
   const [addressDisplay, setAddressDisplay] = useState({
@@ -34,6 +44,16 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }
       error: "",
     },
   });
+// Create function to validate telephone
+
+ const updateAddressForm = () => {
+    const updatedFormBools = { ...showForms}
+    updatedFormBools.nameEmail = false
+    updatedFormBools.billingAddress = true
+    updatedFormBools.shippingAddress = false
+    setShowForms(updatedFormBools)
+
+ }
 
 
   const validateAddress = () => {
@@ -74,19 +94,6 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }
 
   const saveAddressToSession = async () => {
 
-    // const resp = await fetch('/api/address', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     zip: address.zip.value,
-    //     street: address.street.value,
-    //     city: address.city.value,
-    //     state: address.state.value,
-    //     addressType: 'billing'
-    //   })
-    // })
     const respJson = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address`, {
       zip: address.zip.value,
       street: address.street.value,
@@ -99,7 +106,11 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }
 
     // const respJson = await resp.json()
     if (respJson.hasOwnProperty("address")) {
-      setShowAddressForm(false)
+      const updatedFormBools = { ...showForms}
+      updatedFormBools.nameEmail = false
+      updatedFormBools.billingAddress = false
+      updatedFormBools.shippingAddress = false
+      setShowForms(updatedFormBools)
     }
 
   }
@@ -214,11 +225,18 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }
         updatedAddress.zip.value = zip
         updatedAddress.state.value = state
         setAddress({ ...updatedAddress })
-
-        setShowAddressForm(false)
+        const updatedFormBools = { ...showForms}
+        updatedFormBools.nameEmail = false
+        updatedFormBools.billingAddress = false
+        updatedFormBools.shippingAddress = false
+        setShowForms(updatedFormBools)
         return
       }
-      setShowAddressForm(true)
+      const updatedFormBools = { ...showForms}
+      updatedFormBools.nameEmail = false
+      updatedFormBools.billingAddress = true
+      updatedFormBools.shippingAddress = false
+      setShowForms(updatedFormBools)
     }
 
     getAddressFromSession()
@@ -229,7 +247,7 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }
     <div className='bg-white py-6 px-5 w-full flex flex-col'>
       <p className='text-sm font-bold'>Billing address</p>
       <AnimatePresence initial={false}>
-        {showAddressForm && (
+        {showForms.billingAddress && (
           <motion.section
             key='content'
             initial='collapsed'
@@ -318,7 +336,7 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }
         )
 
         }
-        {!showAddressForm && (
+        {!showForms.billingAddress && (
           <div className='mt-3 text-xs flex justify-between'>
             <div className='text-xs'>
               <p>{addressDisplay.street}</p>
@@ -327,7 +345,7 @@ const AddressForm = ({ showAddressForm, setShowAddressForm }
               <p className='mt-2'>{ }</p>
             </div>
             <p
-              onClick={() => setShowAddressForm(true)} className='text-xs cursor-pointer'>
+              onClick={() => updateAddressForm()} className='text-xs cursor-pointer'>
               Change
             </p>
           </div>

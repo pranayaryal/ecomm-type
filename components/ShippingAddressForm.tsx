@@ -1,13 +1,23 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from "react";
 import { states } from '@/components/states'
 import LoadingSpinner from "./LoadingSpinner";
 import axios from '@/lib/axios'
 
-const ShippingAddressForm = () => {
 
-  const [showAddressForm, setShowAddressForm] = useState(true)
+const ShippingAddressForm = ( { showForms, setShowForms} : 
+  { showForms: {
+      nameEmail: boolean,
+      billingAddress: boolean,
+      shippingAddress: boolean
+    }, setShowForms: Dispatch<SetStateAction<{
+      nameEmail: boolean,
+      billingAddress: boolean,
+      shippingAddress: boolean
+
+      }>>}) => {
+
   const [useSpinner, setUseSpinner] = useState(false)
   const [addressDisplay, setAddressDisplay] = useState({
     'city': '',
@@ -34,6 +44,16 @@ const ShippingAddressForm = () => {
       error: "",
     },
   });
+// Create function to validate telephone
+
+ const updateAddressForm = () => {
+    const updatedFormBools = { ...showForms}
+    updatedFormBools.nameEmail = false
+    updatedFormBools.billingAddress = false
+    updatedFormBools.shippingAddress = true
+    setShowForms(updatedFormBools)
+
+ }
 
 
   const validateAddress = () => {
@@ -74,34 +94,23 @@ const ShippingAddressForm = () => {
 
   const saveAddressToSession = async () => {
 
-    // const resp = await fetch('/api/address', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     zip: address.zip.value,
-    //     street: address.street.value,
-    //     city: address.city.value,
-    //     state: address.state.value,
-    //     addressType: 'shipping'
-    //   })
-    // })
+    const respJson = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address`, {
+      zip: address.zip.value,
+      street: address.street.value,
+      city: address.city.value,
+      state: address.state.value,
+      addressType: 'shipping'
+    })
+      .then(dat => dat.data)
+      .catch(err => console.log(err))
 
-    const data = {
-        zip: address.zip.value,
-        street: address.street.value,
-        city: address.city.value,
-        state: address.state.value,
-        addressType: 'shipping'
-      }
-
-    const respJson = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address`, data)
-                .then(dat => dat.data)
-                .catch(err => console.log(err))
-
+    // const respJson = await resp.json()
     if (respJson.hasOwnProperty("address")) {
-      setShowAddressForm(false)
+      const updatedFormBools = { ...showForms}
+      updatedFormBools.nameEmail = false
+      updatedFormBools.billingAddress = false
+      updatedFormBools.shippingAddress = false
+      setShowForms(updatedFormBools)
     }
 
   }
@@ -128,6 +137,7 @@ const ShippingAddressForm = () => {
       },
       body: JSON.stringify(data)
     })
+
 
     const respJson = await resp.json()
     const { respUspsAddJson } = respJson
@@ -161,6 +171,18 @@ const ShippingAddressForm = () => {
 
 
 
+    // const updatedAddress = {...address}
+    // updatedAddress.city.value = respJson.city
+    // updatedAddress.street.value = respJson.street
+    // updatedAddress.state.value = respJson.state
+    // updatedAddress.zip.value = respJson.zip
+    // setAddress({...updatedAddress})
+
+    // If there is an error from 
+    // if (!address.street.value){
+    //   saveAddressToSession()
+    // }
+
   };
 
   const onAddressChangeHandler = (field: string, value: string) => {
@@ -176,22 +198,20 @@ const ShippingAddressForm = () => {
 
   useEffect(() => {
     const getAddressFromSession = async () => {
-      // const resp = await fetch('/api/get-address?addressType=shipping', {
+      // const resp = await fetch('/api/get-address?addressType=billing', {
       //   method: 'GET',
       //   headers: {
       //     'Content-Type': 'application/json'
       //   }
       // })
+      const resp = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address?addressType=shipping`)
+        .then(dat => dat.data)
+        .catch(err => console.log(err))
 
-      const respJson = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/get-address?addressType=shipping`)
-                                  .then(dat => dat.data)
-                                  .catch(err => console.log(err))
-
-
-
-      console.log('responseInUseEffect', respJson)
-      if (respJson?.address.street) {
-        const { city, state, zip, street } = respJson.address
+      // const respJson = await resp.json()
+      console.log('responseInUseEffect', resp)
+      if (resp.address) {
+        const { city, state, zip, street } = resp.address
         const updatedAddressDisplay = { ...addressDisplay }
         updatedAddressDisplay.street = street
         updatedAddressDisplay.city = city
@@ -205,11 +225,18 @@ const ShippingAddressForm = () => {
         updatedAddress.zip.value = zip
         updatedAddress.state.value = state
         setAddress({ ...updatedAddress })
-
-        setShowAddressForm(false)
+        const updatedFormBools = { ...showForms}
+        updatedFormBools.nameEmail = false
+        updatedFormBools.billingAddress = false
+        updatedFormBools.shippingAddress = false
+        setShowForms(updatedFormBools)
         return
       }
-      setShowAddressForm(true)
+      const updatedFormBools = { ...showForms}
+      updatedFormBools.nameEmail = false
+      updatedFormBools.billingAddress = true
+      updatedFormBools.shippingAddress = false
+      setShowForms(updatedFormBools)
     }
 
     getAddressFromSession()
@@ -218,8 +245,9 @@ const ShippingAddressForm = () => {
 
   return (
     <div className='bg-white py-6 px-5 w-full flex flex-col'>
+      <p className='text-sm font-bold'>Billing address</p>
       <AnimatePresence initial={false}>
-        {showAddressForm && (
+        {showForms.shippingAddress && (
           <motion.section
             key='content'
             initial='collapsed'
@@ -233,8 +261,7 @@ const ShippingAddressForm = () => {
             transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
             <>
-              <p className='text-sm font-bold'>Shipping address</p>
-              <p className='text-xs mt-2'>Enter your shipping address</p>
+              <p className='text-xs mt-2'>Enter your billing address</p>
               <div className='flex flex-col mt-4'>
                 <label className='text-xs'>Address</label>
                 <input
@@ -265,7 +292,7 @@ const ShippingAddressForm = () => {
               <div className='flex flex-col mt-4 relative'>
                 <label className='text-xs'>State</label>
                 <select
-                  className={`px-3 py-2 bg-white border outline-none font-sans appearance-none tracking-wide text-md ${address.state.error ? 'border-red-300' : 'border-gray-200'}`}
+                  className={`px-3 py-2 bg-white border appearance-none font-sans tracking-wide text-md ${address.state.error ? 'border-red-300' : 'border-gray-200'}`}
                   value={address.state.value} onChange={(e) => onAddressChangeHandler("state", e.target.value)}>
                   <option
                     className={`${address.state.error ? 'text-red-400' : 'text-black'}`}
@@ -283,7 +310,9 @@ const ShippingAddressForm = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   focusable="false">
                   <path d="M12 14.9l4.95-4.95.707.707-4.95 4.95-.707.707-5.657-5.657.707-.707L12 14.9z"></path></svg>
+
                 {address.state.error && <span className='text-xs text-red-400'>{address.state.error}</span>}
+
               </div>
               {useSpinner ? (
                 <button
@@ -294,7 +323,7 @@ const ShippingAddressForm = () => {
                 (
                   <button
                     onClick={handleSubmit}
-                    className='bg-black text-white w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-8 hover:bg-gray-800'>
+                    className='bg-black text-white w-full md:w-[50%] text-sm py-3 px-3 ml-auto mr-auto mt-8 hover:bg-gray-800'>
                     Save
                   </button>
 
@@ -307,7 +336,7 @@ const ShippingAddressForm = () => {
         )
 
         }
-        {!showAddressForm && (
+        {!showForms.shippingAddress && (
           <div className='mt-3 text-xs flex justify-between'>
             <div className='text-xs'>
               <p>{addressDisplay.street}</p>
@@ -316,7 +345,7 @@ const ShippingAddressForm = () => {
               <p className='mt-2'>{ }</p>
             </div>
             <p
-              onClick={() => setShowAddressForm(true)} className='text-xs cursor-pointer'>
+              onClick={() => updateAddressForm()} className='text-xs cursor-pointer'>
               Change
             </p>
           </div>

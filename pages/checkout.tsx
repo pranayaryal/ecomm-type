@@ -11,6 +11,7 @@ import NameEmailPhoneForm from '@/components/NameEmailPhoneForm'
 export default function Page() {
   const [ showAddressForm, setShowAddressForm ] = useState(false)
   const [isShippingSame, setIsShippingSame] = useState(true)
+  const [ showForms, setShowForms ] = useState({ nameEmail: true, billingAddress: false, shippingAddress: false })
   const [phone, setPhone] = useState('')
   const [ phoneError, setPhoneError ] = useState('')
 
@@ -49,14 +50,19 @@ export default function Page() {
   }
 
 
+
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setIsShippingSame(event.target.checked);
+    const updatedFormBools = { ...showForms}
+    updatedFormBools.nameEmail = false
+    updatedFormBools.billingAddress = false
+    updatedFormBools.shippingAddress = event.target.checked
+    setShowForms(updatedFormBools)
   };
 
   useEffect(() => {
-    console.log('isShippingSame', isShippingSame)
+    console.log('formBools', showForms)
 
-  }, [isShippingSame])
+  }, [showForms])
 
 
   const {
@@ -88,26 +94,31 @@ export default function Page() {
         <div className='mt-8 flex flex-col md:flex-row justify-center md:space-x-8'>
           <div className='flex flex-col gap-y-4 w-full md:w-[66.67%] md:px-5 items-center'>
             {<NameEmailPhoneForm
-              showAddressForm={showAddressForm}
-              setShowAddressForm={setShowAddressForm}
+              showForms={showForms}
+              setShowForms={setShowForms}
               />}
 
             <AddressForm
-              showAddressForm={showAddressForm}
-              setShowAddressForm={setShowAddressForm}/>
+              showForms={showForms}
+              setShowForms={setShowForms}
+              />
 
             <div className='bg-white py-6 px-5 w-full'>
               <p className='text-sm font-bold'>Shipping</p>
               <div className='flex mt-8 items-center space-x-2'>
                 <input
                   type='checkbox'
-                  checked={isShippingSame}
-                  onChange={handleCheckboxChange}
+                  checked={showForms.shippingAddress}
+                  onChange={(e) => handleCheckboxChange(e)}
                   className='w-3 h-3' />
                 <p className='text-xs'>Same as my billing address</p>
 
               </div>
-              {!isShippingSame && <ShippingAddressForm />}
+              
+              <ShippingAddressForm
+                showForms={showForms}
+                setShowForms={setShowForms}
+              />
             </div>
             <button
               className='bg-black text-white py-3 w-full md:w-1/3 mr-auto mx-auto'>Select</button>

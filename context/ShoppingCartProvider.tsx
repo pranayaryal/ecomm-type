@@ -56,6 +56,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const [ clickedItem, setClickedItem ] = useState({})
   const [products, setProducts] = useState([])
   const [isOpen, setIsOpen] = useState(false)
+
   const [ isOpenWholeCart, setIsOpenWholeCart ] = useState(false)
   const [product, setProduct] = useState({})
 

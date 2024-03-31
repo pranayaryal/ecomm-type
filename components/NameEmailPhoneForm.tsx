@@ -6,10 +6,19 @@ import axios from '@/lib/axios'
 
 
 // Used during checkout
-const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm} : 
-  { showAddressForm: boolean, setShowAddressForm: Dispatch<SetStateAction<boolean>>}) => {
+const NameEmailPhoneForm = ( { showForms, setShowForms} : 
+  { showForms: {
+      nameEmail: boolean,
+      billingAddress: boolean,
+      shippingAddress: boolean
+    }, setShowForms: Dispatch<SetStateAction<{
+      nameEmail: boolean,
+      billingAddress: boolean,
+      shippingAddress: boolean
 
-  const [showNameEmailform, setShowNameEmailForm] = useState(true)
+      }>>}) => {
+
+  // const [showNameEmailform, setShowNameEmailForm] = useState(true)
   const [useSpinner, setUseSpinner] = useState(false)
 
   const [personal, setPersonal] = useState({
@@ -48,6 +57,15 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm} :
     }
 
     setPersonal({ ...personal, ...state })
+
+  }
+
+  const cancelNameEmailEdit = () => {
+      const updatedFormBools = { ...showForms}
+      updatedFormBools.nameEmail = false
+      updatedFormBools.billingAddress = true
+      updatedFormBools.shippingAddress = false
+      setShowForms(updatedFormBools)
 
   }
 
@@ -113,8 +131,11 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm} :
       updatedPersonal.phone.value = phone
       setPersonal(updatedPersonal)
       setSavedPersonal({ email, firstName, lastName, phone })
-      setShowNameEmailForm(false)
-      setShowAddressForm(true)
+      const updatedFormBools = { ...showForms}
+      updatedFormBools.nameEmail = false
+      updatedFormBools.billingAddress = true
+      updatedFormBools.shippingAddress = false
+      setShowForms(updatedFormBools)
 
     }
     setUseSpinner(false)
@@ -158,8 +179,11 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm} :
   }
 
   const updateNameEmailPhone = () => {
-    setShowNameEmailForm(true)
-    setShowAddressForm(false)
+    const formBools = {...showForms}
+    formBools.billingAddress = false
+    formBools.shippingAddress = false
+    formBools.nameEmail = true
+    setShowForms(formBools)
   }
 
   useEffect(() => {
@@ -180,12 +204,18 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm} :
         updatedPersonal.phone.value = phone
         setPersonal(updatedPersonal)
         if (email) {
-          setShowNameEmailForm(false)
-          setShowAddressForm(true)
+          const formBools = {...showForms}
+          formBools.billingAddress = true
+          formBools.shippingAddress = false
+          formBools.nameEmail = false
+          setShowForms(formBools)
           return
         }
-        setShowNameEmailForm(true)
-        setShowAddressForm(false)
+        const formBools = {...showForms}
+        formBools.billingAddress = false
+        formBools.shippingAddress = false
+        formBools.nameEmail = true
+        setShowForms(formBools)
 
       }
     }
@@ -199,7 +229,7 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm} :
       <p className='text-sm font-bold'>My Information</p>
       <AnimatePresence initial={false}
       >
-        {(showNameEmailform) && (
+        {(showForms.nameEmail) && (
 
           <motion.section
             key='content'
@@ -263,7 +293,7 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm} :
 
                 )}
               {savedPersonal.email && <button
-                onClick={() => setShowNameEmailForm(false)}
+                onClick={() => cancelNameEmailEdit()}
                 className='text-xs flex w-[50%] ml-auto mr-auto mt-3 space-x-3 items-center justify-center'>
                 <span>
                   <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" height="16" width="16"><path d="M1.854 1.146a.5.5 0 1 0-.708.708L7.293 8l-6.146 6.146a.5.5 0 0 0 .707.708L8 8.707l6.146 6.147a.5.5 0 0 0 .708-.708L8.707 8l6.147-6.146a.5.5 0 1 0-.707-.708L8 7.293 1.854 1.146Z"></path></svg>
@@ -274,7 +304,7 @@ const NameEmailPhoneForm = ( { showAddressForm, setShowAddressForm} :
             </div>
 
           </motion.section>)}
-        {(!showNameEmailform) && <div className='mt-3 text-xs flex justify-between'>
+        {(!showForms.nameEmail) && <div className='mt-3 text-xs flex justify-between'>
           <div>
             <p>Email: {personal.email.value}</p>
             <p className='mt-2'>{`${personal.firstName.value} ${personal.lastName.value}`}</p>
