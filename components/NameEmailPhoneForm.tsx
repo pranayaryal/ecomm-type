@@ -6,8 +6,9 @@ import axios from '@/lib/axios'
 
 
 // Used during checkout
-const NameEmailPhoneForm = ( { showForms, setShowForms} : 
-  { showForms: {
+const NameEmailPhoneForm = ({ showForms, setShowForms }:
+  {
+    showForms: {
       nameEmail: boolean,
       billingAddress: boolean,
       shippingAddress: boolean
@@ -16,7 +17,8 @@ const NameEmailPhoneForm = ( { showForms, setShowForms} :
       billingAddress: boolean,
       shippingAddress: boolean
 
-      }>>}) => {
+    }>>
+  }) => {
 
   // const [showNameEmailform, setShowNameEmailForm] = useState(true)
   const [useSpinner, setUseSpinner] = useState(false)
@@ -61,11 +63,11 @@ const NameEmailPhoneForm = ( { showForms, setShowForms} :
   }
 
   const cancelNameEmailEdit = () => {
-      const updatedFormBools = { ...showForms}
-      updatedFormBools.nameEmail = false
-      updatedFormBools.billingAddress = true
-      updatedFormBools.shippingAddress = false
-      setShowForms(updatedFormBools)
+    const updatedFormBools = { ...showForms }
+    updatedFormBools.nameEmail = false
+    updatedFormBools.billingAddress = true
+    updatedFormBools.shippingAddress = false
+    setShowForms(updatedFormBools)
 
   }
 
@@ -118,11 +120,11 @@ const NameEmailPhoneForm = ( { showForms, setShowForms} :
     // });
 
     const resJson = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personal`, data)
-          .then(dat => dat.data)
-          .catch(err => console.log(err))
+      .then(dat => dat.data)
+      .catch(err => console.log(err))
 
 
-    if (resJson.personal_details) {
+    if (resJson.personal_details.length > 0) {
       const { email, firstName, lastName, phone } = resJson.personal_details
       const updatedPersonal = { ...personal }
       updatedPersonal.email.value = email
@@ -131,13 +133,14 @@ const NameEmailPhoneForm = ( { showForms, setShowForms} :
       updatedPersonal.phone.value = phone
       setPersonal(updatedPersonal)
       setSavedPersonal({ email, firstName, lastName, phone })
-      const updatedFormBools = { ...showForms}
+      const updatedFormBools = { ...showForms }
       updatedFormBools.nameEmail = false
-      updatedFormBools.billingAddress = true
-      updatedFormBools.shippingAddress = false
       setShowForms(updatedFormBools)
 
     }
+    const updatedFormBools = { ...showForms }
+    updatedFormBools.nameEmail = true
+    setShowForms(updatedFormBools)
     setUseSpinner(false)
     return
 
@@ -145,7 +148,7 @@ const NameEmailPhoneForm = ( { showForms, setShowForms} :
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedPhone = formatPhoneNumber(e.target.value)
-    const updatedPersonal = {...personal}
+    const updatedPersonal = { ...personal }
     updatedPersonal.phone.value = formattedPhone ? formattedPhone : ''
     setPersonal(updatedPersonal)
   }
@@ -189,7 +192,7 @@ const NameEmailPhoneForm = ( { showForms, setShowForms} :
   }
 
   const updateNameEmailPhone = () => {
-    const formBools = {...showForms}
+    const formBools = { ...showForms }
     formBools.billingAddress = false
     formBools.shippingAddress = false
     formBools.nameEmail = true
@@ -200,12 +203,14 @@ const NameEmailPhoneForm = ( { showForms, setShowForms} :
     const getInitialData = async () => {
       // const resp = await fetch('/api/get-personal')
       const respJson = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personal`)
-              .then(dat => dat.data)
-              .catch(err => console.log(err))
-      
+        .then(dat => dat.data)
+        .catch(err => console.log(err))
+
+      console.log('respJsonPersonalDetails', respJson.personal_details.length)
+
 
       // const respJson = await resp.json()
-      if (respJson.personal_details) {
+      if (respJson.personal_details.length > 0) {
         const { email, firstName, lastName, phone } = respJson.personal_details
         const updatedPersonal = { ...personal }
         updatedPersonal.email.value = email
@@ -213,21 +218,17 @@ const NameEmailPhoneForm = ( { showForms, setShowForms} :
         updatedPersonal.lastName.value = lastName
         updatedPersonal.phone.value = phone
         setPersonal(updatedPersonal)
-        if (email) {
-          const formBools = {...showForms}
-          formBools.billingAddress = true
-          formBools.shippingAddress = false
-          formBools.nameEmail = false
-          setShowForms(formBools)
-          return
-        }
-        const formBools = {...showForms}
-        formBools.billingAddress = false
-        formBools.shippingAddress = false
-        formBools.nameEmail = true
+        const formBools = { ...showForms }
+        // formBools.billingAddress = true
+        // formBools.shippingAddress = false
+        formBools.nameEmail = false
         setShowForms(formBools)
+        return
 
       }
+      const formBools = { ...showForms }
+      formBools.nameEmail = true
+      setShowForms(formBools)
     }
 
     getInitialData()

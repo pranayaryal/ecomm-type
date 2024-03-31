@@ -230,19 +230,19 @@ const AddressForm = ({ showForms, setShowForms }:
         updatedAddress.state.value = state
         setAddress({ ...updatedAddress })
         const updatedFormBools = { ...showForms }
-        updatedFormBools.nameEmail = false
+        // updatedFormBools.nameEmail = false
         updatedFormBools.billingAddress = false
-        updatedFormBools.shippingAddress = false
-        updatedFormBools.billingPanel = true
+        // updatedFormBools.shippingAddress = false
+        // updatedFormBools.billingPanel = true
         setShowForms(updatedFormBools)
         return
       }
-      // const updatedFormBools = { ...showForms }
+      const updatedFormBools = { ...showForms }
       // updatedFormBools.nameEmail = false
-      // updatedFormBools.billingAddress = true
+      updatedFormBools.billingAddress = true
       // updatedFormBools.shippingAddress = false
       // updatedFormBools.billingPanel = false
-      // setShowForms(updatedFormBools)
+      setShowForms(updatedFormBools)
     }
 
     getAddressFromSession()
