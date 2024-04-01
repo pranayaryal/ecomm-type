@@ -11,6 +11,21 @@ type ShoppingCardProviderProps = {
   children: ReactNode
 }
 
+type inputForSavedPersonal = {
+  email: string,
+  firstName: string,
+  lastName: string,
+  phone: string
+
+}
+
+type returnForSavedPersonal = {
+  nameEmailSaved: boolean,
+  billingAddressSaved: boolean,
+  shippingAddressSaved: boolean,
+
+} | Promise<any>
+
 type ShoppingCartContext = {
   products: []
   getItemQuantity: (id: number) => number
@@ -30,7 +45,12 @@ type ShoppingCartContext = {
   closeCart: () => void
   // setOpenSide: React.Dispatch<React.SetStateAction<boolean>>
   toggle: React.Dispatch<React.SetStateAction<boolean>>
-
+  savePersonalBackend: (data: inputForSavedPersonal) => returnForSavedPersonal
+  showForms: {
+    nameEmailSaved: boolean,
+    billingAddressSaved: boolean,
+    shippingAddressSaved: boolean
+  }
 }
 
 type CartItem = {
@@ -53,12 +73,20 @@ export function useShoppingCart() {
 
 export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const [cartItems, setCartItems] = useState([])
-  const [ clickedItem, setClickedItem ] = useState({})
+  const [clickedItem, setClickedItem] = useState({})
   const [products, setProducts] = useState([])
   const [isOpen, setIsOpen] = useState(false)
 
-  const [ isOpenWholeCart, setIsOpenWholeCart ] = useState(false)
+  const [isOpenWholeCart, setIsOpenWholeCart] = useState(false)
   const [product, setProduct] = useState({})
+
+  const [showForms, setShowForms] = useState(
+    {
+      nameEmailSaved: true,
+      billingAddressSaved: false,
+      shippingAddressSaved: false,
+    }
+  )
 
 
   const openCart = () => setIsOpen(true)
@@ -68,7 +96,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const closeWholeCart = () => setIsOpenWholeCart(false)
 
   useEffect(() => {
-    const loadCartAndProducts = async() => {
+    const loadCartAndProducts = async () => {
       await getProducts()
       await getAllCartItems()
     }
@@ -106,6 +134,46 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
     if (resJson.products) {
       setCartItems(Object.values(resJson.products));
     }
+
+  }
+
+  const savePersonalBackend = async (data: inputForSavedPersonal) => {
+    const resJson = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personal`, data)
+      .then(dat => dat.data)
+      .catch(err => console.log(err))
+
+
+    if (resJson.personal_details) {
+      const formBools = { ...showForms }
+      formBools.nameEmailSaved = false
+      setShowForms(formBools)
+      return resJson
+
+    }
+    const formBools = { ...showForms }
+    formBools.nameEmailSaved = true
+    setShowForms(formBools)
+    return resJson
+
+  }
+
+  const getPersonalBackend = async () => {
+    const resJson = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personal`, data)
+      .then(dat => dat.data)
+      .catch(err => console.log(err))
+
+
+    if (resJson.personal_details) {
+      const formBools = { ...showForms }
+      formBools.nameEmailSaved = false
+      setShowForms(formBools)
+      return resJson
+
+    }
+    const formBools = { ...showForms }
+    formBools.nameEmailSaved = true
+    setShowForms(formBools)
+    return resJson
 
   }
 
@@ -157,13 +225,13 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const getAllCartItems = async () => {
     // await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`)
     const resp = await axios
-        .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cart`)
-        .then(data => data)
-      
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cart`)
+      .then(data => data)
 
-    
-    
-      
+
+
+
+
     if (resp?.data.products) {
       setCartItems(Object.values(resp.data.products));
     }
@@ -277,6 +345,8 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         getAllCartItems,
         forgetCart,
         removeCartItem,
+        savePersonalBackend,
+        showForms,
         // decreaseCartQuantity,
         // removeFromCart,
         // openCart,

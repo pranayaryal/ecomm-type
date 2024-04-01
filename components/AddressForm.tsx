@@ -213,7 +213,6 @@ const AddressForm = ({ showForms, setShowForms }:
         .catch(err => console.log(err))
 
       // const respJson = await resp.json()
-      console.log('responseInUseEffect', typeof(resp))
       if (resp.address) {
         const { city, state, zip, street } = resp.address
         const updatedAddressDisplay = { ...addressDisplay }

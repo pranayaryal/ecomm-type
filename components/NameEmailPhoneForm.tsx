@@ -124,7 +124,7 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
       .catch(err => console.log(err))
 
 
-    if (resJson.personal_details.length > 0) {
+    if (resJson.personal_details) {
       const { email, firstName, lastName, phone } = resJson.personal_details
       const updatedPersonal = { ...personal }
       updatedPersonal.email.value = email
@@ -133,14 +133,15 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
       updatedPersonal.phone.value = phone
       setPersonal(updatedPersonal)
       setSavedPersonal({ email, firstName, lastName, phone })
-      const updatedFormBools = { ...showForms }
-      updatedFormBools.nameEmail = false
-      setShowForms(updatedFormBools)
+      const formBools = { ...showForms }
+      formBools.nameEmail = false
+      setShowForms(formBools)
+      return
 
     }
-    const updatedFormBools = { ...showForms }
-    updatedFormBools.nameEmail = true
-    setShowForms(updatedFormBools)
+    const formBools = { ...showForms }
+    formBools.nameEmail = true
+    setShowForms(formBools)
     setUseSpinner(false)
     return
 
@@ -206,11 +207,11 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
         .then(dat => dat.data)
         .catch(err => console.log(err))
 
-      console.log('respJsonPersonalDetails', respJson.personal_details.length)
-
+      
 
       // const respJson = await resp.json()
-      if (respJson.personal_details.length > 0) {
+      if (respJson.personal_details) {
+        console.log('you reached here')
         const { email, firstName, lastName, phone } = respJson.personal_details
         const updatedPersonal = { ...personal }
         updatedPersonal.email.value = email

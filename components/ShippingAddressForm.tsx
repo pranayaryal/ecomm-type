@@ -226,17 +226,15 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
         updatedAddress.state.value = state
         setAddress({ ...updatedAddress })
         const updatedFormBools = { ...showForms}
-        updatedFormBools.nameEmail = false
-        updatedFormBools.billingAddress = false
         updatedFormBools.shippingAddress = false
         setShowForms(updatedFormBools)
         return
       }
-      // const updatedFormBools = { ...showForms}
+      const updatedFormBools = { ...showForms}
       // updatedFormBools.nameEmail = false
       // updatedFormBools.billingAddress = true
-      // updatedFormBools.shippingAddress = false
-      // setShowForms(updatedFormBools)
+      updatedFormBools.shippingAddress = true
+      setShowForms(updatedFormBools)
     }
 
     getAddressFromSession()
