@@ -4,27 +4,20 @@ import { useEffect, useState } from "react";
 import { states } from '@/components/states'
 import LoadingSpinner from "./LoadingSpinner";
 import axios from '@/lib/axios'
+import { useShoppingCart } from '@/context/ShoppingCartProvider'
 
 
-const AddressForm = ({ showForms, setShowForms }:
-  {
-    showForms: {
-      nameEmail: boolean,
-      billingAddress: boolean,
-      shippingAddress: boolean,
-      namePanel: boolean,
-      billingPanel: boolean,
-      shippingPanel: boolean
-    }, setShowForms: Dispatch<SetStateAction<{
-      nameEmail: boolean,
-      billingAddress: boolean,
-      shippingAddress: boolean,
-      namePanel: boolean,
-      billingPanel: boolean,
-      shippingPanel: boolean
-
-    }>>
-  }) => {
+const AddressForm = () => {
+  const { openNameEmail,
+        closeNameEmail,
+        openBilling,
+        closeBilling,
+        openShipping,
+        closeShipping,
+        showNameEmail,
+        showBilling,
+        showShipping
+ } = useShoppingCart()
 
   const [useSpinner, setUseSpinner] = useState(false)
   const [addressDisplay, setAddressDisplay] = useState({
@@ -55,11 +48,6 @@ const AddressForm = ({ showForms, setShowForms }:
   // Create function to validate telephone
 
   const updateAddressForm = () => {
-    const updatedFormBools = { ...showForms }
-    updatedFormBools.nameEmail = false
-    updatedFormBools.billingAddress = true
-    updatedFormBools.shippingAddress = false
-    setShowForms(updatedFormBools)
 
   }
 
@@ -114,12 +102,11 @@ const AddressForm = ({ showForms, setShowForms }:
 
     // const respJson = await resp.json()
     if (respJson.hasOwnProperty("address")) {
-      const updatedFormBools = { ...showForms }
-      updatedFormBools.nameEmail = false
-      updatedFormBools.billingAddress = false
-      updatedFormBools.shippingAddress = false
-      setShowForms(updatedFormBools)
+      closeBilling()
+      return
+
     }
+    openBilling()
 
   }
 
@@ -211,6 +198,8 @@ const AddressForm = ({ showForms, setShowForms }:
       const resp = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/address?addressType=billing`)
         .then(dat => dat.data)
         .catch(err => console.log(err))
+      
+      console.log('hi from resp address', resp.address)
 
       // const respJson = await resp.json()
       if (resp.address) {
@@ -228,20 +217,11 @@ const AddressForm = ({ showForms, setShowForms }:
         updatedAddress.zip.value = zip
         updatedAddress.state.value = state
         setAddress({ ...updatedAddress })
-        const updatedFormBools = { ...showForms }
-        // updatedFormBools.nameEmail = false
-        updatedFormBools.billingAddress = false
-        // updatedFormBools.shippingAddress = false
-        // updatedFormBools.billingPanel = true
-        setShowForms(updatedFormBools)
+        closeBilling()
+
         return
       }
-      const updatedFormBools = { ...showForms }
-      // updatedFormBools.nameEmail = false
-      updatedFormBools.billingAddress = true
-      // updatedFormBools.shippingAddress = false
-      // updatedFormBools.billingPanel = false
-      setShowForms(updatedFormBools)
+      openBilling()
     }
 
     getAddressFromSession()
@@ -252,7 +232,7 @@ const AddressForm = ({ showForms, setShowForms }:
     <div className='bg-white py-6 px-5 w-full flex flex-col'>
       <p className='text-sm font-bold'>Billing address</p>
       <AnimatePresence initial={false}>
-        {showForms.billingAddress && (
+        {showBilling && (
           <motion.section
             key='content'
             initial='collapsed'
@@ -341,7 +321,7 @@ const AddressForm = ({ showForms, setShowForms }:
         )
 
         }
-        {showForms.billingPanel && (
+        {showBilling && (
           <div className='mt-3 text-xs flex justify-between'>
             <div className='text-xs'>
               <p>{addressDisplay.street}</p>

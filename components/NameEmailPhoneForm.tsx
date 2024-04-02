@@ -3,22 +3,21 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import LoadingSpinner from "./LoadingSpinner";
 import axios from '@/lib/axios'
+import { useShoppingCart } from '@/context/ShoppingCartProvider'
 
 
 // Used during checkout
-const NameEmailPhoneForm = ({ showForms, setShowForms }:
-  {
-    showForms: {
-      nameEmail: boolean,
-      billingAddress: boolean,
-      shippingAddress: boolean
-    }, setShowForms: Dispatch<SetStateAction<{
-      nameEmail: boolean,
-      billingAddress: boolean,
-      shippingAddress: boolean
-
-    }>>
-  }) => {
+const NameEmailPhoneForm = () => {
+  const { openNameEmail,
+        closeNameEmail,
+        openBilling,
+        closeBilling,
+        openShipping,
+        closeShipping,
+        showNameEmail,
+        showBilling,
+        showShipping
+ } = useShoppingCart()
 
   // const [showNameEmailform, setShowNameEmailForm] = useState(true)
   const [useSpinner, setUseSpinner] = useState(false)
@@ -63,11 +62,7 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
   }
 
   const cancelNameEmailEdit = () => {
-    const updatedFormBools = { ...showForms }
-    updatedFormBools.nameEmail = false
-    updatedFormBools.billingAddress = true
-    updatedFormBools.shippingAddress = false
-    setShowForms(updatedFormBools)
+
 
   }
 
@@ -133,15 +128,14 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
       updatedPersonal.phone.value = phone
       setPersonal(updatedPersonal)
       setSavedPersonal({ email, firstName, lastName, phone })
-      const formBools = { ...showForms }
-      formBools.nameEmail = false
-      setShowForms(formBools)
+      closeNameEmail()
+      openBilling()
+
       return
 
     }
-    const formBools = { ...showForms }
-    formBools.nameEmail = true
-    setShowForms(formBools)
+    openNameEmail()
+    closeBilling()
     setUseSpinner(false)
     return
 
@@ -193,11 +187,9 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
   }
 
   const updateNameEmailPhone = () => {
-    const formBools = { ...showForms }
-    formBools.billingAddress = false
-    formBools.shippingAddress = false
-    formBools.nameEmail = true
-    setShowForms(formBools)
+    openNameEmail()
+    closeBilling()
+    closeShipping()
   }
 
   useEffect(() => {
@@ -206,8 +198,6 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
       const respJson = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personal`)
         .then(dat => dat.data)
         .catch(err => console.log(err))
-
-      
 
       // const respJson = await resp.json()
       if (respJson.personal_details) {
@@ -219,17 +209,13 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
         updatedPersonal.lastName.value = lastName
         updatedPersonal.phone.value = phone
         setPersonal(updatedPersonal)
-        const formBools = { ...showForms }
+        closeNameEmail()
         // formBools.billingAddress = true
         // formBools.shippingAddress = false
-        formBools.nameEmail = false
-        setShowForms(formBools)
         return
 
       }
-      const formBools = { ...showForms }
-      formBools.nameEmail = true
-      setShowForms(formBools)
+      openNameEmail()
     }
 
     getInitialData()
@@ -241,7 +227,7 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
       <p className='text-sm font-bold'>My Information</p>
       <AnimatePresence initial={false}
       >
-        {(showForms.nameEmail) && (
+        {(showNameEmail) && (
 
           <motion.section
             key='content'
@@ -316,7 +302,7 @@ const NameEmailPhoneForm = ({ showForms, setShowForms }:
             </div>
 
           </motion.section>)}
-        {(!showForms.nameEmail) && <div className='mt-3 text-xs flex justify-between'>
+        {(!showNameEmail) && <div className='mt-3 text-xs flex justify-between'>
           <div>
             <p>Email: {personal.email.value}</p>
             <p className='mt-2'>{`${personal.firstName.value} ${personal.lastName.value}`}</p>
