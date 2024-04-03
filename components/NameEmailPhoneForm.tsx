@@ -130,6 +130,7 @@ const NameEmailPhoneForm = () => {
       setSavedPersonal({ email, firstName, lastName, phone })
       closeNameEmail()
       openBilling()
+      setUseSpinner(false)
 
       return
 
@@ -290,8 +291,8 @@ const NameEmailPhoneForm = () => {
                   </button>
 
                 )}
-              {savedPersonal.email && <button
-                onClick={() => cancelNameEmailEdit()}
+              {!showBilling && <button
+                onClick={() => closeNameEmail()}
                 className='text-xs flex w-[50%] ml-auto mr-auto mt-3 space-x-3 items-center justify-center'>
                 <span>
                   <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" height="16" width="16"><path d="M1.854 1.146a.5.5 0 1 0-.708.708L7.293 8l-6.146 6.146a.5.5 0 0 0 .707.708L8 8.707l6.146 6.147a.5.5 0 0 0 .708-.708L8.707 8l6.147-6.146a.5.5 0 1 0-.707-.708L8 7.293 1.854 1.146Z"></path></svg>

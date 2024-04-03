@@ -7,8 +7,15 @@ import ShippingAddressForm from '@/components/ShippingAddressForm'
 import PhoneNumber from '@/components/PhoneNumber'
 import NameEmailPhoneForm from '@/components/NameEmailPhoneForm'
 
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements } from '@stripe/react-stripe-js'
+import StripeCheckoutForm from '@/components/StripeCheckoutForm'
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+
 
 export default function Page() {
+  const [ clientSecret, setClientSecret ] = useState('')
   const [ showAddressForm, setShowAddressForm ] = useState(false)
   const [isShippingSame, setIsShippingSame] = useState(true)
   const [ showForms, setShowForms ] = useState(
@@ -60,11 +67,7 @@ export default function Page() {
 
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const updatedFormBools = { ...showForms}
-    updatedFormBools.nameEmail = false
-    updatedFormBools.billingAddress = false
-    updatedFormBools.shippingAddress = event.target.checked
-    setShowForms(updatedFormBools)
+    setIsShipBillSame(prevState => !prevState)
   };
 
   useEffect(() => {
@@ -76,6 +79,9 @@ export default function Page() {
   const {
     cartItems,
     getProducts,
+    isShipBillSame,
+    setIsShipBillSame
+
   } = useShoppingCart()
 
 
@@ -116,17 +122,14 @@ export default function Page() {
               <div className='flex mt-8 items-center space-x-2'>
                 <input
                   type='checkbox'
-                  checked={showForms.shippingAddress}
+                  checked={isShipBillSame}
                   onChange={(e) => handleCheckboxChange(e)}
                   className='w-3 h-3' />
                 <p className='text-xs'>Same as my billing address</p>
 
               </div>
               
-              <ShippingAddressForm
-                showForms={showForms}
-                setShowForms={setShowForms}
-              />
+              {!isShipBillSame && <ShippingAddressForm />}
             </div>
             <button
               className='bg-black text-white py-3 w-full md:w-1/3 mr-auto mx-auto'>Select</button>

@@ -40,6 +40,8 @@ type ShoppingCartContext = {
   showNameEmail: boolean
   showBilling: boolean
   showShipping: boolean
+  isShipBillSame: boolean
+  setIsShipBillSame: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type CartItem = {
@@ -68,6 +70,7 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
   const [showNameEmail, setShowNameEmail] = useState(true)
   const [showBilling, setShowBilling] = useState(false)
   const [showShipping, setShowShipping] = useState(false)
+  const [ isShipBillSame, setIsShipBillSame ] = useState(true)
 
   const [isOpenWholeCart, setIsOpenWholeCart] = useState(false)
   const [product, setProduct] = useState({})
@@ -307,6 +310,8 @@ export function ShoppingCartProvider({ children }: ShoppingCardProviderProps) {
         showNameEmail,
         showShipping,
         showBilling,
+        isShipBillSame,
+        setIsShipBillSame,
         // decreaseCartQuantity,
         // removeFromCart,
         // openCart,

@@ -48,6 +48,8 @@ const AddressForm = () => {
   // Create function to validate telephone
 
   const updateAddressForm = () => {
+    closeNameEmail()
+    openBilling()
 
   }
 
@@ -101,7 +103,8 @@ const AddressForm = () => {
       .catch(err => console.log(err))
 
     // const respJson = await resp.json()
-    if (respJson.hasOwnProperty("address")) {
+    // if (respJson.hasOwnProperty("address")) {
+    if (respJson.address) {
       closeBilling()
       return
 
@@ -321,7 +324,7 @@ const AddressForm = () => {
         )
 
         }
-        {showBilling && (
+        {!showBilling && (
           <div className='mt-3 text-xs flex justify-between'>
             <div className='text-xs'>
               <p>{addressDisplay.street}</p>

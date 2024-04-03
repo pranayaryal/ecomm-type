@@ -3,20 +3,21 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from "react";
 import { states } from '@/components/states'
 import LoadingSpinner from "./LoadingSpinner";
+import { useShoppingCart } from '@/context/ShoppingCartProvider'
 import axios from '@/lib/axios'
 
 
-const ShippingAddressForm = ( { showForms, setShowForms} : 
-  { showForms: {
-      nameEmail: boolean,
-      billingAddress: boolean,
-      shippingAddress: boolean
-    }, setShowForms: Dispatch<SetStateAction<{
-      nameEmail: boolean,
-      billingAddress: boolean,
-      shippingAddress: boolean
+const ShippingAddressForm = () => {
+  const {
+        closeNameEmail,
+        openBilling,
+        closeBilling,
+        openShipping,
+        closeShipping,
+        showBilling,
+        showShipping
 
-      }>>}) => {
+  } = useShoppingCart()
 
   const [useSpinner, setUseSpinner] = useState(false)
   const [addressDisplay, setAddressDisplay] = useState({
@@ -47,11 +48,9 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
 // Create function to validate telephone
 
  const updateAddressForm = () => {
-    const updatedFormBools = { ...showForms}
-    updatedFormBools.nameEmail = false
-    updatedFormBools.billingAddress = false
-    updatedFormBools.shippingAddress = true
-    setShowForms(updatedFormBools)
+  closeBilling()
+  closeNameEmail()
+  openShipping()
 
  }
 
@@ -106,12 +105,11 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
 
     // const respJson = await resp.json()
     if (respJson.hasOwnProperty("address")) {
-      const updatedFormBools = { ...showForms}
-      updatedFormBools.nameEmail = false
-      updatedFormBools.billingAddress = false
-      updatedFormBools.shippingAddress = false
-      setShowForms(updatedFormBools)
+      closeShipping()
+      return
     }
+    openShipping()
+
 
   }
 
@@ -149,6 +147,7 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
       const updatedAddress = { ...address }
       updatedAddress.street.error = message
       setAddress({ ...updatedAddress })
+      openShipping()
       setUseSpinner(false)
       return
 
@@ -209,7 +208,6 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
         .catch(err => console.log(err))
 
       // const respJson = await resp.json()
-      console.log('responseInUseEffect', resp)
       if (resp.address) {
         const { city, state, zip, street } = resp.address
         const updatedAddressDisplay = { ...addressDisplay }
@@ -225,16 +223,10 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
         updatedAddress.zip.value = zip
         updatedAddress.state.value = state
         setAddress({ ...updatedAddress })
-        const updatedFormBools = { ...showForms}
-        updatedFormBools.shippingAddress = false
-        setShowForms(updatedFormBools)
+        closeShipping()
         return
       }
-      const updatedFormBools = { ...showForms}
-      // updatedFormBools.nameEmail = false
-      // updatedFormBools.billingAddress = true
-      updatedFormBools.shippingAddress = true
-      setShowForms(updatedFormBools)
+      openShipping()
     }
 
     getAddressFromSession()
@@ -243,9 +235,9 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
 
   return (
     <div className='bg-white py-6 px-5 w-full flex flex-col'>
-      <p className='text-sm font-bold'>Billing address</p>
+      <p className='text-sm font-bold'>Shipping address</p>
       <AnimatePresence initial={false}>
-        {showForms.shippingAddress && (
+        {showShipping && (
           <motion.section
             key='content'
             initial='collapsed'
@@ -259,7 +251,7 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
             transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
             <>
-              <p className='text-xs mt-2'>Enter your billing address</p>
+              <p className='text-xs mt-2'>Enter your shipping address</p>
               <div className='flex flex-col mt-4'>
                 <label className='text-xs'>Address</label>
                 <input
@@ -334,7 +326,7 @@ const ShippingAddressForm = ( { showForms, setShowForms} :
         )
 
         }
-        {!showForms.shippingAddress && (
+        {!showShipping && (
           <div className='mt-3 text-xs flex justify-between'>
             <div className='text-xs'>
               <p>{addressDisplay.street}</p>
