@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import {
   PaymentElement,
+  AddressElement,
   useStripe,
   useElements
 } from '@stripe/react-stripe-js'
+import ShippingAddressForm from './ShippingAddressForm'
 
 export default function StripeCheckoutForm() {
   const stripe = useStripe()
   const elements = useElements()
   const [message, setMessage] = useState('')
+  const [isFormVisible, setIsFormVisible] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -35,6 +38,7 @@ export default function StripeCheckoutForm() {
       switch (paymentIntent.status) {
         case "succeeded":
           setMessage("Payment succeeded!")
+          setIsFormVisible(false)
           break;
         case "processing":
           setMessage("Your payment is processing.")
@@ -63,7 +67,7 @@ export default function StripeCheckoutForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'http://localhost:3000'
+        return_url: 'http://localhost:3000/checkout'
       }
     })
 
@@ -81,15 +85,22 @@ export default function StripeCheckoutForm() {
   }
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button
-        disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">{isLoading ? <div id="spinner" className='spinner'></div> : 'Pay now'}</span>
-      </button>
+    <div className='mt-4'>
+      {/* <AddressElement options={{mode: 'billing', allowedCountries: ['US']}}/> */}
+      <p className='text-sm  font-semibold'>Make your payment</p>
       {message && <div id='payment-message'>{message}</div>}
+      {isFormVisible && (<form id="payment-form" onSubmit={handleSubmit}>
+        <PaymentElement id="payment-element"
+          className='mt-4' options={paymentElementOptions} />
+        <button
+          disabled={isLoading || !stripe || !elements}
+          className='bg-black px-3 py-2 text-md w-2/5 text-white mt-8'>
+          <span id="button-text">{isLoading ? <div id="spinner" className='spinner'></div> : 'Pay now'}</span>
+        </button>
+        {message && <div id='payment-message'>{message}</div>}
 
 
-    </form>
+      </form>)}
+    </div>
   )
 }

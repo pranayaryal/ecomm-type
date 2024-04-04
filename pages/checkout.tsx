@@ -15,20 +15,41 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 
 export default function Page() {
-  const [ clientSecret, setClientSecret ] = useState('')
-  const [ showAddressForm, setShowAddressForm ] = useState(false)
+  const [clientSecret, setClientSecret] = useState('')
+  const [showAddressForm, setShowAddressForm] = useState(false)
   const [isShippingSame, setIsShippingSame] = useState(true)
-  const [ showForms, setShowForms ] = useState(
-    { nameEmail: true,
+  const [showForms, setShowForms] = useState(
+    {
+      nameEmail: true,
       billingAddress: false,
       shippingAddress: false,
       namePanel: false,
       billingPanel: false,
-      shippingPanel: false 
+      shippingPanel: false
     }
-      )
+  )
   const [phone, setPhone] = useState('')
-  const [ phoneError, setPhoneError ] = useState('')
+  const [phoneError, setPhoneError] = useState('')
+
+  useEffect(() => {
+    fetch("/api/create-payment-intent", {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: [{ id: 'xl-tshirt' }] })
+    })
+      .then((res) => res.json())
+      .then((data) => setClientSecret(data.clientSecret))
+
+  }, [])
+
+  const appearance = {
+    theme: 'stripe'
+  }
+
+  const options = {
+    clientSecret,
+    appearance
+  }
 
 
   const formatPhoneNumber = (value: string) => {
@@ -110,12 +131,12 @@ export default function Page() {
             {<NameEmailPhoneForm
               showForms={showForms}
               setShowForms={setShowForms}
-              />}
+            />}
 
             <AddressForm
               showForms={showForms}
               setShowForms={setShowForms}
-              />
+            />
 
             <div className='bg-white py-6 px-5 w-full'>
               <p className='text-sm font-bold'>Shipping</p>
@@ -128,11 +149,21 @@ export default function Page() {
                 <p className='text-xs'>Same as my billing address</p>
 
               </div>
-              
+
               {!isShipBillSame && <ShippingAddressForm />}
             </div>
             <button
-              className='bg-black text-white py-3 w-full md:w-1/3 mr-auto mx-auto'>Select</button>
+              className='bg-black text-white py-3 w-full md:w-1/3 mr-auto mx-auto'>
+              Select
+            </button>
+            <div className='w-full'>
+              {clientSecret && (
+                <Elements options={options} stripe={stripePromise}>
+                  <StripeCheckoutForm />
+                </Elements>
+              )}
+
+            </div>
           </div>
           {(cartItems === undefined || Object.keys(cartItems).length === 0) ?
             <p></p> :
