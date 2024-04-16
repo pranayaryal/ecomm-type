@@ -1,1 +1,1 @@
-Trying trpc with TypeScript
+Front-end for ecommerce application
