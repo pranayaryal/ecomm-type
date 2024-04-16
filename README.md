@@ -1,1 +1,1 @@
-Front-end for ecommerce application
+Front-end for ecommerce application using Next.js (Typescript)
