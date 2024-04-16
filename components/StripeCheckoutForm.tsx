@@ -86,7 +86,7 @@ export default function StripeCheckoutForm() {
 
   return (
     <div className='mt-4'>
-      {/* <AddressElement options={{mode: 'billing', allowedCountries: ['US']}}/> */}
+      <AddressElement options={{mode: 'billing', allowedCountries: ['US']}}/>
       <p className='text-sm  font-semibold'>Make your payment</p>
       {message && <div id='payment-message'>{message}</div>}
       {isFormVisible && (<form id="payment-form" onSubmit={handleSubmit}>
